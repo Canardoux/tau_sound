@@ -1,0 +1,45 @@
+name: tau_web
+version: 0.0.1-alpha-1+1
+description: Flutter plugin that relates to sound like audio and recorder.
+#author: dooboolab<dooboolab@gmail.com>
+homepage: https://github.com/dooboolab/flutter_sound
+environment:
+    sdk: '>=2.12.0 <3.0.0'
+    flutter: ">=1.12.0"
+
+# 0.1.y+z is compatible with 1.0.0, if you land a breaking change bump
+# the version to 2.0.0.
+# See more details: https://github.com/flutter/flutter/wiki/Package-migration-to-1.0.0
+
+flutter:
+  plugin:
+    platforms:
+      web:
+        pluginClass: TauWebPlugin
+        fileName: tau_web.dart
+
+  assets:
+  - howler/howler.js
+  - src/tau_core.js
+  - src/tau_core_player.js
+  - src/tau_core_recorder.js
+  - howler/howler.js
+
+
+dependencies:
+  tau_platform_interface: 0.0.1-alpha-1+1
+#    path: ../tau_platform_interface # Flutter Sound Dir
+  flutter:
+    sdk: flutter
+  logger: ^1.0.0
+  flutter_web_plugins:
+    sdk: flutter
+  meta: ^1.3.0
+  js: ^0.6.3
+  #import_js_library: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  pedantic: ^1.11.0
+

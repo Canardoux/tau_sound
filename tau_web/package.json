@@ -1,0 +1,41 @@
+{
+        "name": "tau_core",
+        "version": "0.0.1-alpha-1+1",
+        "description": "The Tau Engine for Web App",
+        "homepage": "https://github.com/Canardoux/tau",
+        "keywords": [
+                "flauto",
+                "flutter_sound",
+                "tau",
+                "tau_engine",
+                "tau_core",
+                "audio",
+                "sound",
+                "web audio",
+                "webaudio",
+                "browser",
+                "html5",
+                "html5 audio"
+        ],
+        "author": "Larpoux <larpoux@gmail.com> (https://github.com/orgs/Canardoux/people/Larpoux)",
+        "repository": {
+                "type": "git",
+                "url": "https://github.com/Canardoux/tau_core"
+        },
+        "devDependencies": {
+                "uglify-js": "2.x"
+        },
+        "main": "src/index.js",
+        "license": "LGPL-3.0-only",
+        "files": [
+                "src",
+                "src/index.js",
+                "src/tau.js",
+                "src/tau_player.js",
+                "src/tau_recorder.js",
+                "LICENSE"
+        ],
+        "dependencies": {
+                "my-package": "0.0.0"
+        }
+}
