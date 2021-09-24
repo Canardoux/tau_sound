@@ -24,7 +24,7 @@ It has been extracted to be isolated from Flutter and can be used with other fra
                        DESC
 
   s.homepage         = 'https://github.com/dooboolab/flutter_sound'
-  s.license          = { :type => 'MPL2', :file => 'LICENSE' }
+  s.license          = { :type => 'GPL2', :file => 'LICENSE' }
   s.author           = { 'larpoux' => 'larpoux@gmail.com' }
   s.source           = { :git => 'https://github.com/canardoux/tau10.git', :tag => '' + s.version.to_s }
 
