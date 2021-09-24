@@ -26,6 +26,7 @@ import 'demo_media_path.dart';
 /// Widget containing the set of drop downs used in the UI
 /// Media
 /// Codec
+@deprecated
 class Dropdowns extends StatefulWidget {
   final void Function(Codec?) _onCodecChanged;
 
@@ -40,6 +41,7 @@ class Dropdowns extends StatefulWidget {
   _DropdownsState createState() => _DropdownsState();
 }
 
+@deprecated
 class _DropdownsState extends State<Dropdowns> {
   _DropdownsState();
 

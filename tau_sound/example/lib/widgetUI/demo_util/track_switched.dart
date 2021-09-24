@@ -22,6 +22,7 @@ import 'demo_player_state.dart';
 
 /// UI widget from the TrackPlayer specific settings
 /// Allow Tracks and Hush Others
+@deprecated
 class TrackSwitch extends StatefulWidget {
   final void Function(bool useOSUI) _switchPlayer;
 
@@ -40,6 +41,7 @@ class TrackSwitch extends StatefulWidget {
   _TrackSwitchState createState() => _TrackSwitchState();
 }
 
+@deprecated
 class _TrackSwitchState extends State<TrackSwitch> {
   _TrackSwitchState();
 

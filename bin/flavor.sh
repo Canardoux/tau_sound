@@ -60,11 +60,11 @@ FULL)
 
 		mv ios/tau_sound_lite.podspec 	ios/tau_sound.podspec 2>/dev/null
 # ---
-		gsed -i  "s/^ *s.name *=* 'tau_sound_lite'$/s.name = 'tau_sound'/"  						ios/tau_sound.podspec 2>/dev/null
+		gsed -i  "s/^ *s.name *=* 'tau_sound_lite'$/s.name = 'tau_sound'/"  							ios/tau_sound.podspec 2>/dev/null
                 gsed -i  "s/^ *# *s.dependency *'mobile-ffmpeg-/  s.dependency 'mobile-ffmpeg-/"   					ios/tau_sound.podspec 2>/dev/null
 # ---
 
-		gsed -i  "s/^ *#define *[A-Z]*_FLAVOR/#define FULL_FLAVOR/"   								ios/Classes/FlutterSound.h
+		gsed -i  "s/^ *#define *[A-Z]*_FLAVOR/#define FULL_FLAVOR/"   								ios/Classes/TauSound.h
                 gsed -i  "s/^ *#define *[A-Z]*_FLAVOR/#define FULL_FLAVOR/"   								ios/Classes/FlutterSoundFFmpeg.h
 
                 for f in $(find . -name '*.dart' ); do process_dart_file $f FULL $f; done
@@ -72,8 +72,8 @@ FULL)
 		gsed -i  "/ext.flutterFFmpegPackage *= *'audio'$/d"   									android/build.gradle
 		gsed -i "1iext.flutterFFmpegPackage = 'audio'" 										android/build.gradle
 
- 		gsed -i  "s/^[ $'\t']*public static *final *boolean *FULL_FLAVOR *= *false;$/    public static final boolean FULL_FLAVOR = true;/"  android/src/main/java/com/dooboolab/fluttersound/FlutterSound.java
-		gsed -i  "s/^[ $'\t']*if *( *FULL_FLAVOR *) *;\/\/\ *{/        if (FULL_FLAVOR) \{/"  					android/src/main/java/com/dooboolab/fluttersound/FlutterSound.java
+ 		gsed -i  "s/^[ $'\t']*public static *final *boolean *FULL_FLAVOR *= *false;$/    public static final boolean FULL_FLAVOR = true;/"  	android/src/main/java/xyz/canardoux/tausound/TauSound.java
+		gsed -i  "s/^[ $'\t']*if *( *FULL_FLAVOR *) *;\/\/\ *{/        if (FULL_FLAVOR) \{/"  							android/src/main/java/xyz/canardoux/tausound/TauSound.java
 
   cd ..
 	;;
@@ -87,25 +87,25 @@ LITE)
 		gsed -i  's/^const bool _hasFFmpeg = true;$/const bool _hasFFmpeg = false;/'  					lib/public/util/tau_helper.dart
 		gsed -i  "s/^import 'package:flutter_ffmpeg\/flutter_ffmpeg.dart';$/import 'dummy_ffmpeg.dart';/" 		lib/public/util/tau_helper.dart
 
-		gsed -i  's/^name: tau_sound$/name: tau_sound_lite/' 							pubspec.yaml
-		gsed -i  's/^\( *\)tau_sound:/\1tau_sound_lite:/' 							example/pubspec.yaml
+		gsed -i  's/^name: tau_sound$/name: tau_sound_lite/' 								pubspec.yaml
+		gsed -i  's/^\( *\)tau_sound:/\1tau_sound_lite:/' 								example/pubspec.yaml
 
 		mv ios/tau_sound.podspec ios/tau_sound_lite.podspec 2>/dev/null
 # ---
-		gsed -i  "s/^ *s.name *=* 'tau_sound'$/s.name = 'tau_sound_lite'/"  					ios/tau_sound_lite.podspec 2>/dev/null
+		gsed -i  "s/^ *s.name *=* 'tau_sound'$/s.name = 'tau_sound_lite'/"  						ios/tau_sound_lite.podspec 2>/dev/null
                 gsed -i  "s/^ *#* s.dependency *'mobile-ffmpeg-/  # s.dependency 'mobile-ffmpeg-/"   				ios/tau_sound_lite.podspec 2>/dev/null
 # ---
 
-                gsed -i  "s/^ *#define *[A-Z]*_FLAVOR/#define LITE_FLAVOR/"   							ios/Classes/FlutterSound.h
+                gsed -i  "s/^ *#define *[A-Z]*_FLAVOR/#define LITE_FLAVOR/"   							ios/Classes/TauSound.h
                 gsed -i  "s/^ *#define *[A-Z]*_FLAVOR/#define LITE_FLAVOR/"   							ios/Classes/FlutterSoundFFmpeg.h
 
                 for f in $(find . -name '*.dart' ); do process_dart_file $f LITE $f; done
 
-		gsed -i  "/ext.flutterFFmpegPackage *= *'audio'$/d"   android/build.gradle
-		gsed -i "1i//ext.flutterFFmpegPackage = 'audio'" android/build.gradle
+		gsed -i  "/ext.flutterFFmpegPackage *= *'audio'$/d"   								android/build.gradle
+		gsed -i "1i//ext.flutterFFmpegPackage = 'audio'" 								android/build.gradle
 
-		gsed -i  "s/^[ $'\t']*public static *final *boolean *FULL_FLAVOR *= *true;$/    public static final boolean FULL_FLAVOR = false;/"  android/src/main/java/com/dooboolab/fluttersound/FlutterSound.java
-		gsed -i  "s/^[ $'\t']*if *( *FULL_FLAVOR *) *{/        if (FULL_FLAVOR) ;\/\/\{/"  				android/src/main/java/com/dooboolab/fluttersound/FlutterSound.java
+		gsed -i  "s/^[ $'\t']*public static *final *boolean *FULL_FLAVOR *= *true;$/    public static final boolean FULL_FLAVOR = false;/"  	android/src/main/java/xyz/canardoux/tausound/TauSound.java
+		gsed -i  "s/^[ $'\t']*if *( *FULL_FLAVOR *) *{/        if (FULL_FLAVOR) ;\/\/\{/"  							android/src/main/java/xyz/canardoux/tausound/TauSound.java
   cd ..
 	;;
 

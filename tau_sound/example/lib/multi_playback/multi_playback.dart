@@ -162,19 +162,17 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   // -------  Player2 play a AAC file -----------------------
 
   void play2() async {
-    if (buffer2 != null) {
-      //await _mPlayer2!.setSubscriptionDuration(Duration(milliseconds: 10));
-      //_addListener2();
-      await _mPlayer2!.play(
-          from: InputBuffer(buffer2, codec: Aac(AudioFormat.adts)),
-          to: DefaultOutputDevice(),
-          onProgress: _onProgress2,
-          interval: Duration(milliseconds: 10),
-          whenFinished: () {
-            setState(() {});
-          });
-      setState(() {});
-    }
+    //await _mPlayer2!.setSubscriptionDuration(Duration(milliseconds: 10));
+    //_addListener2();
+    await _mPlayer2!.play(
+        from: InputBuffer(buffer2, codec: Aac(AudioFormat.adts)),
+        to: DefaultOutputDevice(),
+        onProgress: _onProgress2,
+        interval: Duration(milliseconds: 10),
+        whenFinished: () {
+          setState(() {});
+        });
+    setState(() {});
   }
 
   void cancelPlayerSubscriptions2() {
@@ -209,19 +207,17 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   // -------  Player3 play a MP4 file -----------------------
 
   void play3() async {
-    if (buffer3 != null) {
-      //await _mPlayer3!.setSubscriptionDuration(Duration(milliseconds: 10));
-      //_addListener3();
-      await _mPlayer3!.play(
-          from: InputBuffer(buffer3, codec: Aac(AudioFormat.mp4)),
-          to: DefaultOutputDevice(),
-          onProgress: _onProgress3,
-          interval: Duration(milliseconds: 10),
-          whenFinished: () {
-            setState(() {});
-          });
-      setState(() {});
-    }
+    //await _mPlayer3!.setSubscriptionDuration(Duration(milliseconds: 10));
+    //_addListener3();
+    await _mPlayer3!.play(
+        from: InputBuffer(buffer3, codec: Aac(AudioFormat.mp4)),
+        to: DefaultOutputDevice(),
+        onProgress: _onProgress3,
+        interval: Duration(milliseconds: 10),
+        whenFinished: () {
+          setState(() {});
+        });
+    setState(() {});
   }
 
   void cancelPlayerSubscriptions3() {
@@ -301,7 +297,7 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   //}
 
   Fn? getPlaybackFn2() {
-    if (!_mPlayer2IsInited || buffer2 == null) {
+    if (!_mPlayer2IsInited) {
       return null;
     }
     return _mPlayer2!.isStopped
@@ -312,7 +308,7 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   }
 
   Fn? getPauseResumeFn2() {
-    if (!_mPlayer2IsInited || _mPlayer2!.isStopped || buffer2 == null) {
+    if (!_mPlayer2IsInited || _mPlayer2!.isStopped) {
       return null;
     }
     return _mPlayer2!.isPaused ? resume2 : pause2;
@@ -332,7 +328,7 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   }
 
   Fn? getPlaybackFn3() {
-    if (!_mPlayer3IsInited || buffer3 == null) {
+    if (!_mPlayer3IsInited) {
       return null;
     }
     return _mPlayer3!.isStopped
@@ -343,7 +339,7 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   }
 
   Fn? getPauseResumeFn3() {
-    if (!_mPlayer3IsInited || _mPlayer3!.isStopped || buffer3 == null) {
+    if (!_mPlayer3IsInited || _mPlayer3!.isStopped) {
       return null;
     }
     return _mPlayer3!.isPaused ? resume3 : pause3;

@@ -26,6 +26,7 @@ import 'demo_active_codec.dart';
 import 'demo_media_path.dart';
 
 /// Tracks the Recoder UI's state.
+@deprecated
 class UtilRecorder {
   static final UtilRecorder _self = UtilRecorder._internal();
 

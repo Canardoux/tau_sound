@@ -85,7 +85,7 @@ class _LivePlaybackWithBackPressureState
 
   void play() async {
     assert(_mPlayerIsInited && _mPlayer!.isStopped);
-    StreamController<TauFood> totoController = StreamController();
+    var totoController = StreamController<TauFood>();
     InputNode input = InputStream(totoController.stream,
         codec: Pcm(
           AudioFormat.raw,

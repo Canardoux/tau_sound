@@ -35,6 +35,7 @@ final String albumArtPath =
     'https://file-examples-com.github.io/uploads/2017/10/file_example_PNG_500kB.png';
 
 ///
+@deprecated
 class RemotePlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -31,11 +31,13 @@ import 'demo_util/demo3_body.dart';
  */
 
 /// Example app.
+@deprecated
 class WidgetUIDemo extends StatefulWidget {
   @override
   _WidgetUIDemoState createState() => _WidgetUIDemoState();
 }
 
+@deprecated
 class _WidgetUIDemoState extends State<WidgetUIDemo> {
   @override
   Widget build(BuildContext context) {

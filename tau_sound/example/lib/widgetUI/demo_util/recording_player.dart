@@ -21,7 +21,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 
 //import 'util/log.dart';
 import 'demo_active_codec.dart';
@@ -29,6 +29,7 @@ import 'demo_common.dart';
 import 'demo_media_path.dart';
 
 ///
+@deprecated
 class RecordingPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

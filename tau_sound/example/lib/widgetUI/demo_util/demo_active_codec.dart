@@ -19,6 +19,7 @@
 import 'package:tau_sound/tau_sound.dart';
 
 /// Factory used to track what codec is currently selected.
+@deprecated
 class ActiveCodec {
   static final ActiveCodec _self = ActiveCodec._internal();
 

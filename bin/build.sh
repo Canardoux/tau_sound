@@ -111,8 +111,6 @@ npm publish .
 cd ..
  
 cd tau_sound
-#flutter clean
-#flutter pub get
 flutter pub publish
 if [ $? -ne 0 ]; then
     echo "Error"
@@ -121,10 +119,7 @@ fi
 cd ..
 
 bin/flavor.sh LITE
-
-cd flutter_sound
-#flutter clean
-#flutter pub get
+cd tau_sound
 flutter pub publish
 if [ $? -ne 0 ]; then
     echo "Error"
@@ -136,36 +131,36 @@ bin/flavor.sh FULL
 
 
 
-cd flutter_sound
+cd tau_sound
 flutter analyze lib
 if [ $? -ne 0 ]; then
     echo "Error"
     #exit -1
 fi
-dartdoc lib
-if [ $? -ne 0 ]; then
-    echo "Error"
-    #exit -1
-fi
-rm -rf doc
+#dartdoc lib
+#if [ $? -ne 0 ]; then
+#    echo "Error"
+#    #exit -1
+#fi
+#rm -rf doc
 cd example
 flutter analyze lib
 if [ $? -ne 0 ]; then
     echo "Error"
     #exit -1
 fi
-dartdoc lib
-if [ $? -ne 0 ]; then
-    echo "Error"
+#dartdoc lib
+#if [ $? -ne 0 ]; then
+#    echo "Error"
     #exit -1
-fi
-rm -rf doc
+#fi
+#rm -rf doc
 cd ../..
 
 
 
 
-cd flutter_sound/example/ios
+cd tau_sound/example/ios
 pod cache clean --all
 rm Podfile.lock
 rm -rf .symlinks/

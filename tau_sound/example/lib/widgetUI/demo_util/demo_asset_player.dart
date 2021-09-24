@@ -45,6 +45,7 @@ import 'demo_active_codec.dart';
 import 'demo_common.dart';
 
 ///
+@deprecated
 class AssetPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

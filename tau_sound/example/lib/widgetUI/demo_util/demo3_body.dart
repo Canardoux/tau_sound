@@ -33,6 +33,7 @@ import 'recorder_state.dart';
 import 'remote_player.dart';
 
 ///
+@deprecated
 class MainBody extends StatefulWidget {
   ///
   const MainBody({
@@ -43,6 +44,7 @@ class MainBody extends StatefulWidget {
   _MainBodyState createState() => _MainBodyState();
 }
 
+@deprecated
 class _MainBodyState extends State<MainBody> {
   bool initialized = false;
 
@@ -158,6 +160,7 @@ class _MainBodyState extends State<MainBody> {
 }
 
 ///
+@deprecated
 class Left extends StatelessWidget {
   ///
   final String label;

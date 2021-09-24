@@ -19,6 +19,7 @@
 import 'dart:async';
 
 /// Used to track the players state.
+@deprecated
 class PlayerState {
   static final PlayerState _self = PlayerState._internal();
 

@@ -21,6 +21,7 @@ import 'package:tau_sound/tau_sound.dart';
 import 'demo_common.dart';
 
 /// Paths for example media files.
+@deprecated
 class MediaPath {
   static final MediaPath _self = MediaPath._internal();
 

@@ -564,7 +564,7 @@ class _MyAppState extends State<Demo> {
         playerModule.logger.d(albumArtFile);
       } else {}
 
-      TauTrack track = TauTrack(
+      var track = TauTrack(
           title: 'This is a record',
           author: 'from flutter_sound',
           albumArtFile: albumArtFile,

@@ -43,6 +43,7 @@ enum MediaStorage {
 }
 
 /// get the duration for the media with the given codec.
+@deprecated
 Future<Duration?>? getDuration(Codec? codec) async {
   Future<Duration?>? duration;
   switch (MediaPath().media) {

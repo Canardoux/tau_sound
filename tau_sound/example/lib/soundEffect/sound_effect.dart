@@ -32,7 +32,6 @@ import 'package:flutter/services.dart' show rootBundle;
  */
 
 const int _tSampleRate = 44100;
-const int _tNumChannels = 1;
 const _bim = 'assets/noises/bim.wav';
 const _bam = 'assets/noises/bam.wav';
 const _boum = 'assets/noises/boum.wav';
@@ -67,7 +66,7 @@ class _SoundEffectState extends State<SoundEffect> {
     boumData = TauHelper().waveToPCMBuffer(
       inputBuffer: await getAssetData(_boum),
     );
-    StreamController<TauFood> totoController = StreamController<TauFood>();
+    var totoController = StreamController<TauFood>();
     await _mPlayer!.play(
       from: InputStream(
         totoController.stream,

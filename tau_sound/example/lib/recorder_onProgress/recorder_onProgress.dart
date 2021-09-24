@@ -93,7 +93,7 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
   void _onProgressRecorder(Duration position, double decibels) {
     setState(() {
       pos = position.inMilliseconds;
-      dbLevel = decibels as double;
+      dbLevel = decibels;
     });
   }
 

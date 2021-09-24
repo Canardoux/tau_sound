@@ -17,7 +17,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 
 import 'demo_active_codec.dart';
 import 'demo_common.dart';
@@ -26,6 +26,7 @@ import 'demo_media_path.dart';
 /// Widget containing the set of drop downs used in the UI
 /// Media
 /// Codec
+@deprecated
 class Dropdowns extends StatefulWidget {
   final void Function(Codec?) _onCodecChanged;
 
@@ -40,6 +41,7 @@ class Dropdowns extends StatefulWidget {
   _DropdownsState createState() => _DropdownsState();
 }
 
+@deprecated
 class _DropdownsState extends State<Dropdowns> {
   _DropdownsState();
 
