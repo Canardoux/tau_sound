@@ -59,7 +59,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 30
         versionCode 9
-        versionName '0.0.1-alpha-1+1'
+        versionName '0.0.1-alpha-1+2'
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"

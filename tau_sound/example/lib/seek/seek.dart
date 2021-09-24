@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -84,8 +84,8 @@ class _SeekState extends State<Seek> {
     //await _mPlayer.setSubscriptionDuration(Duration(milliseconds: 50));
     _boumData = await getAssetData(_boum);
     //_mPlayerSubscription = _mPlayer.onProgress!.listen((e) {
-      //setPos(e.position.inMilliseconds);
-      //setState(() {});
+    //setPos(e.position.inMilliseconds);
+    //setState(() {});
     //});
   }
 
@@ -98,9 +98,9 @@ class _SeekState extends State<Seek> {
     await player!.play(
         from: InputBuffer(_boumData, codec: Aac(AudioFormat.adts)),
         to: DefaultOutputDevice(),
-        onProgress: (Duration position, Duration duration){
-        setPos(position.inMilliseconds);
-        setState(() {});
+        onProgress: (Duration position, Duration duration) {
+          setPos(position.inMilliseconds);
+          setState(() {});
         },
         interval: Duration(milliseconds: 100),
         whenFinished: () {

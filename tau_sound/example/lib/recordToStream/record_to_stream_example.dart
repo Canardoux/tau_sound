@@ -20,7 +20,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -112,10 +112,15 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
       }
     });
     await _mRecorder!.record(
-      from: DefaultInputDevice(),
-      to: OutputStream(recordingDataController.sink,
-      codec: Pcm(AudioFormat.raw, sampleRate: tSampleRate, depth: Depth.int16, endianness: Endianness.littleEndian, nbChannels: NbChannels.mono),
-    ));
+        from: DefaultInputDevice(),
+        to: OutputStream(
+          recordingDataController.sink,
+          codec: Pcm(AudioFormat.raw,
+              sampleRate: tSampleRate,
+              depth: Depth.int16,
+              endianness: Endianness.littleEndian,
+              nbChannels: NbChannels.mono),
+        ));
     setState(() {});
   }
   // --------------------- (it was very simple, wasn't it ?) -------------------
@@ -145,8 +150,15 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
         _mplaybackReady &&
         _mRecorder!.isStopped &&
         _mPlayer!.isStopped);
-    await _mPlayer!.play(from: InputFile(_mPath, codec: Pcm( AudioFormat.raw, depth: Depth.int16, endianness: Endianness.littleEndian, nbChannels: NbChannels.mono,sampleRate: tSampleRate),
-                        ),
+    await _mPlayer!.play(
+        from: InputFile(
+          _mPath,
+          codec: Pcm(AudioFormat.raw,
+              depth: Depth.int16,
+              endianness: Endianness.littleEndian,
+              nbChannels: NbChannels.mono,
+              sampleRate: tSampleRate),
+        ),
         to: DefaultOutputDevice(),
         whenFinished: () {
           setState(() {});

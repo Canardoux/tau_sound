@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 
 /*
  *
@@ -99,11 +99,27 @@ class _StreamLoopState extends State<StreamLoop> {
   Future<void> record() async {
     totoStream = StreamController<TauFood>();
     await _mPlayer!.play(
-      from: InputStream(totoStream.stream, codec: Pcm(AudioFormat.raw, depth: Depth.int16, endianness: Endianness.littleEndian, nbChannels: NbChannels.mono, sampleRate: _sampleRatePlayer)),
+      from: InputStream(totoStream.stream,
+          codec: Pcm(AudioFormat.raw,
+              depth: Depth.int16,
+              endianness: Endianness.littleEndian,
+              nbChannels: NbChannels.mono,
+              sampleRate: _sampleRatePlayer)),
       to: DefaultOutputDevice(),
     );
 
-    await _mRecorder!.record(from: DefaultInputDevice(), to: OutputStream(totoStream.sink, codec: Pcm(AudioFormat.raw, nbChannels: NbChannels.mono, endianness: Endianness.littleEndian, depth: Depth.int16, sampleRate: _sampleRateRecorder, ), ) );
+    await _mRecorder!.record(
+        from: DefaultInputDevice(),
+        to: OutputStream(
+          totoStream.sink,
+          codec: Pcm(
+            AudioFormat.raw,
+            nbChannels: NbChannels.mono,
+            endianness: Endianness.littleEndian,
+            depth: Depth.int16,
+            sampleRate: _sampleRateRecorder,
+          ),
+        ));
     setState(() {});
   }
 

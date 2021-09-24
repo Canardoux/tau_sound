@@ -32,7 +32,7 @@ library ui_recorder;
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../flutter_sound.dart';
+import '../../tau_sound.dart';
 
 /// Callback fn type
 /// @nodoc
@@ -78,7 +78,7 @@ enum _RecorderState {
 /// created during a recording session via the SoundRecorderUI.
 ///
 /// @nodoc
-@deprecated
+//@deprecated
 class RecordedAudio {
   /// The length of the recording (so far)
   Duration duration = Duration.zero;

@@ -339,8 +339,6 @@ Shows how to change the loglevel during an audio session.
 ''',
   ),
 
-
-
   Example(
     title: 'StreamLoopJustAudio()',
     subTitle: 'JustAudio cohabitation',
@@ -351,8 +349,6 @@ Shows how to change the loglevel during an audio session.
     Test the StreamLoop with JustAudio cohabitation.
     ''',
   ),
-
-
 ];
 
 ///

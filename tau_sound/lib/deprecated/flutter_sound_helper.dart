@@ -32,7 +32,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'flutter_sound_ffmpeg.dart';
-import '../flutter_sound.dart';
+import '../tau_sound.dart';
 import '../public//util/wave_header.dart';
 import 'package:path_provider/path_provider.dart';
 

@@ -9,13 +9,18 @@ if [ ! -z "$VERSION" ]; then
         gsed -i  "s/^\( *version: \).*/\1$VERSION/"                                             doc/_data/sidebars/mydoc_sidebar.yml
 fi
 
-bin/web.sh
+# tau_web
+# -------
+
+cd tau_sound/example
+flutter build web
+
 
 cp privacy_policy.html doc/_site
 
 echo "Upload"
-rm -rf flutter_sound/example/build flutter_sound/build
-tar czf _toto3.tgz flutter_sound flutter_sound_web flutter_sound_platform_interface
+rm -rf tau_sound/example/build tau_sound/build
+tar czf _toto3.tgz tau_sound tau_web tau_platform_interface
 cd doc
 tar czf ../_toto.tgz *
 cd ..

@@ -28,13 +28,13 @@ import 'dart:io' show Platform;
 import 'dart:typed_data' show Uint8List;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_sound_platform_interface/flutter_sound_platform_interface.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_player_platform_interface.dart';
+import 'package:tau_platform_interface/tau_platform_interface.dart';
+import 'package:tau_platform_interface/tau_player_platform_interface.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:path_provider/path_provider.dart';
 import 'package:synchronized/synchronized.dart';
 
-import '../flutter_sound.dart';
+import '../tau_sound.dart';
 
 /// The possible states of the Player.
 enum PlayerState {
@@ -99,7 +99,7 @@ typedef TonSkip = void Function();
 /// This verb will call [stop()] if necessary.
 ///
 /// ----------------------------------------------------------------------------------------------------
-class TauPlayer implements FlutterSoundPlayerCallback {
+class TauPlayer implements TauPlayerCallback {
   //============================================ New API V9 ===================================================================
 
   /// Instanciate a new TauPlayer.
@@ -134,7 +134,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     _logger = Logger(level: aLevel);
     await _lock.synchronized(() async {
       if (_isInited) {
-        await FlutterSoundPlayerPlatform.instance.setLogLevel(
+        await TauPlayerPlatform.instance.setLogLevel(
           this,
           aLevel,
         );
@@ -453,7 +453,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     if (kIsWeb) {
       return null;
     } else if (Platform.isIOS) {
-      var s = await FlutterSoundPlayerPlatform.instance.getResourcePath(this);
+      var s = await TauPlayerPlatform.instance.getResourcePath(this);
       return s;
     } else {
       return (await getApplicationDocumentsDirectory()).path;
@@ -564,11 +564,11 @@ class TauPlayer implements FlutterSoundPlayerCallback {
                   : null;
       assert(convert != null);
       if (convert != null) {
-        result = await FlutterSoundPlayerPlatform.instance
+        result = await TauPlayerPlatform.instance
             .isDecoderSupported(this, codec: convert);
       }
     } else {
-      result = await FlutterSoundPlayerPlatform.instance
+      result = await TauPlayerPlatform.instance
           .isDecoderSupported(this, codec: codec.deprecatedCodec);
     }
     _logger.d('FS:<--- isDecoderSupported ');
@@ -586,7 +586,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     if (!_isInited) {
       throw Exception('Player is not open');
     }
-    var state = await FlutterSoundPlayerPlatform.instance.getPlayerState(this);
+    var state = await TauPlayerPlatform.instance.getPlayerState(this);
     _playerState = PlayerState.values[state];
     return _playerState;
   }
@@ -607,7 +607,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
       throw Exception('Player is not open');
     }
 
-    return FlutterSoundPlayerPlatform.instance.getProgress(this);
+    return TauPlayerPlatform.instance.getProgress(this);
   }
 
 //--------------------------------------------- Locals --------------------------------------------------------------------
@@ -748,14 +748,14 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     focus ??= _hasFocus
         ? AudioFocus.doNotRequestFocus
         : AudioFocus.requestFocusAndStopOthers;
-    FlutterSoundPlayerPlatform.instance.openSession(this);
+    TauPlayerPlatform.instance.openSession(this);
     //_setPlayerCallback();
     _onProgress = null;
     assert(_openPlayerCompleter == null);
     _openPlayerCompleter = Completer<TauPlayer>();
     completer = _openPlayerCompleter;
     try {
-      var state = await FlutterSoundPlayerPlatform.instance.openPlayer(this,
+      var state = await TauPlayerPlatform.instance.openPlayer(this,
           logLevel: _logLevel,
           focus: focus,
           audioFlags: audioFlags,
@@ -802,16 +802,14 @@ class TauPlayer implements FlutterSoundPlayerCallback {
       assert(_closePlayerCompleter == null);
       _closePlayerCompleter = Completer<void>();
       completer = _closePlayerCompleter;
-      if (keepFocus == null) {
-        keepFocus =
-            (FlutterSoundPlayerPlatform.instance.numberOfOpenSessions() > 1);
-      }
+        keepFocus ??=
+            (TauPlayerPlatform.instance.numberOfOpenSessions() > 1);
       if (!keepFocus && _hasFocus) {
         await _setAudioFocus(
             focus: AudioFocus.abandonFocus); // Abandon the focus
       }
-      await FlutterSoundPlayerPlatform.instance.closePlayer(this);
-      FlutterSoundPlayerPlatform.instance.closeSession(this);
+      await TauPlayerPlatform.instance.closePlayer(this);
+      TauPlayerPlatform.instance.closeSession(this);
     } on Exception {
       _closePlayerCompleter = null;
       rethrow;
@@ -836,7 +834,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     if (focus != AudioFocus.doNotRequestFocus) {
       _hasFocus = focus != AudioFocus.abandonFocus;
     }
-    var state = await FlutterSoundPlayerPlatform.instance.setAudioFocus(
+    var state = await TauPlayerPlatform.instance.setAudioFocus(
       this,
       focus: focus,
       category: category,
@@ -859,8 +857,8 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     bool removeUIWhenStopped = true,
   }) async {
     var uri = fromURI.uri;
-    TauCodec codec = fromURI.codec;
-    if (codec is Pcm && (codec as Pcm).audioFormat == AudioFormat.raw) {
+    var codec = fromURI.codec;
+    if (codec is Pcm && codec.audioFormat == AudioFormat.raw) {
       fromURI = await fromURI.toWave();
       uri = fromURI.uri;
       codec = fromURI.codec;
@@ -888,7 +886,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
           albumArtAsset: fromURI.track.albumArtAsset,
           albumArtUrl: fromURI.track.albumArtURL);
 
-      state = await FlutterSoundPlayerPlatform.instance.startPlayerFromTrack(
+      state = await TauPlayerPlatform.instance.startPlayerFromTrack(
         this,
         progress: Duration.zero,
         duration: Duration.zero,
@@ -900,7 +898,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
         removeUIWhenStopped: removeUIWhenStopped,
       );
     } else {
-      state = await FlutterSoundPlayerPlatform.instance.startPlayer(
+      state = await TauPlayerPlatform.instance.startPlayer(
         this,
         codec: oldCodec,
         fromURI: uri,
@@ -922,8 +920,8 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     bool removeUIWhenStopped = true,
   }) async {
     var buffer = fromBuffer.inputBuffer;
-    TauCodec codec = fromBuffer.codec;
-    if (codec is Pcm && (codec as Pcm).audioFormat == AudioFormat.raw) {
+    var codec = fromBuffer.codec;
+    if (codec is Pcm && codec.audioFormat == AudioFormat.raw) {
       fromBuffer = await fromBuffer.toWave();
       buffer = fromBuffer.inputBuffer;
       codec = fromBuffer.codec;
@@ -949,7 +947,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
           albumArtAsset: fromBuffer.track.albumArtAsset,
           albumArtUrl: fromBuffer.track.albumArtURL);
 
-      state = await FlutterSoundPlayerPlatform.instance.startPlayerFromTrack(
+      state = await TauPlayerPlatform.instance.startPlayerFromTrack(
         this,
         progress: Duration.zero,
         duration: Duration.zero,
@@ -961,7 +959,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
         removeUIWhenStopped: removeUIWhenStopped,
       );
     } else {
-      state = await FlutterSoundPlayerPlatform.instance.startPlayer(
+      state = await TauPlayerPlatform.instance.startPlayer(
         this,
         codec: oldCodec,
         fromDataBuffer: buffer,
@@ -1016,11 +1014,11 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     _logger.d('FS:---> startPlayerFromStream ');
 
     _foodStream = stream.stream;
-    _foodStreamSubscription = _foodStream!.listen((TauFood) {
-      _foodStreamSubscription!.pause(TauFood.exec(this));
+    _foodStreamSubscription = _foodStream!.listen((TauFood food) {
+      _foodStreamSubscription!.pause(food.exec(this));
     });
     var codec = stream.codec as Pcm;
-    var state = await FlutterSoundPlayerPlatform.instance.startPlayer(this,
+    var state = await TauPlayerPlatform.instance.startPlayer(this,
         codec: stream.codec.deprecatedCodec,
         fromDataBuffer: null,
         fromURI: null,
@@ -1057,7 +1055,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     OutputDevice to,
   ) async {
     _logger.d('FS:---> startPlayerFromMic ');
-    var state = await FlutterSoundPlayerPlatform.instance
+    var state = await TauPlayerPlatform.instance
         .startPlayerFromMic(this, numChannels: 1, sampleRate: 44000);
     _playerState = PlayerState.values[state];
     _logger.d('FS:<--- startPlayerFromMic ');
@@ -1103,7 +1101,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
       _startPlayerCompleter = Completer<Duration>();
       completer = _startPlayerCompleter;
 
-      var r = Duration.zero;
+      //var r = Duration.zero;
 
       // We dispatch depending on the `from` class.
       // We could have used a virtual function in InputNode,
@@ -1111,7 +1109,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
       var state = PlayerState.isStopped;
       _onProgress = onProgress;
       if (_onProgress != null) {
-        var state = await FlutterSoundPlayerPlatform.instance
+        var state = await TauPlayerPlatform.instance
             .setSubscriptionDuration(this, duration: interval);
         _playerState = PlayerState.values[state];
       }
@@ -1268,7 +1266,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     _stopPlayerCompleter = Completer<void>();
     try {
       completer = _stopPlayerCompleter;
-      var state = await FlutterSoundPlayerPlatform.instance.stopPlayer(this);
+      var state = await TauPlayerPlatform.instance.stopPlayer(this);
 
       _playerState = PlayerState.values[state];
       if (_playerState != PlayerState.isStopped) {
@@ -1298,7 +1296,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
       _pausePlayerCompleter = Completer<void>();
       completer = _pausePlayerCompleter;
       _playerState = PlayerState
-          .values[await FlutterSoundPlayerPlatform.instance.pausePlayer(this)];
+          .values[await TauPlayerPlatform.instance.pausePlayer(this)];
       //if (_playerState != PlayerState.isPaused) {
       //throw _PlayerRunningException(
       //'Player is not paused.'); // I am not sure that it is good to throw an exception here
@@ -1325,7 +1323,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     _resumePlayerCompleter = Completer<void>();
     try {
       completer = _resumePlayerCompleter;
-      var state = await FlutterSoundPlayerPlatform.instance.resumePlayer(this);
+      var state = await TauPlayerPlatform.instance.resumePlayer(this);
       _playerState = PlayerState.values[state];
       //if (_playerState != PlayerState.isPlaying) {
       //throw _PlayerRunningException(
@@ -1345,7 +1343,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     if (!_isInited) {
       throw Exception('Player is not open');
     }
-    var state = await FlutterSoundPlayerPlatform.instance.seekToPlayer(
+    var state = await TauPlayerPlatform.instance.seekToPlayer(
       this,
       duration: duration,
     );
@@ -1364,7 +1362,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
       throw RangeError('Value of volume should be between 0.0 and 1.0.');
     }
 
-    var state = await FlutterSoundPlayerPlatform.instance.setVolume(
+    var state = await TauPlayerPlatform.instance.setVolume(
       this,
       volume: volume,
     );
@@ -1382,7 +1380,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
       throw RangeError('Value of speed should be between 0.0 and n.');
     }
 
-    var state = await FlutterSoundPlayerPlatform.instance.setSpeed(
+    var state = await TauPlayerPlatform.instance.setSpeed(
       this,
       speed: speed,
     );
@@ -1411,7 +1409,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
 
     var trackDico = track.toMap();
     defaultPauseResume ??= (onPaused == null);
-    var state = await FlutterSoundPlayerPlatform.instance.nowPlaying(
+    var state = await TauPlayerPlatform.instance.nowPlaying(
       this,
       track: trackDico,
       duration: duration,
@@ -1435,7 +1433,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     if (!_isInited) {
       throw Exception('Player is not open');
     }
-    var state = await FlutterSoundPlayerPlatform.instance
+    var state = await TauPlayerPlatform.instance
         .setUIProgressBar(this, duration: duration, progress: progress);
     _playerState = PlayerState.values[state];
     _logger.d('FS:<--- setUIProgressBar ');
@@ -1464,7 +1462,7 @@ class TauPlayer implements FlutterSoundPlayerCallback {
     }
     _needSomeFoodCompleter = Completer<int>();
     try {
-      var ln = await (FlutterSoundPlayerPlatform.instance.feed(
+      var ln = await (TauPlayerPlatform.instance.feed(
         this,
         data: data,
       ));

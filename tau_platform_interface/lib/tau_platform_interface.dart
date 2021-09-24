@@ -152,7 +152,7 @@ enum AudioFocus {
 }
 
 
-@deprecated
+//@deprecated
 enum AudioDevice {
   speaker,
   // allowHeadset and allowEarPiece are the same behaviour on both Android and iOS

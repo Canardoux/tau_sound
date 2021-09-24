@@ -17,11 +17,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import 'dart:typed_data' show Uint8List;
-import 'package:flutter_sound_platform_interface/flutter_sound_platform_interface.dart';
-import 'package:logger/logger.dart' show Level, Logger;
-import 'flutter_sound_player.dart';
-import 'flutter_sound_recorder.dart';
 
 /// -----------------------------------------------------------------
 /// This header file is deprecated.

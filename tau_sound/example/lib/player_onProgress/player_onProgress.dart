@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -63,7 +63,7 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
   @override
   void dispose() {
     stopPlayer(_mPlayer);
-     // Be careful : you must `close` the audio session when you have finished with it.
+    // Be careful : you must `close` the audio session when you have finished with it.
     _mPlayer.close();
 
     super.dispose();
@@ -82,7 +82,8 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
   // -------  Here is the code to playback  -----------------------
 
   void play(TauPlayer? player) async {
-    await player!.play( from: InputBuffer(_boumData, codec: Aac(AudioFormat.adts)),
+    await player!.play(
+        from: InputBuffer(_boumData, codec: Aac(AudioFormat.adts)),
         to: DefaultOutputDevice(),
         onProgress: (Duration position, Duration duration) {
           setState(() {
@@ -100,7 +101,6 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
     await player.stop();
   }
 
-
   // --------------------- UI -------------------
 
   Fn? getPlaybackFn(TauPlayer? player) {
@@ -109,7 +109,9 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
     }
     return player!.isStopped
         ? () {
-            play(player,);
+            play(
+              player,
+            );
           }
         : () {
             stopPlayer(player).then((value) => setState(() {}));
@@ -158,10 +160,8 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
             max: 2000.0,
             onChanged: (double d) {
               _interval = d;
-              setState(() {
-
-              });
-              },
+              setState(() {});
+            },
             //divisions: 100
           ),
         ]),

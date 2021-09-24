@@ -20,8 +20,8 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
+import 'package:tau_sound/tau_sound.dart';
+import 'package:tau_platform_interface/tau_recorder_platform_interface.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /*
@@ -115,7 +115,8 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
 
   void record() {
     _mRecorder!
-        .record(from: DefaultInputDevice(), to: OutputFile(_mPath, codec: _codec))
+        .record(
+            from: DefaultInputDevice(), to: OutputFile(_mPath, codec: _codec))
         .then((value) {
       setState(() {});
     });
@@ -135,9 +136,11 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
         _mplaybackReady &&
         _mRecorder!.isStopped &&
         _mPlayer!.isStopped);
-    _mPlayer!.play( from: InputFile(_mPath),
-        to: DefaultOutputDevice(),
-        whenFinished: () {
+    _mPlayer!
+        .play(
+            from: InputFile(_mPath),
+            to: DefaultOutputDevice(),
+            whenFinished: () {
               setState(() {});
             })
         .then((value) {

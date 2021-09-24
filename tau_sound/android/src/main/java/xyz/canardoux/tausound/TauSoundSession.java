@@ -18,7 +18,7 @@
  */
 
 
-package com.dooboolab.fluttersound;
+package xyz.canardoux.tausound;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothProfile;
@@ -38,7 +38,7 @@ import io.flutter.plugin.common.MethodChannel;
 
 
 
-public abstract class FlutterSoundSession
+public abstract class TauSoundSession
 {
 	int slotNo;
 

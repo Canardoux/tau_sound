@@ -24,15 +24,15 @@ import 'dart:io' show Platform;
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_sound_platform_interface/flutter_sound_platform_interface.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
+import 'package:tau_platform_interface/tau_platform_interface.dart';
+import 'package:tau_platform_interface/tau_recorder_platform_interface.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart' show getTemporaryDirectory;
 import 'package:path_provider/path_provider.dart';
 import 'package:synchronized/synchronized.dart';
 
-import '../flutter_sound.dart';
+import '../tau_sound.dart';
 
 /// -----------------------------------------------------------------
 /// This module file is deprecated.
@@ -64,7 +64,7 @@ import '../flutter_sound.dart';
 /// ----------------------------------------------------------------------------------------------------
 /// @nodoc
 @deprecated
-class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
+class FlutterSoundRecorder implements TauRecorderCallback {
   /// The FlutterSoundRecorder Logger
   Logger _logger = Logger(level: Level.debug);
   Level _logLevel = Level.debug;
@@ -81,7 +81,7 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
     _logger = Logger(level: aLevel);
     await _lock.synchronized(() async {
       if (_isInited != Initialized.notInitialized) {
-        await FlutterSoundRecorderPlatform.instance.setLogLevel(
+        await TauRecorderPlatform.instance.setLogLevel(
           this,
           aLevel,
         );
@@ -284,6 +284,7 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
   /// Callback from the &tau; Core. Must not be called by the App
   /// @nodoc
   @deprecated
+  @override
   void stopRecorderCompleted(int? state, bool? success, String? url) {
     _logger.d('---> stopRecorderCompleted: $success');
     assert(state != null);
@@ -460,8 +461,8 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
       //await FlutterSoundRecorderPlatform.instance.resetPlugin(this);
       //}
 
-      FlutterSoundRecorderPlatform.instance.openSession(this);
-      await FlutterSoundRecorderPlatform.instance.openRecorder(
+      TauRecorderPlatform.instance.openSession(this);
+      await TauRecorderPlatform.instance.openRecorder(
         this,
         logLevel: _logLevel,
         focus: focus,
@@ -528,8 +529,8 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
     try {
       completer = _closeRecorderCompleter;
 
-      await FlutterSoundRecorderPlatform.instance.closeRecorder(this);
-      FlutterSoundRecorderPlatform.instance.closeSession(this);
+      await TauRecorderPlatform.instance.closeRecorder(this);
+      TauRecorderPlatform.instance.closeSession(this);
       //_isInited = Initialized.notInitialized;
     } on Exception {
       _closeRecorderCompleter = null;
@@ -568,10 +569,10 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
       //if (!await isFFmpegSupported( ))
       //result = false;
       //else
-      result = await FlutterSoundRecorderPlatform.instance
+      result = await TauRecorderPlatform.instance
           .isEncoderSupported(this, codec: Codec.opusCAF);
     } else {
-      result = await FlutterSoundRecorderPlatform.instance
+      result = await TauRecorderPlatform.instance
           .isEncoderSupported(this, codec: codec);
     }
     return result;
@@ -599,7 +600,7 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
     if (_isInited != Initialized.fullyInitialized) {
       throw Exception('Recorder is not open');
     }
-    await FlutterSoundRecorderPlatform.instance
+    await TauRecorderPlatform.instance
         .setSubscriptionDuration(this, duration: duration);
     _logger.d('FS:<--- setSubscriptionDuration ');
   }
@@ -767,7 +768,7 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
     _startRecorderCompleter = Completer<void>();
     completer = _startRecorderCompleter;
     try {
-      await FlutterSoundRecorderPlatform.instance.startRecorder(this,
+      await TauRecorderPlatform.instance.startRecorder(this,
           path: toFile,
           sampleRate: sampleRate,
           numChannels: numChannels,
@@ -794,7 +795,7 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
     _stopRecorderCompleter = Completer<String>();
     var completer = _stopRecorderCompleter!;
     try {
-      await FlutterSoundRecorderPlatform.instance.stopRecorder(this);
+      await TauRecorderPlatform.instance.stopRecorder(this);
       _userStreamSink = null;
 
       _recorderState = RecorderState.isStopped;
@@ -932,7 +933,7 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
       throw Exception('Recorder is not open');
     }
 
-    await FlutterSoundRecorderPlatform.instance.setAudioFocus(
+    await TauRecorderPlatform.instance.setAudioFocus(
       this,
       focus: focus,
       category: category,
@@ -976,7 +977,7 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
       }
       _pauseRecorderCompleter = Completer<void>();
       completer = _pauseRecorderCompleter;
-      await FlutterSoundRecorderPlatform.instance.pauseRecorder(this);
+      await TauRecorderPlatform.instance.pauseRecorder(this);
     } on Exception {
       _pauseRecorderCompleter = null;
       rethrow;
@@ -1019,7 +1020,7 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
       }
       _resumeRecorderCompleter = Completer<void>();
       completer = _resumeRecorderCompleter;
-      await FlutterSoundRecorderPlatform.instance.resumeRecorder(this);
+      await TauRecorderPlatform.instance.resumeRecorder(this);
     } on Exception {
       _resumeRecorderCompleter = null;
       rethrow;
@@ -1050,7 +1051,7 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
     if (_isInited != Initialized.fullyInitialized) {
       throw Exception('Recorder is not open');
     }
-    var b = await FlutterSoundRecorderPlatform.instance
+    var b = await TauRecorderPlatform.instance
         .deleteRecord(this, fileName);
     _logger.d('FS:<--- deleteRecord');
     return b;
@@ -1071,7 +1072,7 @@ class FlutterSoundRecorder implements FlutterSoundRecorderCallback {
       throw Exception('Recorder is not open');
     }
     var url =
-        await FlutterSoundRecorderPlatform.instance.getRecordURL(this, path);
+        await TauRecorderPlatform.instance.getRecordURL(this, path);
     return url;
   }
 }

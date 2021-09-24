@@ -15,9 +15,8 @@ bin/setver.sh $VERSION
 
 
 cd tau_platform_interface/    
-#flutter clean
-#flutter pub get
-flutter pub publish
+flutter clean
+flutter pub get
 if [ $? -ne 0 ]; then
     echo "Error"
     exit -1
@@ -38,7 +37,7 @@ cd ..
 # Check and re-format sources
 # ---------------------------
 
-cd flutter_sound
+cd tau_sound
 dartfmt -w lib
 if [ $? -ne 0 ]; then
     echo "Error"

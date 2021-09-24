@@ -24,8 +24,8 @@ import 'dart:async';
 import 'dart:html' as html;
 
 import 'package:meta/meta.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_platform_interface.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
+import 'package:tau_platform_interface/tau_platform_interface.dart';
+import 'package:tau_platform_interface/tau_recorder_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'dart:typed_data';
 import 'package:logger/logger.dart' show Level , Logger;
@@ -35,13 +35,13 @@ import 'package:js/js.dart';
 //========================================  JS  ===============================================================
 
 @JS('newRecorderInstance')
-external FlutterSoundRecorder newRecorderInstance(FlutterSoundRecorderCallback callBack, List<Function> callbackTable);
+external TauRecorder newRecorderInstance(TauRecorderCallback callBack, List<Function> callbackTable);
 
-@JS('FlutterSoundRecorder')
-class FlutterSoundRecorder
+@JS('TauRecorder')
+class TauRecorder
 {
         @JS('newInstance')
-        external static FlutterSoundRecorder newInstance(FlutterSoundRecorderCallback callBack, List<Function> callbackTable);
+        external static TauRecorder newInstance(TauRecorderCallback callBack, List<Function> callbackTable);
 
         @JS('initializeFlautoRecorder')
         external void initializeFlautoRecorder( int focus, int category, int mode, int? audioFlags, int device);
@@ -81,37 +81,37 @@ class FlutterSoundRecorder
 
 List<Function> callbackTable =
 [
-        allowInterop( (FlutterSoundRecorderCallback cb,  int duration, double dbPeakLevel)               { cb.updateRecorderProgress(duration: duration, dbPeakLevel: dbPeakLevel);} ),
-        allowInterop( (FlutterSoundRecorderCallback cb, {Uint8List? data})                               { cb.recordingData(data: data);} ),
-        allowInterop( (FlutterSoundRecorderCallback cb,  int state, bool success)                        { cb.startRecorderCompleted(state, success);} ),
-        allowInterop( (FlutterSoundRecorderCallback cb,  int state, bool success)                        { cb.pauseRecorderCompleted(state, success);} ),
-        allowInterop( (FlutterSoundRecorderCallback cb,  int state, bool success)                        { cb.resumeRecorderCompleted(state, success);} ),
-        allowInterop( (FlutterSoundRecorderCallback cb,  int state, bool success, String url)            { cb.stopRecorderCompleted(state, success, url);} ),
-        allowInterop( (FlutterSoundRecorderCallback cb,  int state, bool success)                        { cb.openRecorderCompleted(state, success);} ),
-        allowInterop( (FlutterSoundRecorderCallback cb,  int state, bool success)                        { cb.closeRecorderCompleted(state, success);} ),
-        allowInterop( (FlutterSoundRecorderCallback cb,  int level, String msg)                          { cb.log(Level.values[level], msg);} ),
+        allowInterop( (TauRecorderCallback cb,  int duration, double dbPeakLevel)               { cb.updateRecorderProgress(duration: duration, dbPeakLevel: dbPeakLevel);} ),
+        allowInterop( (TauRecorderCallback cb, {Uint8List? data})                               { cb.recordingData(data: data);} ),
+        allowInterop( (TauRecorderCallback cb,  int state, bool success)                        { cb.startRecorderCompleted(state, success);} ),
+        allowInterop( (TauRecorderCallback cb,  int state, bool success)                        { cb.pauseRecorderCompleted(state, success);} ),
+        allowInterop( (TauRecorderCallback cb,  int state, bool success)                        { cb.resumeRecorderCompleted(state, success);} ),
+        allowInterop( (TauRecorderCallback cb,  int state, bool success, String url)            { cb.stopRecorderCompleted(state, success, url);} ),
+        allowInterop( (TauRecorderCallback cb,  int state, bool success)                        { cb.openRecorderCompleted(state, success);} ),
+        allowInterop( (TauRecorderCallback cb,  int state, bool success)                        { cb.closeRecorderCompleted(state, success);} ),
+        allowInterop( (TauRecorderCallback cb,  int level, String msg)                          { cb.log(Level.values[level], msg);} ),
 ];
 
 
 //============================================================================================================================
 
-/// The web implementation of [FlutterSoundRecorderPlatform].
+/// The web implementation of [TauRecorderPlatform].
 ///
-/// This class implements the `package:FlutterSoundPlayerPlatform` functionality for the web.
-class FlutterSoundRecorderWeb extends FlutterSoundRecorderPlatform //implements FlutterSoundRecorderCallback
+/// This class implements the `package:TauPlayerPlatform` functionality for the web.
+class TauRecorderWeb extends TauRecorderPlatform //implements TauRecorderCallback
 {
 
-        /// Registers this class as the default instance of [FlutterSoundRecorderPlatform].
+        /// Registers this class as the default instance of [TauRecorderPlatform].
         static void registerWith(Registrar registrar)
         {
-                FlutterSoundRecorderPlatform.instance = FlutterSoundRecorderWeb();
+                TauRecorderPlatform.instance = TauRecorderWeb();
         }
 
 
 
 
-        List<FlutterSoundRecorder?> _slots = [];
-        FlutterSoundRecorder? getWebSession(FlutterSoundRecorderCallback callback)
+        List<TauRecorder?> _slots = [];
+        TauRecorder? getWebSession(TauRecorderCallback callback)
         {
                 return _slots[findSession(callback)];
         }
@@ -120,7 +120,7 @@ class FlutterSoundRecorderWeb extends FlutterSoundRecorderPlatform //implements 
 //================================================================================================================
 
         @override
-        Future<void>?   resetPlugin(FlutterSoundRecorderCallback callback,) async
+        Future<void>?   resetPlugin(TauRecorderCallback callback,) async
         {
                 callback.log(Level.debug, '---> resetPlugin');
                 for (int i = 0; i < _slots.length; ++i)
@@ -134,7 +134,7 @@ class FlutterSoundRecorderWeb extends FlutterSoundRecorderPlatform //implements 
         }
 
         @override
-        Future<void> openRecorder(FlutterSoundRecorderCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device}) async
+        Future<void> openRecorder(TauRecorderCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device}) async
         {
                 int slotno = findSession(callback);
                 if (slotno < _slots.length)
@@ -152,7 +152,7 @@ class FlutterSoundRecorderWeb extends FlutterSoundRecorderPlatform //implements 
 
 
         @override
-        Future<void> closeRecorder(FlutterSoundRecorderCallback callback, ) async
+        Future<void> closeRecorder(TauRecorderCallback callback, ) async
         {
                 int slotno = findSession(callback);
                 _slots[slotno]!.releaseFlautoRecorder();
@@ -160,25 +160,25 @@ class FlutterSoundRecorderWeb extends FlutterSoundRecorderPlatform //implements 
         }
 
         @override
-        Future<void> setAudioFocus(FlutterSoundRecorderCallback callback, {AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device,} ) async
+        Future<void> setAudioFocus(TauRecorderCallback callback, {AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device,} ) async
         {
                 getWebSession(callback)!.setAudioFocus(focus!.index, category!.index, mode!.index, audioFlags, device!.index);
         }
 
         @override
-        Future<bool> isEncoderSupported(FlutterSoundRecorderCallback callback, {required Codec codec,}) async
+        Future<bool> isEncoderSupported(TauRecorderCallback callback, {required Codec codec,}) async
         {
                 return getWebSession(callback)!.isEncoderSupported(codec.index);
         }
 
         @override
-        Future<void> setSubscriptionDuration(FlutterSoundRecorderCallback callback, {Duration? duration,}) async
+        Future<void> setSubscriptionDuration(TauRecorderCallback callback, {Duration? duration,}) async
         {
                 getWebSession(callback)!.setSubscriptionDuration(duration!.inMilliseconds);
         }
 
         @override
-        Future<void> startRecorder(FlutterSoundRecorderCallback callback,
+        Future<void> startRecorder(TauRecorderCallback callback,
             {
                     String? path,
                     int? sampleRate,
@@ -193,9 +193,9 @@ class FlutterSoundRecorderWeb extends FlutterSoundRecorderPlatform //implements 
         }
 
         @override
-        Future<void> stopRecorder(FlutterSoundRecorderCallback callback,  ) async
+        Future<void> stopRecorder(TauRecorderCallback callback,  ) async
         {
-                FlutterSoundRecorder? session = getWebSession(callback);
+                TauRecorder? session = getWebSession(callback);
                 if (session != null)
                         session.stopRecorder();
                 else
@@ -203,25 +203,25 @@ class FlutterSoundRecorderWeb extends FlutterSoundRecorderPlatform //implements 
         }
 
         @override
-        Future<void> pauseRecorder(FlutterSoundRecorderCallback callback,  ) async
+        Future<void> pauseRecorder(TauRecorderCallback callback,  ) async
         {
                 getWebSession(callback)!.pauseRecorder();
         }
 
         @override
-        Future<void> resumeRecorder(FlutterSoundRecorderCallback callback, ) async
+        Future<void> resumeRecorder(TauRecorderCallback callback, ) async
         {
                 getWebSession(callback)!.resumeRecorder();
         }
 
         @override
-        Future<String> getRecordURL (FlutterSoundRecorderCallback callback, String path ) async
+        Future<String> getRecordURL (TauRecorderCallback callback, String path ) async
         {
                 return  getWebSession(callback)!.getRecordURL(path);
         }
 
         @override
-        Future<bool> deleteRecord (FlutterSoundRecorderCallback callback, String path ) async
+        Future<bool> deleteRecord (TauRecorderCallback callback, String path ) async
         {
                 return getWebSession(callback)!.deleteRecord(path);
         }

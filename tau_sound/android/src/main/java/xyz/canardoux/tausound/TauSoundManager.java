@@ -18,7 +18,7 @@
  */
 
 
-package com.dooboolab.fluttersound;
+package xyz.canardoux.tausound;
 
 import java.util.ArrayList;
 import java.util.List;

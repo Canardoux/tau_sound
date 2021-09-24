@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'package:just_audio/just_audio.dart';
 
 /*
@@ -37,7 +37,6 @@ const int _sampleRatePlayer = 48000; // same speed than the recorder
 
 const String _exampleAudioFilePathMP3 =
     'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_700KB.mp3';
-
 
 ///
 typedef Fn = void Function();
@@ -106,11 +105,27 @@ class _StreamLoopJustAudioState extends State<StreamLoopJustAudio> {
   Future<void> record() async {
     totoStream = StreamController<TauFood>();
     await _mPlayer!.play(
-      from: InputStream(totoStream.stream, codec: Pcm(AudioFormat.raw, depth: Depth.int16, endianness: Endianness.littleEndian, nbChannels: NbChannels.mono, sampleRate: _sampleRatePlayer)),
+      from: InputStream(totoStream.stream,
+          codec: Pcm(AudioFormat.raw,
+              depth: Depth.int16,
+              endianness: Endianness.littleEndian,
+              nbChannels: NbChannels.mono,
+              sampleRate: _sampleRatePlayer)),
       to: DefaultOutputDevice(),
     );
 
-    await _mRecorder!.record(from: DefaultInputDevice(), to: OutputStream(totoStream.sink, codec: Pcm(AudioFormat.raw, nbChannels: NbChannels.mono, endianness: Endianness.littleEndian, depth: Depth.int16, sampleRate: _sampleRateRecorder, ), ) );
+    await _mRecorder!.record(
+        from: DefaultInputDevice(),
+        to: OutputStream(
+          totoStream.sink,
+          codec: Pcm(
+            AudioFormat.raw,
+            nbChannels: NbChannels.mono,
+            endianness: Endianness.littleEndian,
+            depth: Depth.int16,
+            sampleRate: _sampleRateRecorder,
+          ),
+        ));
     setState(() {});
   }
 
@@ -131,8 +146,7 @@ class _StreamLoopJustAudioState extends State<StreamLoopJustAudio> {
     return _mRecorder!.isRecording ? stop : record;
   }
 
-  void justAudio()
-  {
+  void justAudio() {
     _player.play();
   }
   // ----------------------------------------------------------------------------------------------------------------------
@@ -169,29 +183,27 @@ class _StreamLoopJustAudioState extends State<StreamLoopJustAudio> {
                   ? 'Playback to your headset!'
                   : 'Recorder is stopped'),
             ]),
-
           ),
-      Container(
-      margin: const EdgeInsets.all(3),
-      padding: const EdgeInsets.all(3),
-      height: 80,
-      width: double.infinity,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-      color: Color(0xFFFAF0E6),
-      border: Border.all(
-      color: Colors.indigo,
-      width: 3,
-      ),
-      ),
-      child:
-          ElevatedButton(
-            onPressed: justAudio,
-            //color: Colors.white,
-            //disabledColor: Colors.grey,
-            child: Text('Just Audio'),
+          Container(
+            margin: const EdgeInsets.all(3),
+            padding: const EdgeInsets.all(3),
+            height: 80,
+            width: double.infinity,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Color(0xFFFAF0E6),
+              border: Border.all(
+                color: Colors.indigo,
+                width: 3,
+              ),
+            ),
+            child: ElevatedButton(
+              onPressed: justAudio,
+              //color: Colors.white,
+              //disabledColor: Colors.grey,
+              child: Text('Just Audio'),
+            ),
           ),
-      ),
         ],
       );
     }

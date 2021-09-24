@@ -1,4 +1,4 @@
-package com.dooboolab.fluttersound;
+package xyz.canardoux.tausound;
 /*
  * Copyright 2018, 2019, 2020, 2021 Dooboolab.
  *
@@ -36,7 +36,7 @@ import com.dooboolab.TauEngine.Flauto;
 import com.dooboolab.TauEngine.Flauto.*;
 
 
-public class FlutterSoundRecorder extends FlutterSoundSession implements FlautoRecorderCallback
+public class TauSoundRecorder extends TauSoundSession implements FlautoRecorderCallback
 {
 	static final String ERR_UNKNOWN           = "ERR_UNKNOWN";
 	static final String ERR_RECORDER_IS_NULL      = "ERR_RECORDER_IS_NULL";

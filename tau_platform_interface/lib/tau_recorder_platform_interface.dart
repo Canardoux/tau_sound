@@ -23,8 +23,8 @@ import 'dart:async';
 import 'package:logger/logger.dart' show Level , Logger;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'method_channel_flutter_sound_recorder.dart';
-import 'flutter_sound_platform_interface.dart';
+import 'method_channel_tau_recorder.dart';
+import 'tau_platform_interface.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
@@ -58,7 +58,7 @@ enum AudioSource {
 }
 
 
-abstract class FlutterSoundRecorderCallback
+abstract class TauRecorderCallback
 {
   void updateRecorderProgress({required int duration, required double dbPeakLevel});
   void recordingData({Uint8List? data} );
@@ -79,34 +79,34 @@ abstract class FlutterSoundRecorderCallback
 /// does not consider newly added methods to be breaking changes. Extending this class
 /// (using `extends`) ensures that the subclass will get the default implementation, while
 /// platform implementations that `implements` this interface will be broken by newly added
-/// [FlutterSoundPlatform] methods.
-abstract class FlutterSoundRecorderPlatform extends PlatformInterface {
+/// [TauPlatform] methods.
+abstract class TauRecorderPlatform extends PlatformInterface {
 
   /// Constructs a UrlLauncherPlatform.
-  FlutterSoundRecorderPlatform() : super(token: _token);
+  TauRecorderPlatform() : super(token: _token);
 
   static final Object _token = Object();
 
-  static FlutterSoundRecorderPlatform _instance = MethodChannelFlutterSoundRecorder();
+  static TauRecorderPlatform _instance = MethodChannelTauRecorder();
 
-  /// The default instance of [FlutterSoundRecorderPlatform] to use.
+  /// The default instance of [TauRecorderPlatform] to use.
   ///
-  /// Defaults to [MethodChannelFlutterSoundRecorder].
-  static FlutterSoundRecorderPlatform get instance => _instance;
+  /// Defaults to [MethodChannelTauRecorder].
+  static TauRecorderPlatform get instance => _instance;
 
   /// Platform-specific plugins should set this with their own platform-specific
   /// class that extends [UrlLauncherPlatform] when they register themselves.
-  static set instance(FlutterSoundRecorderPlatform instance) {
+  static set instance(TauRecorderPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
 
 
 
-  List<FlutterSoundRecorderCallback?> _slots = [];
+  List<TauRecorderCallback?> _slots = [];
 
   @override
-  int findSession(FlutterSoundRecorderCallback aSession)
+  int findSession(TauRecorderCallback aSession)
   {
     for (var i = 0; i < _slots.length; ++i)
     {
@@ -119,7 +119,7 @@ abstract class FlutterSoundRecorderPlatform extends PlatformInterface {
   }
 
   @override
-  void openSession(FlutterSoundRecorderCallback aSession)
+  void openSession(TauRecorderCallback aSession)
   {
     assert(findSession(aSession) == -1);
 
@@ -135,12 +135,12 @@ abstract class FlutterSoundRecorderPlatform extends PlatformInterface {
   }
 
   @override
-  void closeSession(FlutterSoundRecorderCallback aSession)
+  void closeSession(TauRecorderCallback aSession)
   {
     _slots[findSession(aSession)] = null;
   }
 
-  FlutterSoundRecorderCallback? getSession(int slotno)
+  TauRecorderCallback? getSession(int slotno)
   {
     return _slots[slotno];
   }
@@ -161,44 +161,44 @@ abstract class FlutterSoundRecorderPlatform extends PlatformInterface {
 
 
 
-  Future<void>?   setLogLevel(FlutterSoundRecorderCallback callback, Level loglevel)
+  Future<void>?   setLogLevel(TauRecorderCallback callback, Level loglevel)
   {
     throw UnimplementedError('setLogLeve() has not been implemented.');
   }
 
 
-  Future<void>?   resetPlugin(FlutterSoundRecorderCallback callback,)
+  Future<void>?   resetPlugin(TauRecorderCallback callback,)
   {
     throw UnimplementedError('resetPlugin() has not been implemented.');
   }
 
 
-  Future<void> openRecorder(FlutterSoundRecorderCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device})
+  Future<void> openRecorder(TauRecorderCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device})
   {
     throw UnimplementedError('openRecorder() has not been implemented.');
   }
 
-  Future<void> closeRecorder(FlutterSoundRecorderCallback callback, )
+  Future<void> closeRecorder(TauRecorderCallback callback, )
   {
     throw UnimplementedError('closeRecorder() has not been implemented.');
   }
 
-  Future<void> setAudioFocus(FlutterSoundRecorderCallback callback, {AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device,} )
+  Future<void> setAudioFocus(TauRecorderCallback callback, {AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device,} )
   {
     throw UnimplementedError('setAudioFocus() has not been implemented.');
   }
 
-  Future<bool> isEncoderSupported(FlutterSoundRecorderCallback callback, {required Codec codec ,})
+  Future<bool> isEncoderSupported(TauRecorderCallback callback, {required Codec codec ,})
   {
     throw UnimplementedError('isEncoderSupported() has not been implemented.');
   }
 
-  Future<void> setSubscriptionDuration(FlutterSoundRecorderCallback callback, { Duration? duration,})
+  Future<void> setSubscriptionDuration(TauRecorderCallback callback, { Duration? duration,})
   {
     throw UnimplementedError('setSubscriptionDuration() has not been implemented.');
   }
 
-  Future<void> startRecorder(FlutterSoundRecorderCallback callback,
+  Future<void> startRecorder(TauRecorderCallback callback,
   {
   String? path,
   int? sampleRate,
@@ -212,27 +212,27 @@ abstract class FlutterSoundRecorderPlatform extends PlatformInterface {
     throw UnimplementedError('startRecorder() has not been implemented.');
   }
 
-  Future<void> stopRecorder(FlutterSoundRecorderCallback callback, )
+  Future<void> stopRecorder(TauRecorderCallback callback, )
   {
     throw UnimplementedError('stopRecorder() has not been implemented.');
   }
 
-  Future<void> pauseRecorder(FlutterSoundRecorderCallback callback, )
+  Future<void> pauseRecorder(TauRecorderCallback callback, )
   {
     throw UnimplementedError('pauseRecorder() has not been implemented.');
   }
 
-  Future<void> resumeRecorder(FlutterSoundRecorderCallback callback, )
+  Future<void> resumeRecorder(TauRecorderCallback callback, )
   {
     throw UnimplementedError('resumeRecorder() has not been implemented.');
   }
 
-  Future<bool?> deleteRecord(FlutterSoundRecorderCallback callback, String path)
+  Future<bool?> deleteRecord(TauRecorderCallback callback, String path)
   {
     throw UnimplementedError('deleteRecord() has not been implemented.');
   }
 
-  Future<String?> getRecordURL(FlutterSoundRecorderCallback callback, String path )
+  Future<String?> getRecordURL(TauRecorderCallback callback, String path )
   {
     throw UnimplementedError('getRecordURL() has not been implemented.');
   }

@@ -34,7 +34,7 @@ library ui_controller;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart' show Level, Logger;
-import '../../flutter_sound.dart';
+import '../../tau_sound.dart';
 
 ///
 /// This class is a Provider style widget designed to
@@ -207,6 +207,7 @@ void onRecordingResume(BuildContext context) {
 }
 
 ///
+@deprecated
 void onRecordingNew(BuildContext context, SoundRecorderUIState recorder) {
   if (RecorderPlaybackController.of(context)?._state._recorderUIState == null) {
     // fix for a bug where for some reason the recorder alone would not be
@@ -218,11 +219,13 @@ void onRecordingNew(BuildContext context, SoundRecorderUIState recorder) {
 }
 
 ///
+@deprecated
 void onPlaybackStart(BuildContext context) {
   RecorderPlaybackController.of(context)?._state._onPlayerPlay();
 }
 
 ///
+@deprecated
 void onPlaybackEnd(BuildContext context) {
   RecorderPlaybackController.of(context)?._state._onPlayerStop();
 }

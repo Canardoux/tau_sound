@@ -19,7 +19,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'package:intl/intl.dart';
 
 import 'demo_media_path.dart';

@@ -20,7 +20,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 /*
@@ -69,7 +69,16 @@ class _SoundEffectState extends State<SoundEffect> {
     );
     StreamController<TauFood> totoController = StreamController<TauFood>();
     await _mPlayer!.play(
-      from: InputStream(totoController.stream, codec: Pcm( AudioFormat.raw, depth: Depth.int16, endianness: Endianness.littleEndian, nbChannels: NbChannels.mono, sampleRate: _tSampleRate,),),
+      from: InputStream(
+        totoController.stream,
+        codec: Pcm(
+          AudioFormat.raw,
+          depth: Depth.int16,
+          endianness: Endianness.littleEndian,
+          nbChannels: NbChannels.mono,
+          sampleRate: _tSampleRate,
+        ),
+      ),
       to: DefaultOutputDevice(),
     );
   }

@@ -21,20 +21,10 @@
 /// {@category Main}
 library node;
 
-import 'dart:async';
 import 'dart:core';
-import 'dart:io';
-import 'dart:io' show Platform;
-import 'dart:typed_data' show Uint8List;
+import 'package:tau_platform_interface/tau_platform_interface.dart';
 
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_sound_platform_interface/flutter_sound_platform_interface.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_player_platform_interface.dart';
-import 'package:logger/logger.dart' show Level, Logger;
-import 'package:path_provider/path_provider.dart';
-import 'package:synchronized/synchronized.dart';
-
-import '../../flutter_sound.dart';
+import '../tau_sound.dart';
 
 enum AudioFormat {
   ogg,
@@ -72,7 +62,7 @@ abstract class TauCodec {
   AudioFormat? audioFormat;
   // @deprecated
   Codec deprecatedCodec = Codec.defaultCodec;
-  TauCodec() {}
+  TauCodec();
 }
 
 class DefaultCodec extends TauCodec {
@@ -198,12 +188,12 @@ class Pcm extends TauCodec {
   }
 
   /* ctor */ Pcm.wav() {
-    this.audioFormat = AudioFormat.wav;
+    audioFormat = AudioFormat.wav;
     deprecatedCodec = Codec.pcm16WAV;
   }
 
   /* ctor */ Pcm.aiff() {
-    this.audioFormat = AudioFormat.aiff;
+    audioFormat = AudioFormat.aiff;
     deprecatedCodec = Codec.pcm16WAV;
   }
 
@@ -243,7 +233,7 @@ class Amr extends TauCodec {
 }
 
 /// Get the new API9 TauCodec from the old API6 Codec
-@deprecated
+//@deprecated
 TauCodec getCodecFromDeprecated(Codec codec) {
   TauCodec r = DefaultCodec();
   switch (codec) {

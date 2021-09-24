@@ -1,4 +1,4 @@
-package com.dooboolab.fluttersound;
+package xyz.canardoux.tausound;
 /*
  * Copyright 2018, 2019, 2020, 2021 Dooboolab.
  *
@@ -29,7 +29,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
-class FlutterSoundPlayerManager extends FlutterSoundManager
+class TauSoundPlayerManager extends FlutterSoundManager
         implements MethodCallHandler
 {
         final static String TAG = "FlutterPlayerPlugin";

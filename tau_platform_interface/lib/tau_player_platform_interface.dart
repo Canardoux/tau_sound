@@ -29,10 +29,10 @@ import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data' show Uint8List;
 
-import 'method_channel_flutter_sound_player.dart';
-import 'flutter_sound_platform_interface.dart';
+import 'method_channel_tau_player.dart';
+import 'tau_platform_interface.dart';
 
-abstract class FlutterSoundPlayerCallback
+abstract class TauPlayerCallback
 {
 
   void updateProgress({int duration, int position,}) ;
@@ -59,35 +59,35 @@ abstract class FlutterSoundPlayerCallback
 /// does not consider newly added methods to be breaking changes. Extending this class
 /// (using `extends`) ensures that the subclass will get the default implementation, while
 /// platform implementations that `implements` this interface will be broken by newly added
-/// [FlutterSoundPlayerPlatform] methods.
+/// [TauPlayerPlatform] methods.
 
 
 
-abstract class FlutterSoundPlayerPlatform extends PlatformInterface {
+abstract class TauPlayerPlatform extends PlatformInterface {
 
   /// Constructs a UrlLauncherPlatform.
-  FlutterSoundPlayerPlatform() : super(token: _token);
+  TauPlayerPlatform() : super(token: _token);
 
   static final Object _token = Object();
 
-  static FlutterSoundPlayerPlatform _instance = MethodChannelFlutterSoundPlayer();
+  static TauPlayerPlatform _instance = MethodChannelTauPlayer();
 
-  /// The default instance of [FlutterSoundPlayerPlatform] to use.
+  /// The default instance of [TauPlayerPlatform] to use.
   ///
-  /// Defaults to [MethodChannelFlutterSoundPlayer].
-  static FlutterSoundPlayerPlatform get instance => _instance;
+  /// Defaults to [MethodChannelTauPlayer].
+  static TauPlayerPlatform get instance => _instance;
 
   /// Platform-specific plugins should set this with their own platform-specific
-  /// class that extends [MethodChannelFlutterSoundPlayer] when they register themselves.
-  static set instance(FlutterSoundPlayerPlatform instance) {
+  /// class that extends [MethodChannelTauPlayer] when they register themselves.
+  static set instance(TauPlayerPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
 
 
-  List<FlutterSoundPlayerCallback?> _slots = [];
+  List<TauPlayerCallback?> _slots = [];
 
-  int findSession(FlutterSoundPlayerCallback aSession)
+  int findSession(TauPlayerCallback aSession)
   {
     for (var i = 0; i < _slots.length; ++i)
     {
@@ -99,7 +99,7 @@ abstract class FlutterSoundPlayerPlatform extends PlatformInterface {
     return -1;
   }
 
-  void openSession(FlutterSoundPlayerCallback aSession,)
+  void openSession(TauPlayerCallback aSession,)
   {
     assert(findSession(aSession) == -1);
 
@@ -114,14 +114,14 @@ abstract class FlutterSoundPlayerPlatform extends PlatformInterface {
     _slots.add(aSession);
   }
 
-  void closeSession(FlutterSoundPlayerCallback aSession)
+  void closeSession(TauPlayerCallback aSession)
   {
     _slots[findSession(aSession)] = null;
   }
 
-  FlutterSoundPlayerCallback getSession(int slotno)
+  TauPlayerCallback getSession(int slotno)
   {
-    FlutterSoundPlayerCallback? cb = _slots[slotno];
+    TauPlayerCallback? cb = _slots[slotno];
     if (cb == null)
       throw Exception('Cannot find session');
     else
@@ -143,112 +143,112 @@ abstract class FlutterSoundPlayerPlatform extends PlatformInterface {
 
   //===================================================================================================================================================
 
-  Future<void>?   setLogLevel(FlutterSoundPlayerCallback callback, Level loglevel)
+  Future<void>?   setLogLevel(TauPlayerCallback callback, Level loglevel)
   {
     throw UnimplementedError('setLogLeve() has not been implemented.');
   }
 
-  Future<void>?   resetPlugin(FlutterSoundPlayerCallback callback)
+  Future<void>?   resetPlugin(TauPlayerCallback callback)
   {
     throw UnimplementedError('resetPlugin() has not been implemented.');
   }
 
-  Future<int> openPlayer(FlutterSoundPlayerCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device, bool? withUI,})
+  Future<int> openPlayer(TauPlayerCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device, bool? withUI,})
   {
     throw UnimplementedError('openPlayer() has not been implemented.');
   }
 
-  Future<int> setAudioFocus(FlutterSoundPlayerCallback callback, {AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device,} )
+  Future<int> setAudioFocus(TauPlayerCallback callback, {AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device,} )
   {
     throw UnimplementedError('setAudioFocus() has not been implemented.');
   }
 
-  Future<int> closePlayer(FlutterSoundPlayerCallback callback, )
+  Future<int> closePlayer(TauPlayerCallback callback, )
   {
     throw UnimplementedError('closePlayer() has not been implemented.');
   }
 
-  Future<int> getPlayerState(FlutterSoundPlayerCallback callback, )
+  Future<int> getPlayerState(TauPlayerCallback callback, )
   {
     throw UnimplementedError('getPlayerState() has not been implemented.');
   }
 
-  Future<Map<String, Duration>> getProgress(FlutterSoundPlayerCallback callback, )
+  Future<Map<String, Duration>> getProgress(TauPlayerCallback callback, )
   {
     throw UnimplementedError('getProgress() has not been implemented.');
   }
 
-  Future<bool> isDecoderSupported(FlutterSoundPlayerCallback callback, { required Codec codec} )
+  Future<bool> isDecoderSupported(TauPlayerCallback callback, { required Codec codec} )
   {
     throw UnimplementedError('isDecoderSupported() has not been implemented.');
   }
 
-  Future<int> setSubscriptionDuration(FlutterSoundPlayerCallback callback, {Duration? duration})
+  Future<int> setSubscriptionDuration(TauPlayerCallback callback, {Duration? duration})
   {
     throw UnimplementedError('setSubscriptionDuration() has not been implemented.');
   }
 
-  Future<int> startPlayer(FlutterSoundPlayerCallback callback, {Codec? codec, Uint8List? fromDataBuffer, String?  fromURI, int? numChannels, int? sampleRate})
+  Future<int> startPlayer(TauPlayerCallback callback, {Codec? codec, Uint8List? fromDataBuffer, String?  fromURI, int? numChannels, int? sampleRate})
   {
     throw UnimplementedError('startPlayer() has not been implemented.');
   }
 
-  Future<int> startPlayerFromMic(FlutterSoundPlayerCallback callback, {int? numChannels, int? sampleRate})
+  Future<int> startPlayerFromMic(TauPlayerCallback callback, {int? numChannels, int? sampleRate})
   {
     throw UnimplementedError('startPlayerFromMic() has not been implemented.');
   }
 
-  Future<int> feed(FlutterSoundPlayerCallback callback, {Uint8List? data, })
+  Future<int> feed(TauPlayerCallback callback, {Uint8List? data, })
   {
     throw UnimplementedError('feed() has not been implemented.');
   }
 
-  Future<int> startPlayerFromTrack(FlutterSoundPlayerCallback callback, {Duration? progress, Duration? duration, Map<String, dynamic>? track, bool? canPause, bool? canSkipForward, bool? canSkipBackward, bool? defaultPauseResume, bool? removeUIWhenStopped })
+  Future<int> startPlayerFromTrack(TauPlayerCallback callback, {Duration? progress, Duration? duration, Map<String, dynamic>? track, bool? canPause, bool? canSkipForward, bool? canSkipBackward, bool? defaultPauseResume, bool? removeUIWhenStopped })
   {
     throw UnimplementedError('startPlayerFromTrack() has not been implemented.');
   }
 
-  Future<int> nowPlaying(FlutterSoundPlayerCallback callback, {Duration? progress, Duration? duration, Map<String, dynamic>? track, bool? canPause, bool? canSkipForward, bool? canSkipBackward, bool? defaultPauseResume,})
+  Future<int> nowPlaying(TauPlayerCallback callback, {Duration? progress, Duration? duration, Map<String, dynamic>? track, bool? canPause, bool? canSkipForward, bool? canSkipBackward, bool? defaultPauseResume,})
   {
     throw UnimplementedError('invokeMethod() has not been implemented.');
   }
 
-  Future<int> stopPlayer(FlutterSoundPlayerCallback callback,  )
+  Future<int> stopPlayer(TauPlayerCallback callback,  )
   {
     throw UnimplementedError('invokeMethod() has not been implemented.');
   }
 
-  Future<int> pausePlayer(FlutterSoundPlayerCallback callback,  )
+  Future<int> pausePlayer(TauPlayerCallback callback,  )
   {
     throw UnimplementedError('invokeMethod() has not been implemented.');
   }
 
-  Future<int> resumePlayer(FlutterSoundPlayerCallback callback,  )
+  Future<int> resumePlayer(TauPlayerCallback callback,  )
   {
     throw UnimplementedError('invokeMethod() has not been implemented.');
   }
 
-  Future<int> seekToPlayer(FlutterSoundPlayerCallback callback, {Duration? duration})
+  Future<int> seekToPlayer(TauPlayerCallback callback, {Duration? duration})
   {
     throw UnimplementedError('invokeMethod() has not been implemented.');
   }
 
-  Future<int> setVolume(FlutterSoundPlayerCallback callback, {double? volume})
+  Future<int> setVolume(TauPlayerCallback callback, {double? volume})
   {
     throw UnimplementedError('invokeMethod() has not been implemented.');
   }
 
-  Future<int> setSpeed(FlutterSoundPlayerCallback callback, {required double speed})
+  Future<int> setSpeed(TauPlayerCallback callback, {required double speed})
   {
     throw UnimplementedError('invokeMethod() has not been implemented.');
   }
 
-  Future<int> setUIProgressBar(FlutterSoundPlayerCallback callback, {Duration? duration, Duration? progress,})
+  Future<int> setUIProgressBar(TauPlayerCallback callback, {Duration? duration, Duration? progress,})
   {
     throw UnimplementedError('invokeMethod() has not been implemented.');
   }
 
-  Future<String> getResourcePath(FlutterSoundPlayerCallback callback, )
+  Future<String> getResourcePath(TauPlayerCallback callback, )
   {
     throw UnimplementedError('invokeMethod() has not been implemented.');
   }

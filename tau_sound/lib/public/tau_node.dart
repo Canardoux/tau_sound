@@ -23,19 +23,11 @@ library node;
 
 import 'dart:async';
 import 'dart:core';
-import 'dart:io';
-import 'dart:io' show Platform;
 import 'dart:typed_data' show Uint8List;
-
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter_sound_platform_interface/flutter_sound_platform_interface.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_player_platform_interface.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
-import 'package:logger/logger.dart' show Level, Logger;
+import 'package:tau_platform_interface/tau_recorder_platform_interface.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:synchronized/synchronized.dart';
 
-import '../../flutter_sound.dart';
+import '../tau_sound.dart';
 
 /// Tau nodes
 abstract class TauNode {
@@ -61,7 +53,7 @@ class TauTrack {
       this.author = 'τ',
       this.albumArtURL,
       this.albumArtAsset,
-      this.albumArtFile}) {}
+      this.albumArtFile});
 }
 
 /// An InputBuffer is a possible source for a Player playback
@@ -77,8 +69,8 @@ class InputBuffer extends InputNode {
   }
 
   Future<InputBuffer> toWave() async {
-    Pcm pcmCodec = codec as Pcm;
-    Uint8List buffer = await tauHelper.pcmToWaveBuffer(
+    var pcmCodec = codec as Pcm;
+    var buffer = await tauHelper.pcmToWaveBuffer(
         inputBuffer: inputBuffer, codec: pcmCodec);
     return InputBuffer(buffer,
         codec: Pcm(AudioFormat.wav,
@@ -102,7 +94,7 @@ class InputFile extends InputNode {
   }
 
   Future<InputFile> toWave() async {
-    Pcm pcmCodec = codec as Pcm;
+    var pcmCodec = codec as Pcm;
     var tempDir = await getTemporaryDirectory();
     var path = '${tempDir.path}/flutter_sound_tmp.wav';
     await tauHelper.pcmToWave(
@@ -131,7 +123,7 @@ class InputStream extends InputNode {
 /// An InputAsset is a possible source for a player playback
 class InputAsset extends InputNode {
   String path;
-  /* ctor */ InputAsset(this.path) {}
+  /* ctor */ InputAsset(this.path);
 }
 
 /// An InputDevice can be the Mic, The Blutooth mic, ...
@@ -211,7 +203,7 @@ class OutputFile extends OutputNode {
   }
 
   Future<OutputFile> toWave() async {
-    Pcm pcmCodec = codec as Pcm;
+    var pcmCodec = codec as Pcm;
     var tempDir = await getTemporaryDirectory();
     var path = '${tempDir.path}/flutter_sound_tmp.wav';
     await tauHelper.pcmToWave(

@@ -20,7 +20,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 /*
@@ -86,8 +86,18 @@ class _LivePlaybackWithBackPressureState
   void play() async {
     assert(_mPlayerIsInited && _mPlayer!.isStopped);
     StreamController<TauFood> totoController = StreamController();
-    InputNode input = InputStream(totoController.stream, codec: Pcm(AudioFormat.raw,   depth: Depth.int16, endianness: Endianness.littleEndian, nbChannels: NbChannels.mono, sampleRate: tSampleRate,));
-    await _mPlayer!.play(from: input, to: DefaultOutputDevice(),);
+    InputNode input = InputStream(totoController.stream,
+        codec: Pcm(
+          AudioFormat.raw,
+          depth: Depth.int16,
+          endianness: Endianness.littleEndian,
+          nbChannels: NbChannels.mono,
+          sampleRate: tSampleRate,
+        ));
+    await _mPlayer!.play(
+      from: input,
+      to: DefaultOutputDevice(),
+    );
     setState(() {});
     var data = await getAssetData('assets/samples/sample.pcm');
     await feedHim(data);

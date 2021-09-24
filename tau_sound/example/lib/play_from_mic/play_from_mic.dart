@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /*
@@ -52,8 +52,7 @@ class _PlayFromMicState extends State<PlayFromMic> {
 
     // Be careful : openAudioSession returns a Future.
     // Do not access your TauPlayer or TauRecorder before the completion of the Future
-    await _mPlayer!.open(
-    );
+    await _mPlayer!.open();
     setState(() {
       _mPlayerIsInited = true;
     });
@@ -78,7 +77,10 @@ class _PlayFromMicState extends State<PlayFromMic> {
   // -------  Here is the code to play from the microphone -----------------------
 
   void play() async {
-    await _mPlayer!.play(from: Mic(), to: DefaultOutputDevice(),);
+    await _mPlayer!.play(
+      from: Mic(),
+      to: DefaultOutputDevice(),
+    );
     setState(() {});
   }
 

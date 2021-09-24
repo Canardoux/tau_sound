@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -90,15 +90,12 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
     _mRecorderIsInited = true;
   }
 
-  void _onProgressRecorder(Duration position, double decibels)
-  {
+  void _onProgressRecorder(Duration position, double decibels) {
     setState(() {
       pos = position.inMilliseconds;
-        dbLevel = decibels as double;
+      dbLevel = decibels as double;
     });
-
   }
-
 
   Future<void> init() async {
     await openTheRecorder();
@@ -113,18 +110,20 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
 
   void record(TauRecorder? recorder) async {
     await recorder!.record(
-        from: DefaultInputDevice(),
-        to: OutputFile(_mPath, codec: _codec,),
-        onProgress: _onProgressRecorder,
-        interval: Duration(milliseconds: _mSubscriptionDuration.floor()),
-        );
+      from: DefaultInputDevice(),
+      to: OutputFile(
+        _mPath,
+        codec: _codec,
+      ),
+      onProgress: _onProgressRecorder,
+      interval: Duration(milliseconds: _mSubscriptionDuration.floor()),
+    );
     setState(() {});
   }
 
   Future<void> stopRecorder(TauRecorder recorder) async {
     await recorder.stop();
   }
-
 
   // --------------------- UI -------------------
 
@@ -179,11 +178,9 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
             value: _mSubscriptionDuration,
             min: 0.0,
             max: 2000.0,
-            onChanged: (double d){
+            onChanged: (double d) {
               _mSubscriptionDuration = d;
-              setState(() {
-
-              });
+              setState(() {});
             },
             //divisions: 100
           ),

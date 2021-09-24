@@ -23,18 +23,18 @@ import 'dart:async';
 import 'package:logger/logger.dart' show Level , Logger;
 import 'package:flutter/services.dart';
 
-import 'flutter_sound_platform_interface.dart';
-import 'flutter_sound_recorder_platform_interface.dart';
+import 'tau_platform_interface.dart';
+import 'tau_recorder_platform_interface.dart';
 
-const MethodChannel _channel = MethodChannel('com.dooboolab.flutter_sound_recorder');
+const MethodChannel _channel = MethodChannel('xyz.canardoux.tau_recorder');
 
 
 
 /// An implementation of [UrlLauncherPlatform] that uses method channels.
-class MethodChannelFlutterSoundRecorder extends FlutterSoundRecorderPlatform
+class MethodChannelTauRecorder extends TauRecorderPlatform
 {
 
-  /*ctor */ MethodChannelFlutterSoundRecorder()
+  /*ctor */ MethodChannelTauRecorder()
   {
     _setCallback();
   }
@@ -51,7 +51,7 @@ class MethodChannelFlutterSoundRecorder extends FlutterSoundRecorderPlatform
 
 
 Future<dynamic>? channelMethodCallHandler(MethodCall call) {
-    FlutterSoundRecorderCallback? aRecorder = getSession(call.arguments['slotNo'] as int);
+    TauRecorderCallback? aRecorder = getSession(call.arguments['slotNo'] as int);
     //bool? success = call.arguments['success'] as bool?;
     bool success = call.arguments['success'] != null ? call.arguments['success'] as bool : false;
 
@@ -121,28 +121,28 @@ Future<dynamic>? channelMethodCallHandler(MethodCall call) {
 
 
 
-  Future<void> invokeMethodVoid (FlutterSoundRecorderCallback callback,  String methodName, Map<String, dynamic> call)
+  Future<void> invokeMethodVoid (TauRecorderCallback callback,  String methodName, Map<String, dynamic> call)
   {
     call['slotNo'] = findSession(callback);
     return _channel.invokeMethod(methodName, call);
   }
 
 
-  Future<int?> invokeMethodInt (FlutterSoundRecorderCallback callback,  String methodName, Map<String, dynamic> call)
+  Future<int?> invokeMethodInt (TauRecorderCallback callback,  String methodName, Map<String, dynamic> call)
   {
     call['slotNo'] = findSession(callback);
     return _channel.invokeMethod(methodName, call);
   }
 
 
-  Future<bool> invokeMethodBool (FlutterSoundRecorderCallback callback,  String methodName, Map<String, dynamic> call) async
+  Future<bool> invokeMethodBool (TauRecorderCallback callback,  String methodName, Map<String, dynamic> call) async
   {
     call['slotNo'] = findSession(callback);
     bool r = await _channel.invokeMethod(methodName, call) as bool;
     return r;
   }
 
-  Future<String?> invokeMethodString (FlutterSoundRecorderCallback callback, String methodName, Map<String, dynamic> call)
+  Future<String?> invokeMethodString (TauRecorderCallback callback, String methodName, Map<String, dynamic> call)
   {
     call['slotNo'] = findSession(callback);
     return _channel.invokeMethod(methodName, call);
@@ -150,7 +150,7 @@ Future<dynamic>? channelMethodCallHandler(MethodCall call) {
 
 
   @override
-  Future<void>?   setLogLevel(FlutterSoundRecorderCallback callback, Level logLevel)
+  Future<void>?   setLogLevel(TauRecorderCallback callback, Level logLevel)
   {
     invokeMethodVoid( callback, 'setLogLevel', {'logLevel': logLevel.index,});
   }
@@ -158,7 +158,7 @@ Future<dynamic>? channelMethodCallHandler(MethodCall call) {
 
 
   @override
-  Future<void>?   resetPlugin(FlutterSoundRecorderCallback callback,)
+  Future<void>?   resetPlugin(TauRecorderCallback callback,)
   {
     return invokeMethodVoid( callback, 'resetPlugin', Map<String, dynamic>(),);
   }
@@ -166,38 +166,38 @@ Future<dynamic>? channelMethodCallHandler(MethodCall call) {
 
 
 @override
-  Future<void> openRecorder( FlutterSoundRecorderCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device})
+  Future<void> openRecorder( TauRecorderCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device})
   {
     return invokeMethodVoid( callback, 'openRecorder', {'logLevel': logLevel.index, 'focus': focus!.index, 'category': category!.index, 'mode': mode!.index, 'audioFlags': audioFlags, 'device': device!.index ,},) ;
   }
 
 
   @override
-  Future<void> closeRecorder(FlutterSoundRecorderCallback callback, )
+  Future<void> closeRecorder(TauRecorderCallback callback, )
   {
     return invokeMethodVoid( callback, 'closeRecorder',  Map<String, dynamic>(),);
   }
 
   @override
-  Future<void> setAudioFocus(FlutterSoundRecorderCallback callback, {AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device,} )
+  Future<void> setAudioFocus(TauRecorderCallback callback, {AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device,} )
   {
     return invokeMethodVoid( callback, 'setAudioFocus', {'focus': focus!.index, 'category': category!.index, 'mode': mode!.index, 'audioFlags': audioFlags, 'device': device!.index ,},);
   }
 
   @override
-  Future<bool> isEncoderSupported(FlutterSoundRecorderCallback callback, {Codec codec = Codec.defaultCodec,})
+  Future<bool> isEncoderSupported(TauRecorderCallback callback, {Codec codec = Codec.defaultCodec,})
   {
     return invokeMethodBool( callback, 'isEncoderSupported', {'codec': codec.index,},) as Future<bool>;
   }
 
   @override
-  Future<void> setSubscriptionDuration(FlutterSoundRecorderCallback callback, {Duration? duration,})
+  Future<void> setSubscriptionDuration(TauRecorderCallback callback, {Duration? duration,})
   {
     return invokeMethodVoid( callback, 'setSubscriptionDuration', {'duration': duration!.inMilliseconds},);
   }
 
   @override
-  Future<void> startRecorder(FlutterSoundRecorderCallback callback,
+  Future<void> startRecorder(TauRecorderCallback callback,
       {
         String? path,
         int? sampleRate,
@@ -221,32 +221,32 @@ Future<dynamic>? channelMethodCallHandler(MethodCall call) {
   }
 
   @override
-  Future<void> stopRecorder(FlutterSoundRecorderCallback callback,  )
+  Future<void> stopRecorder(TauRecorderCallback callback,  )
   {
     return invokeMethodVoid( callback, 'stopRecorder',  Map<String, dynamic>(),) ;
   }
 
   @override
-  Future<void> pauseRecorder(FlutterSoundRecorderCallback callback,  )
+  Future<void> pauseRecorder(TauRecorderCallback callback,  )
   {
     return invokeMethodVoid( callback, 'pauseRecorder',  Map<String, dynamic>(),) ;
   }
 
   @override
-  Future<void> resumeRecorder(FlutterSoundRecorderCallback callback, )
+  Future<void> resumeRecorder(TauRecorderCallback callback, )
   {
     return invokeMethodVoid( callback, 'resumeRecorder', Map<String, dynamic>(),) ;
   }
 
 
   @override
-  Future<bool?> deleteRecord(FlutterSoundRecorderCallback callback, String path)
+  Future<bool?> deleteRecord(TauRecorderCallback callback, String path)
   {
     return invokeMethodBool( callback, 'deleteRecord', {'path': path});
   }
 
   @override
-  Future<String?> getRecordURL(FlutterSoundRecorderCallback callback, String path )
+  Future<String?> getRecordURL(TauRecorderCallback callback, String path )
   {
     return invokeMethodString( callback, 'getRecordURL', {'path': path});
   }

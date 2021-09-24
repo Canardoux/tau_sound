@@ -25,8 +25,8 @@ import 'dart:html' as html;
 import 'dart:typed_data' show Uint8List;
 
 import 'package:meta/meta.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_platform_interface.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_player_platform_interface.dart';
+import 'package:tau_platform_interface/tau_platform_interface.dart';
+import 'package:tau_platform_interface/tau_player_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'dart:io';
 import 'package:js/js.dart';
@@ -36,14 +36,14 @@ import 'package:logger/logger.dart' show Level , Logger;
 // ====================================  JS  =======================================================
 
 @JS('newPlayerInstance')
-external TauCorePlayer newPlayerInstance(FlutterSoundPlayerCallback theCallBack, List<Function> callbackTable);
+external TauCorePlayer newPlayerInstance(TauPlayerCallback theCallBack, List<Function> callbackTable);
 
 
 @JS('TauCorePlayer')
 class TauCorePlayer
 {
         @JS('TauCorePlayer')
-        external factory TauCorePlayer(FlutterSoundPlayerCallback theCallBack, List<Function> callbackTable);
+        external factory TauCorePlayer(TauPlayerCallback theCallBack, List<Function> callbackTable);
 
         @JS('releaseMediaPlayer')
         external int releaseMediaPlayer();
@@ -99,32 +99,32 @@ class TauCorePlayer
 
 List<Function> callbackTable =
 [
-        allowInterop( (FlutterSoundPlayerCallback cb, int position, int duration)                       { cb.updateProgress(duration: duration, position: position,);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int state)                                        { cb.pauseCallback(state,);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int state)                                        { cb.resumeCallback(state,);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int state)                                        { cb.skipBackward(state,);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int state)                                        { cb.skipForward(state,);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int state)                                        { cb.updatePlaybackState(state,);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int ln)                                           { cb.needSomeFood(ln,);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int state)                                        { cb.audioPlayerFinished(state,);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int state, bool success, int duration)            { cb.startPlayerCompleted(state, success, duration,);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int state, bool success)                          { cb.pausePlayerCompleted(state, success);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int state, bool success)                          { cb.resumePlayerCompleted(state, success);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int state, bool success)                          { cb.stopPlayerCompleted(state, success);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int state, bool success)                          { cb.openPlayerCompleted(state, success);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb, int state, bool success)                          { cb.closePlayerCompleted(state, success);} ),
-        allowInterop( (FlutterSoundPlayerCallback cb,  int level, String msg)                           { cb.log(Level.values[level], msg);} ),
+        allowInterop( (TauPlayerCallback cb, int position, int duration)                       { cb.updateProgress(duration: duration, position: position,);} ),
+        allowInterop( (TauPlayerCallback cb, int state)                                        { cb.pauseCallback(state,);} ),
+        allowInterop( (TauPlayerCallback cb, int state)                                        { cb.resumeCallback(state,);} ),
+        allowInterop( (TauPlayerCallback cb, int state)                                        { cb.skipBackward(state,);} ),
+        allowInterop( (TauCallback cb, int state)                                        { cb.skipForward(state,);} ),
+        allowInterop( (TauPlayerCallback cb, int state)                                        { cb.updatePlaybackState(state,);} ),
+        allowInterop( (TauPlayerCallback cb, int ln)                                           { cb.needSomeFood(ln,);} ),
+        allowInterop( (TauPlayerCallback cb, int state)                                        { cb.audioPlayerFinished(state,);} ),
+        allowInterop( (TauPlayerCallback cb, int state, bool success, int duration)            { cb.startPlayerCompleted(state, success, duration,);} ),
+        allowInterop( (TauPlayerCallback cb, int state, bool success)                          { cb.pausePlayerCompleted(state, success);} ),
+        allowInterop( (TauPlayerCallback cb, int state, bool success)                          { cb.resumePlayerCompleted(state, success);} ),
+        allowInterop( (TauPlayerCallback cb, int state, bool success)                          { cb.stopPlayerCompleted(state, success);} ),
+        allowInterop( (TauPlayerCallback cb, int state, bool success)                          { cb.openPlayerCompleted(state, success);} ),
+        allowInterop( (TauPlayerCallback cb, int state, bool success)                          { cb.closePlayerCompleted(state, success);} ),
+        allowInterop( (TauPlayerCallback cb,  int level, String msg)                           { cb.log(Level.values[level], msg);} ),
 ];
 
 //=========================================================================================================
 
 
-/// The web implementation of [FlutterSoundPlatform].
+/// The web implementation of [TauPlatform].
 ///
 /// This class implements the `package:flutter_sound_player` functionality for the web.
 ///
 
-class FlutterSoundPlayerWeb extends FlutterSoundPlayerPlatform //implements FlutterSoundPlayerCallback
+class TauPlayerWeb extends TauPlayerPlatform //implements TauPlayerCallback
 {
 
 
@@ -150,14 +150,14 @@ class FlutterSoundPlayerWeb extends FlutterSoundPlayerPlatform //implements Flut
 
 
 
-        /// Registers this class as the default instance of [FlutterSoundPlatform].
+        /// Registers this class as the default instance of [TauPlatform].
         static void registerWith(Registrar registrar)
         {
-                FlutterSoundPlayerPlatform.instance = FlutterSoundPlayerWeb();
+                TauPlayerPlatform.instance = TauPlayerWeb();
         }
 
 
-        /* ctor */ MethodChannelFlutterSoundPlayer()
+        /* ctor */ MethodChannelTauPlayer()
         {
         }
 
@@ -166,7 +166,7 @@ class FlutterSoundPlayerWeb extends FlutterSoundPlayerPlatform //implements Flut
 
 
         List<TauCorePlayer?> _slots = [];
-        TauCorePlayer? getWebSession(FlutterSoundPlayerCallback callback)
+        TauCorePlayer? getWebSession(TauPlayerCallback callback)
         {
                 return _slots[findSession(callback)];
         }
@@ -176,7 +176,7 @@ class FlutterSoundPlayerWeb extends FlutterSoundPlayerPlatform //implements Flut
 //==============================================================================================================================
 
         @override
-        Future<void>?   resetPlugin(FlutterSoundPlayerCallback callback,)
+        Future<void>?   resetPlugin(TauPlayerCallback callback,)
         {
                 callback.log(Level.debug, '---> resetPlugin');
                 for (int i = 0; i < _slots.length; ++i)
@@ -191,7 +191,7 @@ class FlutterSoundPlayerWeb extends FlutterSoundPlayerPlatform //implements Flut
 
 
         @override
-        Future<int> openPlayer(FlutterSoundPlayerCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device, bool? withUI}) async
+        Future<int> openPlayer(TauPlayerCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device, bool? withUI}) async
         {
                 // openAudioSessionCompleter = new Completer<bool>();
                 // await invokeMethod( callback, 'initializeMediaPlayer', {'focus': focus.index, 'category': category.index, 'mode': mode.index, 'audioFlags': audioFlags, 'device': device.index, 'withUI': withUI ? 1 : 0 ,},) ;
@@ -213,7 +213,7 @@ class FlutterSoundPlayerWeb extends FlutterSoundPlayerPlatform //implements Flut
 
 
         @override
-        Future<int> closePlayer(FlutterSoundPlayerCallback callback, ) async
+        Future<int> closePlayer(TauPlayerCallback callback, ) async
         {
                 int slotno = findSession(callback);
                 int r = _slots[slotno]!.releaseMediaPlayer();
@@ -224,21 +224,21 @@ class FlutterSoundPlayerWeb extends FlutterSoundPlayerPlatform //implements Flut
 
 
         @override
-        Future<int> setAudioFocus(FlutterSoundPlayerCallback callback, {AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device,} ) async
+        Future<int> setAudioFocus(TauPlayerCallback callback, {AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device,} ) async
         {
                 return getWebSession(callback)!.setAudioFocus(focus!.index, category!.index, mode!.index, audioFlags, device!.index);
         }
 
 
         @override
-        Future<int> getPlayerState(FlutterSoundPlayerCallback callback, ) async
+        Future<int> getPlayerState(TauPlayerCallback callback, ) async
         {
                 return getWebSession(callback)!.getPlayerState();
         }
 
 
         @override
-        Future<Map<String, Duration>> getProgress(FlutterSoundPlayerCallback callback, ) async
+        Future<Map<String, Duration>> getProgress(TauPlayerCallback callback, ) async
         {
                 // Map<String, int> m = await invokeMethod( callback, 'getPlayerState', null,) as Map;
                 Map<String, Duration> r = {'duration': Duration.zero, 'progress': Duration.zero,};
@@ -246,20 +246,20 @@ class FlutterSoundPlayerWeb extends FlutterSoundPlayerPlatform //implements Flut
         }
 
         @override
-        Future<bool> isDecoderSupported(FlutterSoundPlayerCallback callback, { required Codec codec ,}) async
+        Future<bool> isDecoderSupported(TauPlayerCallback callback, { required Codec codec ,}) async
         {
                 return getWebSession(callback)!.isDecoderSupported(codec.index);
         }
 
 
         @override
-        Future<int> setSubscriptionDuration(FlutterSoundPlayerCallback callback, { Duration? duration,}) async
+        Future<int> setSubscriptionDuration(TauPlayerCallback callback, { Duration? duration,}) async
         {
                 return getWebSession(callback)!.setSubscriptionDuration(duration!.inMilliseconds);
         }
 
         @override
-        Future<int> startPlayer(FlutterSoundPlayerCallback callback,  {Codec? codec, Uint8List? fromDataBuffer, String?  fromURI, int? numChannels, int? sampleRate}) async
+        Future<int> startPlayer(TauPlayerCallback callback,  {Codec? codec, Uint8List? fromDataBuffer, String?  fromURI, int? numChannels, int? sampleRate}) async
         {
                 // startPlayerCompleter = new Completer<Map>();
                 // await invokeMethod( callback, 'startPlayer', {'codec': codec.index, 'fromDataBuffer': fromDataBuffer, 'fromURI': fromURI, 'numChannels': numChannels, 'sampleRate': sampleRate},) ;
@@ -293,18 +293,18 @@ class FlutterSoundPlayerWeb extends FlutterSoundPlayerPlatform //implements Flut
 
 
         @override
-        Future<int> startPlayerFromMic(FlutterSoundPlayerCallback callback, {int? numChannels, int? sampleRate}) {
+        Future<int> startPlayerFromMic(TauPlayerCallback callback, {int? numChannels, int? sampleRate}) {
                 throw Exception('StartPlayerFromMic() is not implemented on Flutter Web');
         }
 
                 @override
-        Future<int> feed(FlutterSoundPlayerCallback callback, {Uint8List? data, }) async
+        Future<int> feed(TauPlayerCallback callback, {Uint8List? data, }) async
         {
                 return getWebSession(callback)!.feed(data);
         }
 
         @override
-        Future<int> startPlayerFromTrack(FlutterSoundPlayerCallback callback, { Duration? progress, Duration? duration, Map<String, dynamic>? track, bool? canPause, bool? canSkipForward, bool? canSkipBackward, bool? defaultPauseResume, bool? removeUIWhenStopped }) async
+        Future<int> startPlayerFromTrack(TauPlayerCallback callback, { Duration? progress, Duration? duration, Map<String, dynamic>? track, bool? canPause, bool? canSkipForward, bool? canSkipBackward, bool? defaultPauseResume, bool? removeUIWhenStopped }) async
         {
                 // startPlayerCompleter = new Completer<Map>();
                 // await invokeMethod( callback, 'startPlayerFromTrack', {'progress': progress, 'duration': duration, 'track': track, 'canPause': canPause, 'canSkipForward': canSkipForward, 'canSkipBackward': canSkipBackward,
@@ -316,58 +316,58 @@ class FlutterSoundPlayerWeb extends FlutterSoundPlayerPlatform //implements Flut
           }
 
         @override
-        Future<int> nowPlaying(FlutterSoundPlayerCallback callback,  {Duration? progress, Duration? duration,  Map<String, dynamic>? track, bool? canPause, bool? canSkipForward, bool? canSkipBackward, bool? defaultPauseResume, }) async
+        Future<int> nowPlaying(TauPlayerCallback callback,  {Duration? progress, Duration? duration,  Map<String, dynamic>? track, bool? canPause, bool? canSkipForward, bool? canSkipBackward, bool? defaultPauseResume, }) async
         {
                 return getWebSession(callback)!.nowPlaying(progress!.inMilliseconds, duration!.inMilliseconds, track, canPause, canSkipForward, canSkipBackward, defaultPauseResume);
         }
 
         @override
-        Future<int> stopPlayer(FlutterSoundPlayerCallback callback,  ) async
+        Future<int> stopPlayer(TauPlayerCallback callback,  ) async
         {
                 return getWebSession(callback)!.stopPlayer();
         }
 
         @override
-        Future<int> pausePlayer(FlutterSoundPlayerCallback callback,  ) async
+        Future<int> pausePlayer(TauPlayerCallback callback,  ) async
         {
                 return getWebSession(callback)!.pausePlayer();
         }
 
         @override
-        Future<int> resumePlayer(FlutterSoundPlayerCallback callback,  ) async
+        Future<int> resumePlayer(TauPlayerCallback callback,  ) async
         {
                 return getWebSession(callback)!.resumePlayer();
         }
 
         @override
-        Future<int> seekToPlayer(FlutterSoundPlayerCallback callback,  {Duration? duration}) async
+        Future<int> seekToPlayer(TauPlayerCallback callback,  {Duration? duration}) async
         {
                 return getWebSession(callback)!.seekToPlayer(duration!.inMilliseconds);
         }
 
-        Future<int> setVolume(FlutterSoundPlayerCallback callback,  {double? volume}) async
+        Future<int> setVolume(TauPlayerCallback callback,  {double? volume}) async
         {
                 return getWebSession(callback)!.setVolume(volume);
         }
 
-        Future<int> setSpeed(FlutterSoundPlayerCallback callback,  {required double speed}) async
+        Future<int> setSpeed(TauPlayerCallback callback,  {required double speed}) async
         {
                 return getWebSession(callback)!.setSpeed(speed);
         }
 
         @override
-        Future<int> setUIProgressBar(FlutterSoundPlayerCallback callback, {Duration? duration, Duration? progress,}) async
+        Future<int> setUIProgressBar(TauPlayerCallback callback, {Duration? duration, Duration? progress,}) async
         {
                 return getWebSession(callback)!.setUIProgressBar(duration!.inMilliseconds, progress!.inMilliseconds);
         }
 
-        Future<String> getResourcePath(FlutterSoundPlayerCallback callback, ) async
+        Future<String> getResourcePath(TauPlayerCallback callback, ) async
         {
                 return '';
         }
 
         @override
-        Future<void>?   setLogLeve(FlutterSoundPlayerCallback callback, Level loglevel)
+        Future<void>?   setLogLeve(TauPlayerCallback callback, Level loglevel)
         {
 
         }

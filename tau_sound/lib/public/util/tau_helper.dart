@@ -34,7 +34,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 
-import '../../flutter_sound.dart';
+import '../../tau_sound.dart';
 import 'wave_header.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
@@ -144,9 +144,9 @@ class TauHelper {
   Future<Duration?> duration(String uri) async {
     if (!isFFmpegAvailable()) return null;
     var info = await FlutterFFprobe().getMediaInformation(uri);
-    if (info == null) {
-      return null;
-    }
+    //if (info == null) {
+      //return null;
+    //}
     var format = info.getAllProperties()['format'];
     if (format == null) return null;
     var duration = format['duration'];

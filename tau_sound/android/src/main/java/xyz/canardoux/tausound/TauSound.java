@@ -1,4 +1,4 @@
-package com.dooboolab.fluttersound;
+package xyz.canardoux.tausound;
 /*
  * Copyright 2018, 2019, 2020, 2021 Dooboolab.
  *
@@ -27,9 +27,9 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 
-import com.dooboolab.TauEngine.Flauto;
+import xyz.canardoux.TauEngine.Flauto;
 
-public class FlutterSound
+public class TauSound
 	implements FlutterPlugin,
 	           ActivityAware
 {

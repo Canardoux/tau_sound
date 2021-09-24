@@ -23,20 +23,20 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-#ifndef FlutterSound_h
-#define FlutterSound_h
+#ifndef TauSound_h
+#define TauSound_h
 
 #import <Flutter/Flutter.h>
 #import <AVFoundation/AVFoundation.h>
-#import <tau_core/Flauto.h>
+#import <tau_native/Flauto.h>
 
 #define FULL_FLAVOR
 
-@interface FlutterSound : NSObject <FlutterPlugin, AVAudioPlayerDelegate>
+@interface TauSound : NSObject <FlutterPlugin, AVAudioPlayerDelegate>
 {
 }
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar;
 
 @end
 
-#endif /* FlutterSound_h */
+#endif /* TauSound_h */

@@ -19,7 +19,6 @@
 
 /// ------------------------------------------------------------------
 ///
-/// # [SoundPlayerUI] is a HTML 5 style audio play bar.
 /// It allows you to play/pause/resume and seek an audio track.
 ///
 /// The `SoundPlayerUI` displays:
@@ -39,7 +38,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:provider/provider.dart';
-import '../../flutter_sound.dart';
+import '../../tau_sound.dart';
 
 ///
 /// @nodoc
@@ -829,6 +828,7 @@ class PlaybarSlider extends StatefulWidget {
 }
 
 ///
+@deprecated
 class _PlaybarSliderState extends State<PlaybarSlider> {
   @override
   Widget build(BuildContext context) {

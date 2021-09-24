@@ -21,7 +21,7 @@ import 'dart:async';
 import 'dart:html' as html;
 
 import 'package:meta/meta.dart';
-import 'package:flutter_sound_platform_interface/flutter_sound_recorder_platform_interface.dart';
+import 'package:tau_platform_interface/tau_recorder_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:tau_web/tau_web_player.dart';
 import 'package:tau_web/tau_web_recorder.dart';
@@ -140,16 +140,16 @@ bool isJsLibraryImported(String url, {required String flutterPluginName}) {
 
 
 
-/// The web implementation of [FlutterSoundRecorderPlatform].
+/// The web implementation of [TauRecorderPlatform].
 ///
-/// This class implements the `package:FlutterSoundPlayerPlatform` functionality for the web.
-class TauWebPlugin //extends FlutterSoundPlatform
+/// This class implements the `package:TauPlayerPlatform` functionality for the web.
+class TauWebPlugin //extends TauPlatform
 {
-        /// Registers this class as the default instance of [FlutterSoundPlatform].
+        /// Registers this class as the default instance of [TauPlatform].
         static void registerWith(Registrar registrar)
         {
-                FlutterSoundPlayerWeb.registerWith(registrar);
-                FlutterSoundRecorderWeb.registerWith(registrar);
+                TauPlayerWeb.registerWith(registrar);
+                TauRecorderWeb.registerWith(registrar);
                 importJsLibrary(url: "./howler/howler.js", flutterPluginName: "tau_web");
                 importJsLibrary(url: "./src/tau_core.js", flutterPluginName: "tau_web");
                 importJsLibrary(url: "./src/tau_core_player.js", flutterPluginName: "tau_web");

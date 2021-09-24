@@ -27,14 +27,14 @@
 
 
 
-#import "FlutterSound.h"
+#import "TauSound.h"
 #import "FlutterSoundPlayerManager.h"
 #import "FlutterSoundRecorderManager.h"
 #ifdef FULL_FLAVOR
         #import "FlutterSoundFFmpeg.h"
 #endif
 
-@implementation FlutterSound
+@implementation TauSound
 {
 }
 

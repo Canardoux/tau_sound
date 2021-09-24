@@ -1,4 +1,4 @@
-package com.dooboolab.fluttersound;
+package xyz.canardoux.tausound;
 /*
  * Copyright 2018, 2019, 2020, 2021 Dooboolab.
  *
@@ -33,7 +33,7 @@ import com.dooboolab.TauEngine.FlautoPlayerCallback;
 import com.dooboolab.TauEngine.Flauto.*;
 
 
-public class FlutterSoundPlayer extends FlutterSoundSession implements  FlautoPlayerCallback
+public class TauSoundPlayer extends TauSoundSession implements  FlautoPlayerCallback
 {
 
 	static final String ERR_UNKNOWN           = "ERR_UNKNOWN";

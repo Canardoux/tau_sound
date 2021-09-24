@@ -28,17 +28,12 @@
 /// - [TauPlayer]. Everything about the playback functions
 /// - [TauRecorder]. Everything about the recording functions
 /// - [TauHelper]. Some utilities to manage audio data.
-/// And two modules for the Widget UI
-/// - [SoundPlayerUI]
-/// - [SoundRecorderUI]
 /// ------------------------------------------------------------------
 /// {@category Main}
 library tau;
 
-import 'dart:typed_data' show Uint8List;
-import 'package:flutter_sound_platform_interface/flutter_sound_platform_interface.dart';
 import 'package:logger/logger.dart' show Level, Logger;
-import '../flutter_sound.dart';
+import '../tau_sound.dart';
 
 /// The usual file extensions used for each codecs
 const List<String> ext = [
@@ -91,13 +86,10 @@ const List<List<String>> validExt = [
 /// For future expansion. Do not use.
 /// This class is not instanciable. Use the expression [FlutterSound()] when you want to get the Singleton.
 ///
-/// This class is used to access the main functionalities of Flutter Sound. It declares also
-/// a default [FlutterSoundPlayer] and a default [FlutterSoundRecorder] that can be used
-/// by the App, without having to build such objects themselves.
+/// This class is used to access the main functionalities of Flutter Sound.
 /// @nodoc
 class Tau {
   Logger _logger = Logger(level: Level.debug);
-  Level _logLevel = Level.debug;
 
   /// The FlutterSound Logger getter
   Logger get logger => _logger;
@@ -105,7 +97,6 @@ class Tau {
   /// Used if the App wants to dynamically change the Log Level.
   /// Seldom used. Most of the time the Log Level is specified during the constructor.
   Future<void> setLogLevel(Level aLevel) async {
-    _logLevel = aLevel;
     _logger = Logger(level: aLevel);
   }
 

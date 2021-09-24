@@ -27,7 +27,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -228,7 +228,8 @@ class _MyAppState extends State<Demo> {
     await playerModule.close();
     _isAudioPlayer = withUI;
     await playerModule.open(
-        withShadeUI: withUI,);
+      withShadeUI: withUI,
+    );
     await initializeDateFormatting();
     await setCodec(_codec);
   }
@@ -241,7 +242,9 @@ class _MyAppState extends State<Demo> {
       }
     }
     await recorderModule.open();
-    if (!await recorderModule.isEncoderSupported(getCodecFromDeprecated(_codec)) && kIsWeb) {
+    if (!await recorderModule
+            .isEncoderSupported(getCodecFromDeprecated(_codec)) &&
+        kIsWeb) {
       _codec = Codec.opusWebM;
     }
   }
@@ -338,20 +341,26 @@ class _MyAppState extends State<Demo> {
         });
         await recorderModule.record(
           from: DefaultInputDevice(),
-          to: OutputStream(recordingDataController!.sink,
-
-            codec: Pcm(AudioFormat.raw, nbChannels: NbChannels.mono, endianness: Endianness.littleEndian, depth: Depth.int16, sampleRate: tSTREAMSAMPLERATE),
+          to: OutputStream(
+            recordingDataController!.sink,
+            codec: Pcm(AudioFormat.raw,
+                nbChannels: NbChannels.mono,
+                endianness: Endianness.littleEndian,
+                depth: Depth.int16,
+                sampleRate: tSTREAMSAMPLERATE),
           ),
-          onProgress:    _onRecorderProgress,
+          onProgress: _onRecorderProgress,
           interval: Duration(milliseconds: 100),
         );
       } else {
         await recorderModule.record(
           from: DefaultInputDevice(),
-          to: OutputFile(path,
-          codec: getCodecFromDeprecated(_codec), //Pcm(AudioFormat.raw, nbChannels: NbChannels.mono, endianness: Endianness.littleEndian, depth: Depth.int16, sampleRate: (_codec == Codec.pcm16) ? tSTREAMSAMPLERATE : tSAMPLERATE,),
+          to: OutputFile(
+            path,
+            codec: getCodecFromDeprecated(
+                _codec), //Pcm(AudioFormat.raw, nbChannels: NbChannels.mono, endianness: Endianness.littleEndian, depth: Depth.int16, sampleRate: (_codec == Codec.pcm16) ? tSTREAMSAMPLERATE : tSAMPLERATE,),
           ),
-          onProgress:    _onRecorderProgress,
+          onProgress: _onRecorderProgress,
           interval: Duration(milliseconds: 100),
         );
       }
@@ -361,7 +370,6 @@ class _MyAppState extends State<Demo> {
         _isRecording = true;
         _path[_codec.index] = path;
       });
-
     } on Exception catch (err) {
       recorderModule.logger.e('startRecorder error: $err');
       setState(() {
@@ -372,17 +380,15 @@ class _MyAppState extends State<Demo> {
     }
   }
 
-
   void _onRecorderProgress(Duration position, double decibels) {
-  var date = DateTime.fromMillisecondsSinceEpoch(
-      position.inMilliseconds,
-  isUtc: true);
-  var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+    var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
+        isUtc: true);
+    var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
 
-  setState(() {
-  _recorderTxt = txt.substring(0, 8);
-  _dbLevel = decibels;
-  });
+    setState(() {
+      _recorderTxt = txt.substring(0, 8);
+      _dbLevel = decibels;
+    });
   }
 
   Future<void> getDuration() async {
@@ -438,28 +444,27 @@ class _MyAppState extends State<Demo> {
   }
 
   //void _addListeners() {
-    //cancelPlayerSubscriptions();
-    //_playerSubscription = playerModule.onProgress!.listen((e) {
-    void _onProgress(Duration position, Duration duration)
-    {
-      maxDuration = duration.inMilliseconds.toDouble();
-      if (maxDuration <= 0) maxDuration = 0.0;
+  //cancelPlayerSubscriptions();
+  //_playerSubscription = playerModule.onProgress!.listen((e) {
+  void _onProgress(Duration position, Duration duration) {
+    maxDuration = duration.inMilliseconds.toDouble();
+    if (maxDuration <= 0) maxDuration = 0.0;
 
-      sliderCurrentPosition =
-          min(position.inMilliseconds.toDouble(), maxDuration);
-      if (sliderCurrentPosition < 0.0) {
-        sliderCurrentPosition = 0.0;
-      }
-
-      var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
-          isUtc: true);
-      var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
-      setState(() {
-        _playerTxt = txt.substring(0, 8);
-      });
-    //});
-  //}
+    sliderCurrentPosition =
+        min(position.inMilliseconds.toDouble(), maxDuration);
+    if (sliderCurrentPosition < 0.0) {
+      sliderCurrentPosition = 0.0;
     }
+
+    var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
+        isUtc: true);
+    var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+    setState(() {
+      _playerTxt = txt.substring(0, 8);
+    });
+    //});
+    //}
+  }
 
   Future<Uint8List> _readFileByte(String filePath) async {
     var myUri = Uri.parse(filePath);
@@ -499,7 +504,6 @@ class _MyAppState extends State<Demo> {
     }
   }
 
-
   Future<void> startPlayer() async {
     try {
       Uint8List? dataBuffer;
@@ -525,13 +529,19 @@ class _MyAppState extends State<Demo> {
       } else if (_media == Media.remoteExampleFile) {
         // We have to play an example audio file loaded via a URL
         audioFilePath = remoteSample[_codec.index];
-
-         } else if (_media == Media.stream) {
+      } else if (_media == Media.stream) {
         totoController = StreamController<TauFood>();
-        InputNode from = InputStream(totoController.stream, codec: Pcm( AudioFormat.raw,  depth: Depth.int16, endianness: Endianness.littleEndian, nbChannels: NbChannels.mono, sampleRate: tSTREAMSAMPLERATE,));
+        InputNode from = InputStream(totoController.stream,
+            codec: Pcm(
+              AudioFormat.raw,
+              depth: Depth.int16,
+              endianness: Endianness.littleEndian,
+              nbChannels: NbChannels.mono,
+              sampleRate: tSTREAMSAMPLERATE,
+            ));
         await playerModule.play(
-            from: from,
-            to: DefaultOutputDevice(),
+          from: from,
+          to: DefaultOutputDevice(),
           onProgress: _onProgress,
           interval: Duration(milliseconds: 10),
         );
@@ -543,82 +553,95 @@ class _MyAppState extends State<Demo> {
         return;
       }
 
-
-          String? albumArtUrl;
-          String? albumArtAsset;
-          String? albumArtFile;
-          if (_media == Media.remoteExampleFile) {
-            albumArtUrl = albumArtPathRemote;
-          } else if (!kIsWeb) {
-            albumArtFile =
+      String? albumArtUrl;
+      String? albumArtAsset;
+      String? albumArtFile;
+      if (_media == Media.remoteExampleFile) {
+        albumArtUrl = albumArtPathRemote;
+      } else if (!kIsWeb) {
+        albumArtFile =
             '${await playerModule.getResourcePath()}/assets/canardo.png';
-            playerModule.logger.d(albumArtFile);
-          } else {}
+        playerModule.logger.d(albumArtFile);
+      } else {}
 
-
-          TauTrack track = TauTrack(title: 'This is a record' ,author: 'from flutter_sound', albumArtFile: albumArtFile, albumArtAsset: albumArtAsset, albumArtURL:  albumArtUrl);
-        if (audioFilePath != null) {
-          InputNode from = InputFile(audioFilePath, codec: getCodecFromDeprecated(codec), track: track );
-          await playerModule.play(
-              from: from,
-              to: DefaultOutputDevice(),
-              onProgress: _onProgress,
-              interval: Duration(milliseconds: 10),
-              whenFinished: () {
-                playerModule.logger.d('Play finished');
-                setState(() {});},
-                removeUIWhenStopped: true,
-            onSkipBackward: () {
-              playerModule.logger.d('Skip backward');
-              stopPlayer();
-              startPlayer();
-            }, onSkipForward: () {
+      TauTrack track = TauTrack(
+          title: 'This is a record',
+          author: 'from flutter_sound',
+          albumArtFile: albumArtFile,
+          albumArtAsset: albumArtAsset,
+          albumArtURL: albumArtUrl);
+      if (audioFilePath != null) {
+        InputNode from = InputFile(audioFilePath,
+            codec: getCodecFromDeprecated(codec), track: track);
+        await playerModule.play(
+          from: from,
+          to: DefaultOutputDevice(),
+          onProgress: _onProgress,
+          interval: Duration(milliseconds: 10),
+          whenFinished: () {
+            playerModule.logger.d('Play finished');
+            setState(() {});
+          },
+          removeUIWhenStopped: true,
+          onSkipBackward: () {
+            playerModule.logger.d('Skip backward');
+            stopPlayer();
+            startPlayer();
+          },
+          onSkipForward: () {
             playerModule.logger.d('Skip forward');
             stopPlayer();
             startPlayer();
-          }, onPaused: (b) {
+          },
+          onPaused: (b) {
             if (b) {
               playerModule.pause();
             } else {
               playerModule.resume();
             }
           },
-          defaultPauseResume:  false,
-
-
+          defaultPauseResume: false,
+        );
+      } else if (dataBuffer != null) {
+        if (codec == Codec.pcm16) {
+          dataBuffer = await tauHelper.pcmToWaveBuffer(
+            inputBuffer: dataBuffer,
+            codec: getCodecFromDeprecated(codec) as Pcm,
           );
-        } else if (dataBuffer != null) {
-          if (codec == Codec.pcm16) {
-            dataBuffer = await tauHelper.pcmToWaveBuffer(inputBuffer: dataBuffer,codec: getCodecFromDeprecated(codec) as Pcm,);
-            codec = Codec.pcm16WAV;
-          }
-          await playerModule.play(
-              from: InputBuffer(dataBuffer, codec: getCodecFromDeprecated(codec), track: track, ),
-              to: DefaultOutputDevice(),
-              onProgress: _onProgress,
-              interval: Duration(milliseconds: 10),
-              whenFinished: () {
-                playerModule.logger.d('Play finished');
-                setState(() {});
-              } , onSkipBackward:
-                () {
-          playerModule.logger.d('Skip backward');
-          stopPlayer();
-          startPlayer();
-          }, onSkipForward: () {
+          codec = Codec.pcm16WAV;
+        }
+        await playerModule.play(
+          from: InputBuffer(
+            dataBuffer,
+            codec: getCodecFromDeprecated(codec),
+            track: track,
+          ),
+          to: DefaultOutputDevice(),
+          onProgress: _onProgress,
+          interval: Duration(milliseconds: 10),
+          whenFinished: () {
+            playerModule.logger.d('Play finished');
+            setState(() {});
+          },
+          onSkipBackward: () {
+            playerModule.logger.d('Skip backward');
+            stopPlayer();
+            startPlayer();
+          },
+          onSkipForward: () {
             playerModule.logger.d('Skip forward');
             stopPlayer();
             startPlayer();
-          }, onPaused: (b) {
+          },
+          onPaused: (b) {
             if (b) {
               playerModule.pause();
             } else {
               playerModule.resume();
             }
           },
-            defaultPauseResume:  false,
-          );
-
+          defaultPauseResume: false,
+        );
       }
       //_addListeners();
       setState(() {});
@@ -903,8 +926,10 @@ class _MyAppState extends State<Demo> {
   }
 
   Future<void> setCodec(Codec codec) async {
-    _encoderSupported = await recorderModule.isEncoderSupported(getCodecFromDeprecated(codec));
-    _decoderSupported = await playerModule.isDecoderSupported(getCodecFromDeprecated(codec));
+    _encoderSupported =
+        await recorderModule.isEncoderSupported(getCodecFromDeprecated(codec));
+    _decoderSupported =
+        await playerModule.isDecoderSupported(getCodecFromDeprecated(codec));
 
     setState(() {
       _codec = codec;

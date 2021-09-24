@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -85,7 +85,7 @@ class _SpeedControlState extends State<SpeedControl> {
 
   void play(TauPlayer? player) async {
     await player!.play(
-        from: InputBuffer( _boumData, codec: Aac(AudioFormat.adts)),
+        from: InputBuffer(_boumData, codec: Aac(AudioFormat.adts)),
         to: DefaultOutputDevice(),
         whenFinished: () {
           setState(() {});

@@ -22,7 +22,7 @@ import 'dart:typed_data';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:flutter/material.dart';
-import 'package:flutter_sound/flutter_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 /*
@@ -162,19 +162,18 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   // -------  Player2 play a AAC file -----------------------
 
   void play2() async {
-    if (buffer2 != null)
-    {
-          //await _mPlayer2!.setSubscriptionDuration(Duration(milliseconds: 10));
-          //_addListener2();
-          await _mPlayer2!.play(
-              from: InputBuffer(buffer2, codec: Aac(AudioFormat.adts)),
-              to: DefaultOutputDevice(),
-              onProgress: _onProgress2,
-              interval: Duration(milliseconds: 10),
-              whenFinished: () {
-                setState(() {});
-              });
-          setState(() {});
+    if (buffer2 != null) {
+      //await _mPlayer2!.setSubscriptionDuration(Duration(milliseconds: 10));
+      //_addListener2();
+      await _mPlayer2!.play(
+          from: InputBuffer(buffer2, codec: Aac(AudioFormat.adts)),
+          to: DefaultOutputDevice(),
+          onProgress: _onProgress2,
+          interval: Duration(milliseconds: 10),
+          whenFinished: () {
+            setState(() {});
+          });
+      setState(() {});
     }
   }
 
@@ -211,17 +210,17 @@ class _MultiPlaybackState extends State<MultiPlayback> {
 
   void play3() async {
     if (buffer3 != null) {
-          //await _mPlayer3!.setSubscriptionDuration(Duration(milliseconds: 10));
-          //_addListener3();
-          await _mPlayer3!.play(
-              from: InputBuffer(buffer3, codec: Aac(AudioFormat.mp4  )),
-              to: DefaultOutputDevice(),
-              onProgress: _onProgress3,
-              interval: Duration(milliseconds: 10),
-              whenFinished: () {
-                setState(() {});
-              });
-          setState(() {});
+      //await _mPlayer3!.setSubscriptionDuration(Duration(milliseconds: 10));
+      //_addListener3();
+      await _mPlayer3!.play(
+          from: InputBuffer(buffer3, codec: Aac(AudioFormat.mp4)),
+          to: DefaultOutputDevice(),
+          onProgress: _onProgress3,
+          interval: Duration(milliseconds: 10),
+          whenFinished: () {
+            setState(() {});
+          });
+      setState(() {});
     }
   }
 
@@ -257,16 +256,15 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   // ------------------------------------------------------------------------------------
 
   //void _addListener1() {
-    //cancelPlayerSubscriptions1();
-    //_playerSubscription1 = _mPlayer1!.onProgress!.listen((e) {
-  void _onProgress1(Duration position, Duration duration)
-  {
-      var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
-          isUtc: true);
-      var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
-      setState(() {
-        _playerTxt1 = txt.substring(0, 8);
-      });
+  //cancelPlayerSubscriptions1();
+  //_playerSubscription1 = _mPlayer1!.onProgress!.listen((e) {
+  void _onProgress1(Duration position, Duration duration) {
+    var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
+        isUtc: true);
+    var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+    setState(() {
+      _playerTxt1 = txt.substring(0, 8);
+    });
     //});
   }
 
@@ -289,17 +287,17 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   }
 
   //void _addListener2() {
-    //cancelPlayerSubscriptions2();
-    //_playerSubscription2 = _mPlayer2!.onProgress!.listen((e) {
+  //cancelPlayerSubscriptions2();
+  //_playerSubscription2 = _mPlayer2!.onProgress!.listen((e) {
   void _onProgress2(Duration position, Duration duration) {
-      var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
-          isUtc: true);
-      var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
-      setState(() {
-        _playerTxt2 = txt.substring(0, 8);
-      });
+    var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
+        isUtc: true);
+    var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+    setState(() {
+      _playerTxt2 = txt.substring(0, 8);
+    });
   }
-    //});
+  //});
   //}
 
   Fn? getPlaybackFn2() {
@@ -321,15 +319,15 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   }
 
   //void _addListener3() {
-    //cancelPlayerSubscriptions3();
-    //_playerSubscription3 = _mPlayer3!.onProgress!.listen((e) {
+  //cancelPlayerSubscriptions3();
+  //_playerSubscription3 = _mPlayer3!.onProgress!.listen((e) {
   void _onProgress3(Duration position, Duration duration) {
-      var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
-          isUtc: true);
-      var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
-      setState(() {
-        _playerTxt3 = txt.substring(0, 8);
-      });
+    var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
+        isUtc: true);
+    var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+    setState(() {
+      _playerTxt3 = txt.substring(0, 8);
+    });
     //});
   }
 

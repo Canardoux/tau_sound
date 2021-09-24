@@ -42,7 +42,7 @@
 /// @nodoc
 library everything;
 
-export 'package:flutter_sound_platform_interface/flutter_sound_platform_interface.dart';
+export 'package:tau_platform_interface/tau_platform_interface.dart';
 
 /// Deprecated
 export 'deprecated/flutter_sound_header.dart';

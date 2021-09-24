@@ -42,7 +42,7 @@ class FlutterSoundFFmpegExecution {
 
 /// Represents a completed FFmpeg execution.
 /// @nodoc
-@deprecated
+//@deprecated
 class FlutterSoundCompletedFFmpegExecution {
   ///
   int? executionId;
@@ -73,7 +73,7 @@ class FlutterSoundLog {
 
 ///
 /// @nodoc
-@deprecated
+//@deprecated
 class FlutterSoundStatistics {
   ///
   int? executionId;
