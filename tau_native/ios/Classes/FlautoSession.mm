@@ -97,6 +97,7 @@
                         case blueTooth: sessionCategoryOption |= AVAudioSessionCategoryOptionAllowBluetooth; break;
                         case blueToothA2DP: sessionCategoryOption |= AVAudioSessionCategoryOptionAllowBluetoothA2DP; break;
                         case earPiece:
+                        case obsolete:
                         case headset: sessionCategoryOption |= 0; break; // NOTHING
                 }
                 

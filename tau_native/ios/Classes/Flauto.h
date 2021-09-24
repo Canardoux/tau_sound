@@ -149,7 +149,7 @@ typedef enum
           // ONLY iOS 12.0 // modeVoicePrompt, // 'AVAudioSessionModeVoicePrompt',
 }  t_SESSION_MODE;
 
-/// @deprecated
+/// deprecated
 typedef enum
 {
           speaker,
