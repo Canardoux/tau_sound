@@ -74,8 +74,8 @@ if [ ! -z "$VERSION" ]; then
 fi
 cd ..
 
-cd tau_core
-pod trunk push tau_core.podspec
+cd tau_native
+pod trunk push tau_native.podspec
 if [ $? -ne 0 ]; then
     echo "Error"
     exit -1
