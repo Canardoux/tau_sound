@@ -19,7 +19,11 @@ gsed -i  "s/^\( *s.dependency *'tau_native', *\).*$/\1'$VERSION'/"              
 
 
 gsed -i  "s/^\( *versionName *\).*$/\1'$VERSION'/"                                      tau_native/android/build.gradle
-gsed -i  "s/^\( *\/* *implementation 'com.github.canardoux:tau10:\).*$/\1$VERSION'/"    flutter_sound/android/build.gradle
+gsed -i  "s/^\( *\/* *implementation 'com.github.canardoux:tau10:\).*$/\1$VERSION'/"    tau_sound/android/build.gradle
+gsed -i  "s/^\( *version *\).*$/\1'$VERSION'/"                                          tau_sound/android/build.gradle
+
+#? gsed -i  "s/^\( *implementation 'com.github.canardoux:tau_native:\).*$/\1$VERSION/"     flutter_sound/example/android/app/build.gradle
+
 
 gsed -i  "s/^\( *version: *\).*$/\1$VERSION/"                                           tau_sound/pubspec.yaml
 gsed -i  "s/^\( *tau_platform_interface: *#* *\).*$/\1$VERSION/"                        tau_sound/pubspec.yaml

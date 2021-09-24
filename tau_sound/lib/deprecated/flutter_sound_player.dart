@@ -1239,10 +1239,8 @@ class FlutterSoundPlayer implements TauPlayerCallback {
       }
       _startPlayerCompleter = Completer<Duration>();
       completer = _startPlayerCompleter;
-      var state = await TauPlayerPlatform.instance.startPlayerFromMic(
-          this,
-          numChannels: numChannels,
-          sampleRate: sampleRate);
+      var state = await TauPlayerPlatform.instance.startPlayerFromMic(this,
+          numChannels: numChannels, sampleRate: sampleRate);
       _playerState = PlayerState.values[state];
     } on Exception {
       _startPlayerCompleter = null;
@@ -1539,8 +1537,7 @@ class FlutterSoundPlayer implements TauPlayerCallback {
       _startPlayerCompleter = Completer<Duration>();
       completer = _startPlayerCompleter;
 
-      var state =
-          await TauPlayerPlatform.instance.startPlayerFromTrack(
+      var state = await TauPlayerPlatform.instance.startPlayerFromTrack(
         this,
         progress: progress,
         duration: duration,

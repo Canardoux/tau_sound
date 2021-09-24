@@ -17,7 +17,6 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-
 /// -----------------------------------------------------------------
 /// This header file is deprecated.
 /// It is replaced by file `tau.dart`

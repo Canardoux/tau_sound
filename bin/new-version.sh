@@ -17,6 +17,7 @@ bin/setver.sh $VERSION
 cd tau_platform_interface/    
 flutter clean
 flutter pub get
+flutter pub publish
 if [ $? -ne 0 ]; then
     echo "Error"
     exit -1
@@ -63,16 +64,16 @@ if [ ! -z "$VERSION" ]; then
     git push  -f origin $VERSION
 fi
 
-cd tau_core
-git add .
-git commit -m "TAU : Version $VERSION"
-git pull origin
-git push origin
-if [ ! -z "$VERSION" ]; then
-    git tag -f $VERSION
-    git push  -f origin $VERSION
-fi
-cd ..
+#cd tau_core
+#git add .
+#git commit -m "TAU : Version $VERSION"
+#git pull origin
+#git push origin
+#if [ ! -z "$VERSION" ]; then
+#    git tag -f $VERSION
+#    git push  -f origin $VERSION
+#fi
+#cd ..
 
 cd tau_native
 pod trunk push tau_native.podspec
@@ -82,41 +83,34 @@ if [ $? -ne 0 ]; then
 fi
 cd ..
 
-#cd tau_core/android
-#./gradlew clean build bintrayUpload
-#if [ $? -ne 0 ]; then
-#    echo "Error"
-#    exit -1
+
+
+#git add .
+#git commit -m "TAU : Version $VERSION"
+#git pull origin
+#it push origin
+#if [ ! -z "$VERSION" ]; then
+#        git tag -f $VERSION
+#        git push  -f origin $VERSION
 #fi
-#cd ../..
 
+#cd tau_core
+#git add .
+#git commit -m "TAU : Version $VERSION"
+#git pull origin
+#git push origin
+#if [ ! -z "$VERSION" ]; then
+#    git tag -f $VERSION
+#    git push  -f origin $VERSION
+#fi
+#cd ..
 
-git add .
-git commit -m "TAU : Version $VERSION"
-git pull origin
-git push origin
-if [ ! -z "$VERSION" ]; then
-        git tag -f $VERSION
-        git push  -f origin $VERSION
-fi
-
-cd tau_core
-git add .
-git commit -m "TAU : Version $VERSION"
-git pull origin
-git push origin
-if [ ! -z "$VERSION" ]; then
-    git tag -f $VERSION
-    git push  -f origin $VERSION
-fi
-cd ..
-
-cd tau_core/web
+cd tau_web
 npm publish .
 
-cd ../..
+cd ..
  
-cd flutter_sound
+cd tau_sound
 #flutter clean
 #flutter pub get
 flutter pub publish

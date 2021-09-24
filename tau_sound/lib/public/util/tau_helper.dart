@@ -145,7 +145,7 @@ class TauHelper {
     if (!isFFmpegAvailable()) return null;
     var info = await FlutterFFprobe().getMediaInformation(uri);
     //if (info == null) {
-      //return null;
+    //return null;
     //}
     var format = info.getAllProperties()['format'];
     if (format == null) return null;

@@ -357,8 +357,7 @@ class TauRecorder implements TauRecorderCallback {
     if (!_isInited) {
       throw Exception('Recorder is not open');
     }
-    var b = await TauRecorderPlatform.instance
-        .deleteRecord(this, fileName);
+    var b = await TauRecorderPlatform.instance.deleteRecord(this, fileName);
     _logger.d('FS:<--- deleteRecord');
     return b;
   }
@@ -375,8 +374,7 @@ class TauRecorder implements TauRecorderCallback {
     if (!_isInited) {
       throw Exception('Recorder is not open');
     }
-    var url =
-        await TauRecorderPlatform.instance.getRecordURL(this, path);
+    var url = await TauRecorderPlatform.instance.getRecordURL(this, path);
     return url;
   }
 
@@ -947,7 +945,6 @@ class _RecorderException implements Exception {
 
   String get message => _message;
 }
-
 
 class _CodecNotSupportedException extends _RecorderException {
   _CodecNotSupportedException(String message) : super(message);

@@ -1051,8 +1051,7 @@ class FlutterSoundRecorder implements TauRecorderCallback {
     if (_isInited != Initialized.fullyInitialized) {
       throw Exception('Recorder is not open');
     }
-    var b = await TauRecorderPlatform.instance
-        .deleteRecord(this, fileName);
+    var b = await TauRecorderPlatform.instance.deleteRecord(this, fileName);
     _logger.d('FS:<--- deleteRecord');
     return b;
   }
@@ -1071,8 +1070,7 @@ class FlutterSoundRecorder implements TauRecorderCallback {
     if (_isInited != Initialized.fullyInitialized) {
       throw Exception('Recorder is not open');
     }
-    var url =
-        await TauRecorderPlatform.instance.getRecordURL(this, path);
+    var url = await TauRecorderPlatform.instance.getRecordURL(this, path);
     return url;
   }
 }

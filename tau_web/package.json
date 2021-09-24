@@ -1,8 +1,8 @@
 {
-        "name": "tau_core",
-        "version": "0.0.1-alpha-1+2",
+        "name": "tau_web",
+        "version": "0.0.1-alpha-1+3",
         "description": "The Tau Engine for Web App",
-        "homepage": "https://github.com/Canardoux/tau",
+        "homepage": "https://github.com/Canardoux/tau10",
         "keywords": [
                 "flauto",
                 "flutter_sound",
@@ -20,13 +20,13 @@
         "author": "Larpoux <larpoux@gmail.com> (https://github.com/orgs/Canardoux/people/Larpoux)",
         "repository": {
                 "type": "git",
-                "url": "https://github.com/Canardoux/tau_core"
+                "url": "https://github.com/Canardoux/tau10"
         },
         "devDependencies": {
                 "uglify-js": "2.x"
         },
         "main": "src/index.js",
-        "license": "LGPL-3.0-only",
+        "license": "GPL-3.0-only",
         "files": [
                 "src",
                 "src/index.js",

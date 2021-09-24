@@ -44,7 +44,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.dooboolab.example"
+        applicationId "xyz.canardoux.tau_example"
         minSdkVersion 24 // 18 works fine for the player, but the recorder needs at least 24. Speech to Text need 21, Flutter FFmpeg needs 24
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
@@ -70,7 +70,7 @@ dependencies {
     // -------------------------------------------------------------------------------------
     // CAUTION: The following instruction is for developping and debugging the Flauto Engine
     // DO NOT INCLUDE THE FOLLOWING LINE IN A REAL APP !!!
-    implementation project(':tau_core')
+    implementation project(':tau_native')
     // -------------------------------------------------------------------------------------
 
     //apply plugin: 'maven'

@@ -802,8 +802,7 @@ class TauPlayer implements TauPlayerCallback {
       assert(_closePlayerCompleter == null);
       _closePlayerCompleter = Completer<void>();
       completer = _closePlayerCompleter;
-        keepFocus ??=
-            (TauPlayerPlatform.instance.numberOfOpenSessions() > 1);
+      keepFocus ??= (TauPlayerPlatform.instance.numberOfOpenSessions() > 1);
       if (!keepFocus && _hasFocus) {
         await _setAudioFocus(
             focus: AudioFocus.abandonFocus); // Abandon the focus
