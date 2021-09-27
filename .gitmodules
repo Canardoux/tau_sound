@@ -1,0 +1,3 @@
+[submodule "tau_native"]
+	path = tau_native
+	url = https://github.com/canardoux/tau_native.git
