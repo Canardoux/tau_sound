@@ -37,11 +37,11 @@ import 'package:logger/logger.dart' show Level, Logger;
 import '../../tau_sound.dart';
 import 'wave_header.dart';
 import 'package:path_provider/path_provider.dart';
-import 'dummy_ffmpeg.dart';
+import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 
 /// The TauHelper singleton for accessing the helpers functions
 TauHelper tauHelper = TauHelper._internal(); // Singleton
-const bool _hasFFmpeg = false;
+const bool _hasFFmpeg = true;
 
 /// TauHelper class is for handling audio files and buffers.
 /// Most of those utilities use FFmpeg, so are not available in the LITE flavor of Flutter Sound.

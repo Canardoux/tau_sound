@@ -33,7 +33,7 @@ public class TauSound
 	implements FlutterPlugin,
 	           ActivityAware
 {
-    public static final boolean FULL_FLAVOR = false;
+    public static final boolean FULL_FLAVOR = true;
 	//static Context ctx;
 	//static Registrar reg;
 	//static Activity androidActivity;

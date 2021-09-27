@@ -7,7 +7,7 @@ description: Driver for the various Tau Sound examples
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 0.0.1-alpha-3
+version: 0.0.1-alpha-4
 
 homepage: https://github.com/canardoux/tau10/blob/master/tau_sound/
 
@@ -24,12 +24,12 @@ dependencies:
 # ============================================================================
 # The following instructions are just for developing/debugging Flutter Sound
 # Do not put them in a real App
-  tau_platform_interface: # 0.0.1-alpha-3
-    path: ../../tau_platform_interface # tau_platform_interface Dir
-  tau_web: # 0.0.1-alpha-3
-    path: ../../tau_web # tau_web Dir
-  tau_sound_lite: # ^0.0.1-alpha-3
-    path: ../ # Flutter Sound Dir
+#  tau_platform_interface: 0.0.1-alpha-4
+#    path: ../../tau_platform_interface # tau_platform_interface Dir
+#  tau_web: 0.0.1-alpha-4
+#    path: ../../tau_web # tau_web Dir
+  tau_sound: ^0.0.1-alpha-4
+#    path: ../ # Flutter Sound Dir
 # ============================================================================
 
 

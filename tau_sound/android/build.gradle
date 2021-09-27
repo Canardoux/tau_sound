@@ -1,7 +1,7 @@
-//ext.flutterFFmpegPackage = 'audio'
+ext.flutterFFmpegPackage = 'audio'
 
 group 'xyz.canardoux.tausound'
-version '0.0.1-alpha-3'
+version '0.0.1-alpha-4'
 
 buildscript {
     repositories {
@@ -54,8 +54,8 @@ dependencies {
     // -------------------------------------------------------------------------------------
     // CAUTION: The following instruction is for developping and debugging the Flauto Engine
     // DO NOT INCLUDE THE FOLLOWING LINE IN A REAL APP !!!
-    implementation project(':tau_native')
-    //implementation 'com.github.canardoux:tau10:0.0.1-alpha-3'
+    //implementation project(':tau_native')
+    //implementation 'com.github.canardoux:tau10:0.0.1-alpha-4'
     // -------------------------------------------------------------------------------------
 
 }

@@ -1,5 +1,5 @@
 name: tau_platform_interface
-version: 0.0.1-alpha-3
+version: 0.0.1-alpha-4
 description: The Dart interface to Tau Sound.
 #author: larpoux<larpoux@canardoux.xyz>
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
