@@ -135,7 +135,7 @@
     },
     {
       "name": "tau_platform_interface",
-      "rootUri": "file:///Volumes/Home/larpoux/.pub-cache/hosted/pub.dartlang.org/tau_platform_interface-0.0.1-alpha-4",
+      "rootUri": "file:///Volumes/Home/larpoux/.pub-cache/hosted/pub.dartlang.org/tau_platform_interface-0.0.1-alpha-5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -170,7 +170,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2021-09-27T09:40:42.881185Z",
+  "generated": "2021-09-27T13:12:19.865361Z",
   "generator": "pub",
   "generatorVersion": "2.15.0-82.2.beta"
 }

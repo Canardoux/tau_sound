@@ -30,7 +30,7 @@ if [ "_$1" = "_REL" ] ; then
         gsed -i  "s/^ *project(':tau_native').projectDir = /\/\/project(':tau_native').projectDir = /"                                                                      tau_sound/android/settings.gradle
 
         gsed -i  "s/^ *\(implementation project(':tau_native'\)/    \/\/\1/"                                                                                              tau_sound/android/build.gradle
-        gsed -i  "s/^ *\/\/ *implementation 'com.github.Canardoux:tau_native:/    implementation 'com.github.Canardoux:tautau_native_core:/"                                        tau_sound/android/build.gradle
+        gsed -i  "s/^ *\/\/ *implementation 'com.github.canardoux:tau_native:/    implementation 'com.github.canardoux:tau_native:/"                                        tau_sound/android/build.gradle
 
         gsed -i  "s/^ *pod 'tau_native',\(.*\)$/# pod 'tau_native',\1/"                                                                                                     tau_sound/example/ios/Podfile
 
@@ -75,7 +75,7 @@ elif [ "_$1" = "_DEV" ]; then
 
         #gsed -i  "s/^\( *implementation [^\/]*\/\/ Tau Core\)$/\/\/\1/"                                                                                                 tau_sound/android/build.gradle
         gsed -i  "s/^ *\/\/ *\(implementation project(':tau_native'\)/    \1/"                                                                                            tau_sound/android/build.gradle
-        gsed -i  "s/^ *implementation 'xyz.canardoux:tau_native:/    \/\/implementation 'xyz.canardoux:tau_native:/"                                                        tau_sound/android/build.gradle
+        gsed -i  "s/^ *implementation 'com.github.canardoux:tau_native:/    \/\/implementation 'com.github.canardoux:tau_native:/"                                                        tau_sound/android/build.gradle
 
         gsed -i  "s/^ *# pod 'tau_native',\(.*\)$/pod 'tau_native',\1/"                                                                                                     tau_sound/example/ios/Podfile
 
