@@ -26,11 +26,11 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
 
-import com.dooboolab.TauEngine.FlautoPlayer;
-import com.dooboolab.TauEngine.FlautoTrack;
-import com.dooboolab.TauEngine.FlautoTrackPlayer;
-import com.dooboolab.TauEngine.FlautoPlayerCallback;
-import com.dooboolab.TauEngine.Flauto.*;
+import xyz.canardoux.TauNative.*;
+import xyz.canardoux.TauNative.FlautoTrack;
+import xyz.canardoux.TauNative.FlautoTrackPlayer;
+import xyz.canardoux.TauNative.FlautoPlayerCallback;
+import xyz.canardoux.TauNative.Flauto.*;
 
 
 public class TauSoundPlayer extends TauSoundSession implements  FlautoPlayerCallback
@@ -39,7 +39,7 @@ public class TauSoundPlayer extends TauSoundSession implements  FlautoPlayerCall
 	static final String ERR_UNKNOWN           = "ERR_UNKNOWN";
 	static final String ERR_PLAYER_IS_NULL    = "ERR_PLAYER_IS_NULL";
 	static final String ERR_PLAYER_IS_PLAYING = "ERR_PLAYER_IS_PLAYING";
-	final static  String           TAG         = "FlutterSoundPlugin";
+	final static  String           TAG         = "TauSoundPlugin";
 
 
 	FlautoPlayer m_flautoPlayer;
@@ -129,7 +129,7 @@ public class TauSoundPlayer extends TauSoundSession implements  FlautoPlayerCall
 
 //========================================================================================================================================
 
-	/* ctor */ FlutterSoundPlayer (final MethodCall call)
+	/* ctor */ TauSoundPlayer (final MethodCall call)
 	{
 		int withUI  = call.argument("withUI");
 		if (withUI != 0)
@@ -141,9 +141,9 @@ public class TauSoundPlayer extends TauSoundSession implements  FlautoPlayerCall
 		}
 	}
 
-	FlutterSoundManager getPlugin ()
+	TauSoundManager getPlugin ()
 	{
-		return FlutterSoundPlayerManager.flutterSoundPlayerPlugin;
+		return TauSoundPlayerManager.TauSoundPlayerPlugin;
 	}
 
 	int getStatus()

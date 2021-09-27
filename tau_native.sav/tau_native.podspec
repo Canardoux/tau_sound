@@ -23,14 +23,14 @@ This code was originally inside the flutter_sound/ios directory.
 It has been extracted to be isolated from Flutter and can be used with other frameworks.
                        DESC
 
-  s.homepage         = 'https://github.com/canardoux/tau_sound'
+  s.homepage         = 'https://github.com/canardoux/tau10'
   s.license          = { :type => 'GPL3', :file => 'LICENSE' }
   s.author           = { 'larpoux' => 'larpoux@gmail.com' }
   s.source           = { :git => 'https://github.com/canardoux/tau10.git', :tag => '' + s.version.to_s }
 
   s.ios.deployment_target = '10.0'
 
-  s.source_files = 'tau_native/ios/Classes/*'
+  s.source_files = 'ios/Classes/*'
   s.frameworks = 'AVFoundation', 'MediaPlayer'
 
 

@@ -27,13 +27,13 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 
-import xyz.canardoux.TauEngine.Flauto;
+import xyz.canardoux.TauNative.Flauto;
 
 public class TauSound
 	implements FlutterPlugin,
 	           ActivityAware
 {
-    public static final boolean FULL_FLAVOR = true;
+    public static final boolean FULL_FLAVOR = false;
 	//static Context ctx;
 	//static Registrar reg;
 	//static Activity androidActivity;
@@ -58,8 +58,8 @@ public class TauSound
 		Flauto.androidContext = registrar.context ();
 		Flauto.androidActivity = registrar.activity ();
 
-		FlutterSoundPlayerManager.attachFlautoPlayer ( Flauto.androidContext, registrar.messenger () );
-		FlutterSoundRecorderManager.attachFlautoRecorder ( Flauto.androidContext, registrar.messenger ()  );
+		TauSoundPlayerManager.attachFlautoPlayer ( Flauto.androidContext, registrar.messenger () );
+		TauSoundRecorderManager.attachFlautoRecorder ( Flauto.androidContext, registrar.messenger ()  );
 	}
 
 
@@ -98,8 +98,8 @@ public class TauSound
 
 		// Only register if activity exists (the application is not running in background)
 		Flauto.androidContext = pluginBinding.getApplicationContext ();
-		FlutterSoundPlayerManager.attachFlautoPlayer ( Flauto.androidContext, pluginBinding.getBinaryMessenger () );
-		FlutterSoundRecorderManager.attachFlautoRecorder ( Flauto.androidContext, pluginBinding.getBinaryMessenger () );
+		TauSoundPlayerManager.attachFlautoPlayer ( Flauto.androidContext, pluginBinding.getBinaryMessenger () );
+		TauSoundRecorderManager.attachFlautoRecorder ( Flauto.androidContext, pluginBinding.getBinaryMessenger () );
 	}
 
 

@@ -1,4 +1,4 @@
-package com.dooboolab.TauEngine;
+package xyz.canardoux.TauNative;
 /*
  * Copyright 2018, 2019, 2020, 2021 Dooboolab.
  *
@@ -30,7 +30,7 @@ import java.io.*;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import com.dooboolab.TauEngine.Flauto.*;
+import xyz.canardoux.TauNative.Flauto.*;
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------

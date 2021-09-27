@@ -1,4 +1,4 @@
-package com.dooboolab.TauEngine;
+package xyz.canardoux.TauNative;
 /*
  * Copyright 2018, 2019, 2020, 2021 Dooboolab.
  *
@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Arrays;
 
-import com.dooboolab.TauEngine.Flauto.*;
+import xyz.canardoux.TauNative.Flauto.*;
 
 
 public class FlautoRecorderEngine

@@ -17,7 +17,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.dooboolab.TauEngine;
+package xyz.canardoux.TauNative;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothProfile;
@@ -28,7 +28,7 @@ import android.os.Build;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.dooboolab.TauEngine.Flauto.*;
+import xyz.canardoux.TauNative.Flauto.*;
 
 
 public abstract class FlautoSession

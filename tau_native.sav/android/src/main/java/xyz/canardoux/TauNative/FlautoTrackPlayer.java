@@ -1,4 +1,4 @@
-package com.dooboolab.TauEngine;
+package xyz.canardoux.TauNative;
 /*
  * Copyright 2018, 2019, 2020, 2021 Dooboolab.
  *
@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Callable;
-import com.dooboolab.TauEngine.Flauto.*;
+import xyz.canardoux.TauNative.Flauto.*;
 
 
 //-----------------------------------------------------------------------------------------------------------------------------

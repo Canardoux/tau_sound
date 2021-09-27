@@ -1,4 +1,4 @@
-package com.dooboolab.TauEngine;
+package xyz.canardoux.TauNative;
 /*
  * Copyright 2018, 2019, 2020, 2021 Dooboolab.
  *
@@ -24,7 +24,7 @@ import android.media.MediaRecorder;
 import android.os.Build;
 import androidx.core.content.ContextCompat;
 import java.io.IOException;
-import com.dooboolab.TauEngine.Flauto.t_CODEC;
+import xyz.canardoux.TauNative.Flauto.t_CODEC;
 import static android.Manifest.permission.RECORD_AUDIO;
 
 

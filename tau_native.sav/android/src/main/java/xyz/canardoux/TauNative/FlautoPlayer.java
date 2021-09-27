@@ -1,4 +1,4 @@
-package com.dooboolab.TauEngine;
+package xyz.canardoux.TauNative;
 /*
  * Copyright 2018, 2019, 2020, 2021 Dooboolab.
  *
@@ -35,8 +35,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.lang.Thread;
 
-import com.dooboolab.TauEngine.Flauto.*;
-import com.dooboolab.TauEngine.Flauto;
+import xyz.canardoux.TauNative.Flauto.*;
+import xyz.canardoux.TauNative.Flauto;
 
 public class FlautoPlayer extends FlautoSession implements MediaPlayer.OnErrorListener
 {

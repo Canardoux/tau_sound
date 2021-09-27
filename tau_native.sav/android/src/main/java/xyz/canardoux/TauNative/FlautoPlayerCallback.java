@@ -1,4 +1,4 @@
-package com.dooboolab.TauEngine;
+package xyz.canardoux.TauNative;
 /*
  * Copyright 2018, 2019, 2020, 2021 Dooboolab.
  *
@@ -18,7 +18,7 @@ package com.dooboolab.TauEngine;
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import com.dooboolab.TauEngine.Flauto.*;
+import xyz.canardoux.TauNative.Flauto.*;
 
 public interface FlautoPlayerCallback
 {

@@ -29,32 +29,32 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
-class TauSoundPlayerManager extends FlutterSoundManager
+class TauSoundPlayerManager extends TauSoundManager
         implements MethodCallHandler
 {
         final static String TAG = "FlutterPlayerPlugin";
         static Context            androidContext;
-        static FlutterSoundPlayerManager flutterSoundPlayerPlugin; // singleton
+        static TauSoundPlayerManager TauSoundPlayerPlugin; // singleton
 
 
         public static void attachFlautoPlayer (
                 Context ctx, BinaryMessenger messenger
         )
         {
-                if (flutterSoundPlayerPlugin == null) {
-                        flutterSoundPlayerPlugin = new FlutterSoundPlayerManager();
+                if (TauSoundPlayerPlugin == null) {
+                        TauSoundPlayerPlugin = new TauSoundPlayerManager();
                 }
                 MethodChannel channel = new MethodChannel ( messenger, "com.dooboolab.flutter_sound_player" );
-                flutterSoundPlayerPlugin.init(channel);
-                channel.setMethodCallHandler ( flutterSoundPlayerPlugin );
+                TauSoundPlayerPlugin.init(channel);
+                channel.setMethodCallHandler ( TauSoundPlayerPlugin );
                 androidContext = ctx;
         }
 
 
 
-        FlutterSoundPlayerManager getManager ()
+        TauSoundPlayerManager getManager ()
         {
-                return flutterSoundPlayerPlugin;
+                return TauSoundPlayerPlugin;
         }
 
         @Override
@@ -69,13 +69,13 @@ class TauSoundPlayerManager extends FlutterSoundManager
                         }
                 }
 
-                FlutterSoundPlayer aPlayer = (FlutterSoundPlayer)getSession(call);
+                TauSoundPlayer aPlayer = (TauSoundPlayer)getSession(call);
                 switch ( call.method )
                 {
                         case "openPlayer":
                         {
                                 //int withUI = call.argument("withUI");
-                                aPlayer = new FlutterSoundPlayer (call );
+                                aPlayer = new TauSoundPlayer (call );
                                 initSession( call, aPlayer);
                                 aPlayer.openPlayer ( call, result );
 

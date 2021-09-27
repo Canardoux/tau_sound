@@ -30,10 +30,10 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
 
-import com.dooboolab.TauEngine.FlautoRecorderCallback;
-import com.dooboolab.TauEngine.FlautoRecorder;
-import com.dooboolab.TauEngine.Flauto;
-import com.dooboolab.TauEngine.Flauto.*;
+import xyz.canardoux.TauNative.*;
+import xyz.canardoux.TauNative.FlautoRecorder;
+import xyz.canardoux.TauNative.Flauto;
+import xyz.canardoux.TauNative.Flauto.*;
 
 
 public class TauSoundRecorder extends TauSoundSession implements FlautoRecorderCallback
@@ -41,7 +41,7 @@ public class TauSoundRecorder extends TauSoundSession implements FlautoRecorderC
 	static final String ERR_UNKNOWN           = "ERR_UNKNOWN";
 	static final String ERR_RECORDER_IS_NULL      = "ERR_RECORDER_IS_NULL";
 	static final String ERR_RECORDER_IS_RECORDING = "ERR_RECORDER_IS_RECORDING";
-	final static String             TAG                = "FlutterSoundRecorder";
+	final static String             TAG                = "TauSoundRecorder";
 	FlautoRecorder m_recorder;
 
 // =============================================================  callback ===============================================================
@@ -96,15 +96,15 @@ public class TauSoundRecorder extends TauSoundSession implements FlautoRecorderC
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 
-	/* ctor */ FlutterSoundRecorder (final MethodCall call)
+	/* ctor */ TauSoundRecorder (final MethodCall call)
 	{
 		m_recorder = new FlautoRecorder(this);
 	}
 
 
-	FlutterSoundManager getPlugin ()
+	TauSoundManager getPlugin ()
 	{
-		return FlutterSoundRecorderManager.flutterSoundRecorderPlugin;
+		return TauSoundRecorderManager.TauSoundRecorderPlugin;
 	}
 
 

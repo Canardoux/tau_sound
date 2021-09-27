@@ -1,4 +1,4 @@
-package com.dooboolab.TauEngine;
+package xyz.canardoux.TauNative;
 /*
  * Copyright 2018, 2019, 2020, 2021 Dooboolab.
  *
@@ -20,7 +20,7 @@ package com.dooboolab.TauEngine;
 
 
 import java.util.HashMap;
-import com.dooboolab.TauEngine.Flauto.t_CODEC;
+import xyz.canardoux.TauNative.Flauto.t_CODEC;
 
 public class FlautoTrack {
     private String path;

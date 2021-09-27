@@ -9,9 +9,10 @@ toc: false
 ---
 ## 9.0.0-alpha.1
 
-- Flutter Sound FULL is now correctely linked with Flutter_ffmpeg. This means that if the App needs to access flutter_ffmpeg, it can use either the FULL flavor or the LITE flavor as it wants. [install](https://tau.canardoux.xyz/flutter_sound_install.html#ffmpeg)
+- Tau Sound FULL is now correctly linked with Flutter_ffmpeg. This means that if the App needs to access flutter_ffmpeg, it can use either the FULL flavor or the LITE flavor as it wants. [install](https://tau.canardoux.xyz/flutter_sound_install.html#ffmpeg)
 - The V8 API continues to be supported : backward compatibility is Ensured. Side to side the V8 API, a new API V9 is proposed (beta). Please refer to [this migration guide](links_migration_v9).
-- Flutter Sound and tau-core are now published under MPL2.0 (LGPL was not permissive enough). [#696](https://github.com/Canardoux/tau/issues/696)
+- Tau Sound and tau-native are now published under GPL3.0 . [#696](https://github.com/Canardoux/tau/issues/696)
+- Not necessary to do any include inside index.html for Tau Sound on Web
 
 ## 8.3.12
 
@@ -20,7 +21,6 @@ toc: false
 ## 8.3.11
 
 - Fix several bugs in the UI Widgets : [#759](https://github.com/Canardoux/tau/issues/759). This is a Pull Request kindly pushed by [@jfkominsky](https://github.com/jfkominsky) : [763](https://github.com/Canardoux/tau/pull/763). Thanks to him/her :-)
->>>>>>> origin/master
 
 ## 8.3.10
 

@@ -30,15 +30,15 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel.Result;
 
 
-public class FlutterSoundManager
+public class TauSoundManager
 {
 	public MethodChannel            channel;
-	public List<FlutterSoundSession> slots;
+	public List<TauSoundSession> slots;
 
 	void init(MethodChannel aChannel)
 	{
 		if ( slots == null ) {
-			slots = new ArrayList<FlutterSoundSession>();
+			slots = new ArrayList<TauSoundSession>();
 		}
 		channel = aChannel;
 	}
@@ -55,7 +55,7 @@ public class FlutterSoundManager
 	}
 
 
-	public FlutterSoundSession getSession(final MethodCall call)
+	public TauSoundSession getSession(final MethodCall call)
 	{
 		int slotNo = call.argument ( "slotNo" );
 		if ( ( slotNo < 0 ) || ( slotNo > slots.size () ) )
@@ -69,7 +69,7 @@ public class FlutterSoundManager
 		return slots.get ( slotNo );
 	}
 
-	public void initSession( final MethodCall call, FlutterSoundSession aPlayer)
+	public void initSession( final MethodCall call, TauSoundSession aPlayer)
 	{
 		int slot =  call.argument ( "slotNo" );
 		slots.set ( slot, aPlayer );
@@ -84,7 +84,7 @@ public class FlutterSoundManager
 			{
 				slots.get ( i ).reset(call, result);
 			}
-			slots   = new ArrayList<FlutterSoundSession>();
+			slots   = new ArrayList<TauSoundSession>();
 		}
 		result.success(0);
 	}

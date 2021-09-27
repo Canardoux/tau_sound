@@ -29,12 +29,12 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 
 
-class TauSoundRecorderManager extends FlutterSoundManager
+class TauSoundRecorderManager extends TauSoundManager
         implements MethodCallHandler
 {
 
         static Context              androidContext;
-        static FlutterSoundRecorderManager flutterSoundRecorderPlugin; // singleton
+        static TauSoundRecorderManager TauSoundRecorderPlugin; // singleton
 
 
         static final String ERR_UNKNOWN               = "ERR_UNKNOWN";
@@ -44,20 +44,20 @@ class TauSoundRecorderManager extends FlutterSoundManager
 
         public static void attachFlautoRecorder ( Context ctx, BinaryMessenger messenger )
         {
-                if (flutterSoundRecorderPlugin == null) {
-                        flutterSoundRecorderPlugin = new FlutterSoundRecorderManager();
+                if (TauSoundRecorderPlugin == null) {
+                        TauSoundRecorderPlugin = new TauSoundRecorderManager();
                 }
                 MethodChannel channel = new MethodChannel ( messenger, "com.dooboolab.flutter_sound_recorder" );
-                flutterSoundRecorderPlugin.init( channel);
-                channel.setMethodCallHandler ( flutterSoundRecorderPlugin );
+                TauSoundRecorderPlugin.init( channel);
+                channel.setMethodCallHandler ( TauSoundRecorderPlugin );
                 androidContext = ctx;
         }
 
 
 
-        FlutterSoundRecorderManager getManager ()
+        TauSoundRecorderManager getManager ()
         {
-                return flutterSoundRecorderPlugin;
+                return TauSoundRecorderPlugin;
         }
 
 
@@ -73,12 +73,12 @@ class TauSoundRecorderManager extends FlutterSoundManager
                         }
                 }
 
-                FlutterSoundRecorder aRecorder = (FlutterSoundRecorder) getSession( call);
+                TauSoundRecorder aRecorder = (TauSoundRecorder) getSession( call);
                 switch ( call.method )
                 {
                         case "openRecorder":
                         {
-                                aRecorder = new FlutterSoundRecorder ( call );
+                                aRecorder = new TauSoundRecorder ( call );
                                 initSession( call, aRecorder );
                                 aRecorder.openRecorder ( call, result );
                         }
