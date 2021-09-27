@@ -103,7 +103,7 @@ List<Function> callbackTable =
         allowInterop( (TauPlayerCallback cb, int state)                                        { cb.pauseCallback(state,);} ),
         allowInterop( (TauPlayerCallback cb, int state)                                        { cb.resumeCallback(state,);} ),
         allowInterop( (TauPlayerCallback cb, int state)                                        { cb.skipBackward(state,);} ),
-        allowInterop( (TauCallback cb, int state)                                        { cb.skipForward(state,);} ),
+        allowInterop( (TauPlayerCallback cb, int state)                                        { cb.skipForward(state,);} ),
         allowInterop( (TauPlayerCallback cb, int state)                                        { cb.updatePlaybackState(state,);} ),
         allowInterop( (TauPlayerCallback cb, int ln)                                           { cb.needSomeFood(ln,);} ),
         allowInterop( (TauPlayerCallback cb, int state)                                        { cb.audioPlayerFinished(state,);} ),

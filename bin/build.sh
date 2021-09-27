@@ -12,7 +12,7 @@ bin/flavor.sh FULL
 bin/reldev.sh REL
 bin/setver.sh $VERSION
 
-
+rm tau_sound/_*.tgz 2>/dev/null
 
 cd tau_platform_interface/    
 flutter clean
@@ -187,8 +187,14 @@ if [ $? -ne 0 ]; then
     #exit -1
 fi
 
-cd ../..
+flutter build web
+if [ $? -ne 0 ]; then
+    echo "Error"
+    #exit -1
+fi
 
+cd ../..
+exit 0
 
 bin/doc.sh $VERSION
 

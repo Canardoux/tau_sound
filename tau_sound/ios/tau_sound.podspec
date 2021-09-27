@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
 s.name = 'tau_sound'
-  s.version          = '0.0.1-alpha-5'
+  s.version          = '0.0.1-alpha-6+1'
   s.summary          = 'Flutter plugin that relates to sound like audio and recorder.'
   s.description      = <<-DESC
 Flutter plugin that relates to sound like audio and recorder.
@@ -18,7 +18,7 @@ Flutter plugin that relates to sound like audio and recorder.
 
   s.ios.deployment_target = '10.0'
   s.static_framework = true
-  s.dependency 'tau_native', '0.0.1-alpha-5'
+  s.dependency 'tau_native', '0.0.1-alpha-6+1'
   s.dependency 'mobile-ffmpeg-audio', '4.4.LTS'
   #s.dependency 'ffmpeg-kit-ios-full', '~> 4.4.LTS'
 end
