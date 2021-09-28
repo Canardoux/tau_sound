@@ -1,5 +1,5 @@
 name: tau_web
-version: 0.0.1-alpha-6+1
+version: 0.0.1-alpha-7+1
 description: Flutter plugin that relates to sound like audio and recorder.
 #author: larpoux<larpoux@canardoux.xyz>
 homepage: https://github.com/canardoux/tau10
@@ -27,8 +27,8 @@ flutter:
 
 
 dependencies:
-  tau_platform_interface: # 0.0.1-alpha-6+1
-    path: ../tau_platform_interface # Flutter Sound Dir
+  tau_platform_interface: 0.0.1-alpha-7+1
+#    path: ../tau_platform_interface # Flutter Sound Dir
   flutter:
     sdk: flutter
   logger: ^1.0.0

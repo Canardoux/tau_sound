@@ -147,7 +147,7 @@ class _StreamLoopJustAudioState extends State<StreamLoopJustAudio> {
   }
 
   void justAudio() async {
-     await _player.setUrl(_exampleAudioFilePathMP3);
+    await _player.setUrl(_exampleAudioFilePathMP3);
     await _player.play();
   }
   // ----------------------------------------------------------------------------------------------------------------------
