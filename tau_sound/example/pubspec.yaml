@@ -24,12 +24,12 @@ dependencies:
 # ============================================================================
 # The following instructions are just for developing/debugging Flutter Sound
 # Do not put them in a real App
-#  tau_platform_interface: 0.0.1-alpha-6+1
-#    path: ../../tau_platform_interface # tau_platform_interface Dir
-#  tau_web: 0.0.1-alpha-6+1
-#    path: ../../tau_web # tau_web Dir
-  tau_sound: ^0.0.1-alpha-6+1
-#    path: ../ # Flutter Sound Dir
+  tau_platform_interface: # 0.0.1-alpha-6+1
+    path: ../../tau_platform_interface # tau_platform_interface Dir
+  tau_web: # 0.0.1-alpha-6+1
+    path: ../../tau_web # tau_web Dir
+  tau_sound: # ^0.0.1-alpha-6+1
+    path: ../ # Flutter Sound Dir
 # ============================================================================
 
 
@@ -39,7 +39,8 @@ dependencies:
   path: ^1.6.4
 ####  flutter_ffmpeg: ^0.4.2
   intl: ^0.17.0
-  just_audio: ^0.9.11
+  just_audio: # ^0.9.11
+    path: ../../../just_audio/just_audio
 
 
 

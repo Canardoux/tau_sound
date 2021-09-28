@@ -41,7 +41,7 @@ FlutterSoundPlayerManager* flutterSoundPlayerManager = nil; // Singleton
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar
 {
-        FlutterMethodChannel* aChannel = [FlutterMethodChannel methodChannelWithName:@"com.dooboolab.flutter_sound_player"
+        FlutterMethodChannel* aChannel = [FlutterMethodChannel methodChannelWithName:@"xyz.canardoux.tau_player"
                                         binaryMessenger:[registrar messenger]];
         if (flutterSoundPlayerManager != nil)
         {

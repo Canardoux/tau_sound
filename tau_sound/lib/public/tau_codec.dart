@@ -19,7 +19,7 @@
 
 /// Flutter Sound Input nodes
 /// {@category Main}
-library node;
+library codec;
 
 import 'dart:core';
 import 'package:tau_platform_interface/tau_platform_interface.dart';

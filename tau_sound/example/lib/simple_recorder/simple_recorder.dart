@@ -67,7 +67,8 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
   bool _mplaybackReady = false;
 
   @override
-  void initState() {
+  void initState()
+  {
     _mPlayer!.open().then((value) {
       setState(() {
         _mPlayerIsInited = true;

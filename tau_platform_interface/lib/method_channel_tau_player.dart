@@ -39,14 +39,13 @@ class MethodChannelTauPlayer extends TauPlayerPlatform
 
 
 
-  /* ctor */ MethodChannelTauSoundPlayer()
+  /* ctor */ MethodChannelTauPlayer()
   {
     setCallback();
   }
 
   void setCallback()
   {
-    //_channel = const MethodChannel('com.dooboolab.flutter_sound_player');
     _channel.setMethodCallHandler((MethodCall call)
     {
       return channelMethodCallHandler(call)!;

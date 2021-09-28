@@ -47,7 +47,7 @@ class TauSoundRecorderManager extends TauSoundManager
                 if (TauSoundRecorderPlugin == null) {
                         TauSoundRecorderPlugin = new TauSoundRecorderManager();
                 }
-                MethodChannel channel = new MethodChannel ( messenger, "com.dooboolab.flutter_sound_recorder" );
+                MethodChannel channel = new MethodChannel ( messenger, "xyz.canardoux.tau_recorder" );
                 TauSoundRecorderPlugin.init( channel);
                 channel.setMethodCallHandler ( TauSoundRecorderPlugin );
                 androidContext = ctx;

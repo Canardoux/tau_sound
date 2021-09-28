@@ -16,27 +16,12 @@ cd
 
 
 
-echo "patch css for Jekyll compatigility"
-
-sed -i  "0,/^  overflow: hidden;$/s//overflow: auto;/"  /tmp/toto_doc/_site/pages/tau-sound/api/static-assets/styles.css
-sed -i  "s/^  background-color: inherit;$/  background-color: #2196F3;/" /tmp/toto_doc/_site/pages/tau-sound/api/static-assets/styles.css
-
-echo "Add Front matter on top of dartdoc pages"
-for f in $(find /tmp/toto_doc/_site/pages/flutter-sound/api -name '*.html' )
-do
-        sed -i  "1i ---" $f
-        #gsed -i  "1i toc: false" $f
-
-        sed -i  "1i ---" $f
-        sed -i  "/^<script src=\"https:\/\/ajax\.googleapis\.com\/ajax\/libs\/jquery\/3\.2\.1\/jquery\.min\.js\"><\/script>$/d" $f
-done
-
-
-
+cp -a /tmp/toto_doc/api /tmp/toto_doc/_site/pages/tau-sound/api
 
 echo "Building Jekyll doc"
 cd /tmp/toto_doc
 rm home.md 2>/dev/null
+rm -rf /tmp/toto_doc/tau_sound/example/ios/Pods 
 bundle config set --local path '~/vendor/bundle'
 bundle install
 bundle exec jekyll build
@@ -45,8 +30,24 @@ if [ $? -ne 0 ]; then
     exit -1
 fi
 
-cp -a /tmp/toto_doc/api /tmp/toto_doc/_site/pages/tau-sound/api
 
+cd
+echo "patch css for Jekyll compatigility"
+
+sed -i  "0,/^  overflow: hidden;$/s//overflow: auto;/"  /tmp/toto_doc/_site/pages/tau-sound/api/static-assets/styles.css
+sed -i  "s/^  background-color: inherit;$/  background-color: #2196F3;/" /tmp/toto_doc/_site/pages/tau-sound/api/static-assets/styles.css
+
+echo "Add Front matter on top of dartdoc pages"
+for f in $(find /tmp/toto_doc/_site/pages/tau-sound/api -name '*.html' )
+do
+        sed -i  "1i ---" $f
+        #gsed -i  "1i toc: false" $f
+
+        sed -i  "1i ---" $f
+        sed -i  "/^<script src=\"https:\/\/ajax\.googleapis\.com\/ajax\/libs\/jquery\/3\.2\.1\/jquery\.min\.js\"><\/script>$/d" $f
+done
+
+cd
 
 echo "Symbolic links"
 #FILES=*
@@ -87,6 +88,6 @@ if [ $? -ne 0 ]; then
 fi
 cd 
 
-rm -rf /var/www/vhosts/canardoux.xyz/tau.canardoux.xyz/web_example/
+rm -rf /var/www/vhosts/canardoux.xyz/tau10.canardoux.xyz/web_example/
 cp -a /tmp/toto_doc/tau_sound/example/assets/samples/ /tmp/toto_doc/tau_sound/example/assets/extract /tmp/toto_doc/tau_sound/example/build/web/assets
-cp -a /tmp/toto_doc/tau_sound/example/build/web /var/www/vhosts/canardoux.xyz/tau.canardoux.xyz/web_example
+cp -a /tmp/toto_doc/tau_sound/example/build/web /var/www/vhosts/canardoux.xyz/tau10.canardoux.xyz/web_example

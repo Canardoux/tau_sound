@@ -57,7 +57,7 @@ class _StreamLoopJustAudioState extends State<StreamLoopJustAudio> {
   Future<void> init() async {
     await _mRecorder!.open();
     await _mPlayer!.open();
-    await _player.setUrl(_exampleAudioFilePathMP3);
+    //await _player.setUrl(_exampleAudioFilePathMP3);
   }
 
   @override
@@ -146,8 +146,9 @@ class _StreamLoopJustAudioState extends State<StreamLoopJustAudio> {
     return _mRecorder!.isRecording ? stop : record;
   }
 
-  void justAudio() {
-    _player.play();
+  void justAudio() async {
+     await _player.setUrl(_exampleAudioFilePathMP3);
+    await _player.play();
   }
   // ----------------------------------------------------------------------------------------------------------------------
 

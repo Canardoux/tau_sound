@@ -194,7 +194,6 @@ if [ $? -ne 0 ]; then
 fi
 
 cd ../..
-exit 0
 
 bin/doc.sh $VERSION
 

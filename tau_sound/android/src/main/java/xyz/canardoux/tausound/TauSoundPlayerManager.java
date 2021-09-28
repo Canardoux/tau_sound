@@ -44,7 +44,7 @@ class TauSoundPlayerManager extends TauSoundManager
                 if (TauSoundPlayerPlugin == null) {
                         TauSoundPlayerPlugin = new TauSoundPlayerManager();
                 }
-                MethodChannel channel = new MethodChannel ( messenger, "com.dooboolab.flutter_sound_player" );
+                MethodChannel channel = new MethodChannel ( messenger, "xyz.canardoux.tau_player" );
                 TauSoundPlayerPlugin.init(channel);
                 channel.setMethodCallHandler ( TauSoundPlayerPlugin );
                 androidContext = ctx;

@@ -12,8 +12,8 @@ fi
 # tau_web
 # -------
 
-cd tau_sound/example
-flutter build web
+#cd tau_sound/example
+#flutter build web
 
 
 cp privacy_policy.html doc/_site

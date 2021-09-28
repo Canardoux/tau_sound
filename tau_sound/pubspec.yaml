@@ -21,10 +21,10 @@ dependencies:
     sdk: flutter
   flutter_ffmpeg: ^0.4.2    
 # ============================================================================
-  tau_platform_interface: 0.0.1-alpha-6+1
-#    path: ../tau_platform_interface # Flutter Sound Dir
-  tau_web: 0.0.1-alpha-6+1
-#    path: ../tau_web # Flutter Sound Dir
+  tau_platform_interface: # 0.0.1-alpha-6+1
+    path: ../tau_platform_interface # Flutter Sound Dir
+  tau_web: # 0.0.1-alpha-6+1
+    path: ../tau_web # Flutter Sound Dir
 # ============================================================================
 
 dev_dependencies:

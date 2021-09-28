@@ -53,7 +53,7 @@ FlutterSoundRecorderManager* flutterSoundRecorderManager = nil; // Singleton
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar
 {
-        FlutterMethodChannel* aChannel = [FlutterMethodChannel methodChannelWithName:@"com.dooboolab.flutter_sound_recorder"
+        FlutterMethodChannel* aChannel = [FlutterMethodChannel methodChannelWithName:@"xyz.canardoux.tau_recorder"
                                         binaryMessenger:[registrar messenger]];
         if (flutterSoundRecorderManager != nil)
                 NSLog(@"ERROR during registerWithRegistrar: flutterSoundRecorderManager != nil");
