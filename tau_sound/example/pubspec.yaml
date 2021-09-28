@@ -39,8 +39,8 @@ dependencies:
   path: ^1.6.4
 ####  flutter_ffmpeg: ^0.4.2
   intl: ^0.17.0
-  just_audio: # ^0.9.11
-    path: ../../../just_audio/just_audio
+  just_audio: ^0.9.11
+    #path: ../../../just_audio/just_audio
 
 
 
