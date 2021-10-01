@@ -1,10 +1,15 @@
 
-![Banner](https://tau.canardoux.xyz/images/banner.png)
+{% include tip.html content="This is the GPL fork of Flutter Sound. If you cannot (or don't want to) publish your App under the GPL License, you probably want to consider using
+the `MPL Flutter-Sound 8.4` branch :" %}
+# [MPL Flutter-Sound 8.4](https://pub.dev/packages/flutter_sound)
 
 -------------------------------------------------------------------------------------
 
-- ## The [τ documentation](https://tau.canardoux.xyz/readme.html) is there
-- ## The [τ CHANGELOG](https://tau.canardoux.xyz/changelog.html) is there
+[Banner](https://tau.canardoux.xyz/images/banner5.png)
+
+
+- ## The [Tau documentation](https://tau10.canardoux.xyz/readme.html) is there
+- ## The [Tau CHANGELOG](https://tau10.canardoux.xyz/changelog.html) is there
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
@@ -26,7 +31,15 @@ Flutter Sound provides both a high level API and widgets for:
 
 Flutter Sound can be used to play a beep from an asset all the way up to implementing a complete media player.
 
-The API is designed so you can use the supplied widgets or roll your own.
+
+This project is one of the two forks of the famous LGPL Flutter Sound Project 8.3. (The other being the MPL [Flutter Sound Project 8.4](https://pub.dev/packages/flutter_sound).
+
+This fork is published under the GNU Public License GPL3.0. 
+
+If your App will be covered by the GPL License,
+you probably want to consider using the MPL [Tau Flutter Sound Project 8.4](https://pub.dev/packages/tau_sound).
+
+## Requirements
 
 - Flutter Sound requires an iOS 10.0 SDK (or later)
 - Flutter Sound requires an Android API level 21 (or later)
@@ -49,21 +62,18 @@ The Flutter Sound package includes the following features
 
 ## Changelog
 
-You can find the [changes here](https://tau.canardoux.xyz/changelog.html)
+You can find the [changes here](https://tau10.canardoux.xyz/changelog.html)
 
 
 ## Documentation
 
-The [documentation is here](https://tau.canardoux.xyz/readme.html)
+The [documentation is here](https://tau10.canardoux.xyz/readme.html)
 
 ## Licenses
 
-- Flutter Sound and tau_core are copyrighted by Dooboolab (2018, 2019, 2020, 2021).
-- Flutter Sound  and tau_core are released under a license with a *copyleft* clause: the MPL-V2 license. This means that if you modify some of Flutter Sound code you must publish your modifications under the MPL license too.
-
-- Tau React, Tau RCL and Tau JS are copyrighted by Canardoux (2021).
-- Tau React, Tau RCL and Tau JS are released under a license with a **strong** *copyleft* clause : the GPL-V3 license. This means that if you use part or all of Tau React, Tau RCL or Tau JS in your App, this App must be published under the GPL-V3 license, too.
-
+- τ Sound is copyrighted by Canardoux (2021).
+- τ Sound is released under a license with a *strong copyleft* clause: the GPL-V3 license. This means that your App must be pusblished to the GPL-v3 License, too.
+- If you cannot (or don't want to) publish your App under the GPL License you probably want to consider using the MPL [Flutter Sound Project 8.4](https://pub.dev/packages/flutter_sound).
 
 ## Help
 

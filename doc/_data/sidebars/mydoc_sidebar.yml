@@ -385,7 +385,7 @@ entries:
       output: web, pdf
 
     - title: Live demo
-      external_url: https://tau.canardoux.xyz/web_example/
+      external_url: https://tau10.canardoux.xyz/web_example/
       output: web, pdf
 
 
@@ -478,19 +478,27 @@ entries:
         subfolderitems:
 
         - title: Player Class
-          url: /pages\/flutter-sound\/api\/player\/FlutterSoundPlayer-class.html
+          url: /api\/player\/TauPlayer-class.html
           output: web, pdf
 
         - title: Recorder Class
-          url: /pages\/flutter-sound\/api\/recorder\/FlutterSoundRecorder-class.html
+          url: /api\/recorder\/TauRecorder-class.html
           output: web, pdf
 
-        - title: Utilities
-          url: /pages\/flutter-sound\/api\/topics\/Utilities-topic.html
+        - title: Helper Class
+          url: /api\/helper\/TauHelper-class.html
           output: web, pdf
 
-        - title: Widgets UI
-          url: /pages\/flutter-sound\/api\/topics\/UI_Widgets-topic.html
+        - title: Main Topic
+          url: /api\/topics\/Main-topic.html
+          output: web, pdf
+
+        - title: Utilities Topic
+          url: /api\/topics\/Utilities-topic.html
+          output: web, pdf
+
+        - title: Widgets UI Topic
+          url: /api\/topics\/UI_Widgets-topic.html
           output: web, pdf
 
 # ----------------------------------------
@@ -523,12 +531,12 @@ entries:
     - title: Problem Report
       output: web, pdf
       hint: Issues on Github
-      external_url: https://github.com/Canardoux/tau/issues
+      external_url: https://github.com/Canardoux/tau10/issues
 
 
 
     - title: Roadmap
-      external_url: https://github.com/Canardoux/tau/projects/3
+      external_url: https://github.com/Canardoux/tau10/projects/1
       output: web, pdf
 
     - title: Contributions

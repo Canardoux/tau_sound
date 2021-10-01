@@ -14,9 +14,20 @@ flutter pub get
 /usr/lib/dart/bin/dartdoc --pretty-index-json  --output /tmp/toto_doc/api lib
 cd
 
+sed -i  "0,/^  overflow: hidden;$/s/overflow: auto;/"  /tmp/toto_doc/api/static-assets/styles.css
+sed -i  "s/^  background-color: inherit;$/  background-color: #2196F3;/" /tmp/toto_doc/api/static-assets/styles.css
 
+echo "patch css for Jekyll compatigility"
 
-cp -a /tmp/toto_doc/api /tmp/toto_doc/_site/pages/tau-sound/api
+echo "Add Front matter on top of dartdoc pages"
+for f in $(find /tmp/toto_doc/api -name '*.html' )
+do
+        sed -i  "1i ---" $f
+        #gsed -i  "1i toc: false" $f
+
+        sed -i  "1i ---" $f
+        sed -i  "/^<script src=\"https:\/\/ajax\.googleapis\.com\/ajax\/libs\/jquery\/3\.2\.1\/jquery\.min\.js\"><\/script>$/d" $f
+done
 
 echo "Building Jekyll doc"
 cd /tmp/toto_doc
@@ -29,50 +40,57 @@ if [ $? -ne 0 ]; then
     echo "Error"
     exit -1
 fi
+cd ~/_site
+ln -s -v readme.html index.html
 
 
 cd
-echo "patch css for Jekyll compatigility"
 
-sed -i  "0,/^  overflow: hidden;$/s//overflow: auto;/"  /tmp/toto_doc/_site/pages/tau-sound/api/static-assets/styles.css
-sed -i  "s/^  background-color: inherit;$/  background-color: #2196F3;/" /tmp/toto_doc/_site/pages/tau-sound/api/static-assets/styles.css
-
-echo "Add Front matter on top of dartdoc pages"
-for f in $(find /tmp/toto_doc/_site/pages/tau-sound/api -name '*.html' )
-do
-        sed -i  "1i ---" $f
-        #gsed -i  "1i toc: false" $f
-
-        sed -i  "1i ---" $f
-        sed -i  "/^<script src=\"https:\/\/ajax\.googleapis\.com\/ajax\/libs\/jquery\/3\.2\.1\/jquery\.min\.js\"><\/script>$/d" $f
-done
-
-cd
-
-echo "Symbolic links"
+#echo "Symbolic links"
 #FILES=*
-cd /tmp/toto_doc/_site
+#cd /tmp/toto_doc/_site
 #ln -s  pages/flutter-sound/api/index.html dartdoc.html
 #ln -s  pages/flutter-sound/api/player/FlutterSoundPlayer-class.html dartdoc_player.html
 #ln -s  pages/flutter-sound/api/recorder/FlutterSoundRecorder-class.html dartdoc_recorder.html
 #ln -s  pages/flutter-sound/api/topics/Utilities-topic.html dartdoc_utilities.html
 #ln -s  pages/flutter-sound/api/topics/UI_Widgets-topic.html dartdoc_widgets.html
 
-for dir in $(find pages/tau-sound/api -type d)
+rm -rf /var/www/vhosts/canardoux.xyz/tau10.canardoux.xyz/*
+cp -a /tmp/toto_doc/_site/* /var/www/vhosts/canardoux.xyz/tau10.canardoux.xyz/
+
+cd ~/tau10.canardoux.xyz/
+echo "Symbolic links of the API"
+echo "--------------------------"
+for dir in $(find api -type d)
 do
         rel=`realpath --relative-to=$dir .`
+        echo "----- dir=$dir ----- rel=$rel"
         for d in */ ; do
-            ln -s $rel/$d $dir
+            echo "ln -s -v $rel/$d $dir"
+            ln -s -v $rel/$d $dir
         done
         #for f in *
         #do
         #        ln -s $rel/$f $dir
         #done
 done
-ln -s readme.html index.html
 
-rm -rf /var/www/vhosts/canardoux.xyz/tau10.canardoux.xyz/*
-cp -a /tmp/toto_doc/_site/* /var/www/vhosts/canardoux.xyz/tau10.canardoux.xyz/
+
+sed -i  "0,/^  overflow: hidden;$/s//overflow: auto;/"  api/static-assets/styles.css
+sed -i  "s/^  background-color: inherit;$/  background-color: #2196F3;/" api/static-assets/styles.css
+
+
+cd
+
+#echo "Symbolic links"
+#FILES=*
+#cd /tmp/toto_doc/_site
+#ln -s  pages/flutter-sound/api/index.html dartdoc.html
+#ln -s  pages/flutter-sound/api/player/FlutterSoundPlayer-class.html dartdoc_player.html
+#ln -s  pages/flutter-sound/api/recorder/FlutterSoundRecorder-class.html dartdoc_recorder.html
+#ln -s  pages/flutter-sound/api/topics/Utilities-topic.html dartdoc_utilities.html
+#ln -s  pages/flutter-sound/api/topics/UI_Widgets-topic.html dartdoc_widgets.html
+
 
 cd
 rm _toto.tgz _toto3.tgz

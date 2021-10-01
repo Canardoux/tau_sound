@@ -51,6 +51,9 @@ if [ $? -ne 0 ]; then
     echo "Error"
     #exit -1
 fi
+
+flutter format .
+
 cd ..
 
 
