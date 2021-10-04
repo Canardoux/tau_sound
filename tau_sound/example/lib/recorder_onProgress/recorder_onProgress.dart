@@ -78,7 +78,12 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
         throw RecordingPermissionException('Microphone permission not granted');
       }
     }
-    await _mRecorder.open();
+    await _mRecorder.open(      from: InputDeviceNode.mic(),
+      to: OutputFileNode(
+        _mPath,
+        codec: _codec,
+      ),
+    );
     if (!await _mRecorder.isEncoderSupported(_codec) && kIsWeb) {
       _codec = Opus(AudioFormat.webm);
       _mPath = 'tau_file.webm';
@@ -110,11 +115,6 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
 
   void record(TauRecorder? recorder) async {
     await recorder!.record(
-      from: DefaultInputDevice(),
-      to: OutputFile(
-        _mPath,
-        codec: _codec,
-      ),
       onProgress: _onProgressRecorder,
       interval: Duration(milliseconds: _mSubscriptionDuration.floor()),
     );

@@ -173,6 +173,9 @@ class TauPlayer implements TauPlayerCallback {
   ///     myPlayer = null;
   /// ```
   Future<TauPlayer?> open({
+    required InputNode from,
+    required OutputDeviceNode to,
+
     AudioFocus? focus,
     SessionCategory category = SessionCategory.playAndRecord,
     SessionMode mode = SessionMode.modeDefault,
@@ -185,7 +188,11 @@ class TauPlayer implements TauPlayerCallback {
     }
     TauPlayer? r;
     await _lock.synchronized(() async {
+      _from = from;
+      _to = to;
       r = await _open(
+        from: from,
+        to: to,
         focus: focus,
         category: category,
         mode: mode,
@@ -313,8 +320,6 @@ class TauPlayer implements TauPlayerCallback {
   ///     );
   /// ```
   Future<Duration?> play({
-    required InputNode from,
-    required OutputDevice to,
     TWhenFinished? whenFinished,
     TOnProgress? onProgress,
     Duration? interval,
@@ -329,8 +334,6 @@ class TauPlayer implements TauPlayerCallback {
     Duration? r;
     await _lock.synchronized(() async {
       r = await _play(
-        from: from,
-        to: to,
         whenFinished: whenFinished,
         onProgress: onProgress,
         interval: interval,
@@ -633,6 +636,10 @@ class TauPlayer implements TauPlayerCallback {
   TonPaused? _onPaused; // user callback "whenPause:"
   //static bool _reStarted = true;
 
+  InputNode? _from;
+  OutputDeviceNode? _to;
+
+
   ///
   StreamSubscription<TauFood>?
       _foodStreamSubscription; // ignore: cancel_subscriptions
@@ -720,6 +727,9 @@ class TauPlayer implements TauPlayerCallback {
   }
 
   Future<TauPlayer> _open({
+    required InputNode from,
+    required OutputDeviceNode to,
+
     AudioFocus? focus,
     SessionCategory category = SessionCategory.playAndRecord,
     SessionMode mode = SessionMode.modeDefault,
@@ -766,7 +776,8 @@ class TauPlayer implements TauPlayerCallback {
       if (focus != AudioFocus.doNotRequestFocus) {
         _hasFocus = focus != AudioFocus.abandonFocus;
       }
-
+      _from = from;
+      _to = to;
       _playerState = PlayerState.values[state];
       this.withShadeUI = withShadeUI;
     } on Exception {
@@ -846,8 +857,8 @@ class TauPlayer implements TauPlayerCallback {
   }
 
   Future<PlayerState> _startPlayerFromURI(
-    InputFile fromURI,
-    OutputDevice to, {
+    InputFileNode fromURI,
+    OutputDeviceNode to, {
     //Parameters for _play from track
     TonSkip? onSkipForward,
     TonSkip? onSkipBackward,
@@ -909,8 +920,8 @@ class TauPlayer implements TauPlayerCallback {
   }
 
   Future<PlayerState> _startPlayerFromBuffer(
-    InputBuffer fromBuffer,
-    OutputDevice to, {
+    InputBufferNode fromBuffer,
+    OutputDeviceNode to, {
     //Parameters for _play from track
     TonSkip? onSkipForward,
     TonSkip? onSkipBackward,
@@ -1007,8 +1018,8 @@ class TauPlayer implements TauPlayerCallback {
   ///   myPlayer._FoodSink.add(_FoodEvent((){_mPlayer.stopPlayer();}));
   ///   ```
   Future<PlayerState> _startPlayerFromStream(
-    InputStream stream,
-    OutputDevice to,
+    InputStreamNode stream,
+    OutputDeviceNode to,
   ) async {
     _logger.d('FS:---> startPlayerFromStream ');
 
@@ -1050,8 +1061,8 @@ class TauPlayer implements TauPlayerCallback {
   ///     myPlayer.stopPlayer();
   /// ```
   Future<PlayerState> _startPlayerFromMic(
-    Mic mic,
-    OutputDevice to,
+    InputDeviceNode mic,
+    OutputDeviceNode to,
   ) async {
     _logger.d('FS:---> startPlayerFromMic ');
     var state = await TauPlayerPlatform.instance
@@ -1063,8 +1074,6 @@ class TauPlayer implements TauPlayerCallback {
   }
 
   Future<Duration> _play({
-    required InputNode from,
-    required OutputDevice to, // For future expansion
     TWhenFinished? whenFinished,
     TOnProgress? onProgress,
     Duration? interval,
@@ -1112,11 +1121,11 @@ class TauPlayer implements TauPlayerCallback {
             .setSubscriptionDuration(this, duration: interval);
         _playerState = PlayerState.values[state];
       }
-      switch (from.runtimeType) {
-        case InputFile:
+      switch (_from.runtimeType) {
+        case InputFileNode:
           state = await _startPlayerFromURI(
-            from as InputFile,
-            to,
+            _from as InputFileNode,
+            _to!,
             onSkipForward: onSkipForward,
             defaultPauseResume: defaultPauseResume,
             onPaused: onPaused,
@@ -1124,10 +1133,10 @@ class TauPlayer implements TauPlayerCallback {
             removeUIWhenStopped: removeUIWhenStopped,
           );
           break;
-        case InputBuffer:
+        case InputBufferNode:
           state = await _startPlayerFromBuffer(
-            from as InputBuffer,
-            to,
+            _from as InputBufferNode,
+            _to!,
             onSkipForward: onSkipForward,
             defaultPauseResume: defaultPauseResume,
             onPaused: onPaused,
@@ -1135,14 +1144,14 @@ class TauPlayer implements TauPlayerCallback {
             removeUIWhenStopped: removeUIWhenStopped,
           );
           break;
-        case InputStream:
+        case InputStreamNode:
           state = await _startPlayerFromStream(
-            from as InputStream,
-            to,
+            _from as InputStreamNode,
+            _to!,
           );
           break;
-        case Mic:
-          state = await _startPlayerFromMic(from as Mic, to);
+        case InputDeviceNode:
+          state = await _startPlayerFromMic(_from as InputDeviceNode, _to!);
           break;
         default:
           throw Exception('Invalid Input Node');

@@ -70,7 +70,9 @@ class _SpeedControlState extends State<SpeedControl> {
   }
 
   Future<void> init() async {
-    await _mPlayer.open();
+    await _mPlayer.open(        from: InputBufferNode(_boumData, codec: Aac(AudioFormat.adts)),
+      to: OutputDeviceNode.speaker(),
+    );
     await _mPlayer.setSpeed(
         1.0); // This dummy instruction is MANDATORY on iOS, before the first `startRecorder()`.
     _boumData = await getAssetData(_boum);
@@ -85,8 +87,6 @@ class _SpeedControlState extends State<SpeedControl> {
 
   void play(TauPlayer? player) async {
     await player!.play(
-        from: InputBuffer(_boumData, codec: Aac(AudioFormat.adts)),
-        to: DefaultOutputDevice(),
         whenFinished: () {
           setState(() {});
         });

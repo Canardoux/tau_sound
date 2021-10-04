@@ -210,7 +210,9 @@ class TauRecorder implements TauRecorderCallback {
   ///     myRecorder.closeAudioSession();
   ///     myRecorder = null;
   /// ```
-  Future<TauRecorder?> open() async {
+  Future<TauRecorder?> open(  { required InputDeviceNode from,
+  required OutputNode to,}
+  ) async {
     if (_isInited) {
       return this;
     }
@@ -218,7 +220,7 @@ class TauRecorder implements TauRecorderCallback {
     TauRecorder? r;
     _logger.d('FS:---> open ');
     await _lock.synchronized(() async {
-      r = await _open();
+      r = await _open(from: from, to: to);
     });
     _logger.d('FS:<--- open ');
     return r;
@@ -269,15 +271,13 @@ class TauRecorder implements TauRecorderCallback {
   ///     await myRecorder.startRecorder(toFile: 'foo', codec: t_CODEC.CODEC_AAC,); // A temporary file named 'foo'
   /// ```
   Future<void> record({
-    required InputDevice from,
-    required OutputNode to,
-    TOnRecorderProgress? onProgress,
-    Duration? interval,
+     TOnRecorderProgress? onProgress,
+     Duration? interval,
   }) async {
     _logger.d('FS:---> record ');
     await _lock.synchronized(() async {
       await _startRecorder(
-          from: from, to: to, onProgress: onProgress, interval: interval);
+          onProgress: onProgress, interval: interval);
     });
     _logger.d('FS:<--- record ');
   }
@@ -403,6 +403,9 @@ class TauRecorder implements TauRecorderCallback {
       _tmpUri; // Used by startRecorder/stopRecorder to keep the temporary uri to record CAF
 
   RecorderState _recorderState = RecorderState.isStopped;
+  InputDeviceNode? _from;
+  OutputNode? _to;
+
 
   /// A reference to the User Sink during `StartRecorder(toStream:...)`
   StreamSink<TauFood>? _userStreamSink;
@@ -418,7 +421,8 @@ class TauRecorder implements TauRecorderCallback {
     }
   }
 
-  Future<TauRecorder> _open() async {
+  Future<TauRecorder> _open( { required InputDeviceNode from,
+    required OutputNode to,}) async {
     _logger.d('---> openAudioSession');
 
     Completer<TauRecorder>? completer;
@@ -451,6 +455,8 @@ class TauRecorder implements TauRecorderCallback {
         audioFlags: 0,
         device: AudioDevice.obsolete,
       );
+      _from = from;
+      _to = to;
     } on Exception {
       _openRecorderCompleter = null;
       rethrow;
@@ -501,7 +507,7 @@ class TauRecorder implements TauRecorderCallback {
   }
 
   Future<void> _startRecorderToURI(
-      InputDevice from, OutputFile outputFile) async {
+      InputDeviceNode from, OutputFileNode outputFile) async {
     var path = outputFile.uri;
     var codec = outputFile.codec;
     var extension = _fileExtension(
@@ -544,7 +550,7 @@ class TauRecorder implements TauRecorderCallback {
         path: path,
         codec: codec.deprecatedCodec,
         toStream: false,
-        audioSource: from.deprecatedAudioSource,
+        audioSource: from.audioSource,
         sampleRate: c.sampleRate,
         numChannels: c.nbrChannels(),
       );
@@ -554,18 +560,18 @@ class TauRecorder implements TauRecorderCallback {
         path: path,
         codec: codec.deprecatedCodec,
         toStream: false,
-        audioSource: from.deprecatedAudioSource,
+        audioSource: from.audioSource,
       );
     }
   }
 
   Future<void> _startRecorderToBuffer(
-      InputDevice from, OutputBuffer outputBuffer) async {
+      InputDeviceNode from, OutputBufferNode outputBuffer) async {
 // Unimplemented
   }
 
   Future<void> _startRecorderToStream(
-      InputDevice from, OutputStream outputStream) async {
+      InputDeviceNode from, OutputStreamNode outputStream) async {
     _userStreamSink = outputStream.stream;
     var c = outputStream.getPcmCodec();
     if (c == null) {
@@ -577,15 +583,13 @@ class TauRecorder implements TauRecorderCallback {
       path: null,
       codec: outputStream.codec.deprecatedCodec,
       toStream: true,
-      audioSource: from.deprecatedAudioSource,
+      audioSource: from.audioSource,
       numChannels: codec.nbrChannels(),
       sampleRate: codec.sampleRate,
     );
   }
 
   Future<void> _startRecorder({
-    required InputDevice from,
-    required OutputNode to,
     TOnRecorderProgress? onProgress,
     Duration? interval,
   }) async {
@@ -625,15 +629,15 @@ class TauRecorder implements TauRecorderCallback {
         await TauRecorderPlatform.instance
             .setSubscriptionDuration(this, duration: interval);
       }
-      switch (to.runtimeType) {
-        case OutputFile:
-          await _startRecorderToURI(from, to as OutputFile);
+      switch (_to.runtimeType) {
+        case OutputFileNode:
+          await _startRecorderToURI(_from!, _to as OutputFileNode);
           break;
-        case OutputBuffer:
-          await _startRecorderToBuffer(from, to as OutputBuffer);
+        case OutputBufferNode:
+          await _startRecorderToBuffer(_from!, _to as OutputBufferNode);
           break;
-        case OutputStream:
-          await _startRecorderToStream(from, to as OutputStream);
+        case OutputStreamNode:
+          await _startRecorderToStream(_from!, _to as OutputStreamNode);
           break;
       }
 

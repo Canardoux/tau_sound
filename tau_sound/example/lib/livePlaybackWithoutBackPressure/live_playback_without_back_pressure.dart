@@ -70,7 +70,17 @@ class _LivePlaybackWithoutBackPressureState
     super.initState();
     // Be careful : openAudioSession return a Future.
     // Do not access your TauPlayer or TauRecorder before the completion of the Future
-    _mPlayer!.open().then((value) {
+    InputNode input = InputStreamNode(totoController.stream,
+        codec: Pcm(
+          AudioFormat.raw,
+          depth: Depth.int16,
+          endianness: Endianness.littleEndian,
+          nbChannels: NbChannels.mono,
+          sampleRate: tSampleRate,
+        ));
+    _mPlayer!.open(      from: input,
+      to: OutputDeviceNode.speaker(),
+    ).then((value) {
       setState(() {
         _mPlayerIsInited = true;
       });
@@ -102,17 +112,7 @@ class _LivePlaybackWithoutBackPressureState
   void play() async {
     assert(_mPlayerIsInited && _mPlayer!.isStopped);
     totoController = StreamController<TauFood>();
-    InputNode input = InputStream(totoController.stream,
-        codec: Pcm(
-          AudioFormat.raw,
-          depth: Depth.int16,
-          endianness: Endianness.littleEndian,
-          nbChannels: NbChannels.mono,
-          sampleRate: tSampleRate,
-        ));
     await _mPlayer!.play(
-      from: input,
-      to: DefaultOutputDevice(),
     );
     setState(() {});
     var data = await getAssetData('assets/samples/sample.pcm');

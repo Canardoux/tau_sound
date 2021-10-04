@@ -52,7 +52,9 @@ class _PlayFromMicState extends State<PlayFromMic> {
 
     // Be careful : openAudioSession returns a Future.
     // Do not access your TauPlayer or TauRecorder before the completion of the Future
-    await _mPlayer!.open();
+    await _mPlayer!.open(      from: InputDeviceNode.mic(),
+      to: OutputDeviceNode.speaker(),
+    );
     setState(() {
       _mPlayerIsInited = true;
     });
@@ -78,8 +80,6 @@ class _PlayFromMicState extends State<PlayFromMic> {
 
   void play() async {
     await _mPlayer!.play(
-      from: Mic(),
-      to: DefaultOutputDevice(),
     );
     setState(() {});
   }

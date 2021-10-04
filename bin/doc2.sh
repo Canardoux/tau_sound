@@ -40,8 +40,6 @@ if [ $? -ne 0 ]; then
     echo "Error"
     exit -1
 fi
-cd ~/_site
-ln -s -v readme.html index.html
 
 
 cd
@@ -66,7 +64,7 @@ do
         rel=`realpath --relative-to=$dir .`
         echo "----- dir=$dir ----- rel=$rel"
         for d in */ ; do
-            echo "ln -s -v $rel/$d $dir"
+            #echo "ln -s -v $rel/$d $dir"
             ln -s -v $rel/$d $dir
         done
         #for f in *
@@ -80,7 +78,6 @@ sed -i  "0,/^  overflow: hidden;$/s//overflow: auto;/"  api/static-assets/styles
 sed -i  "s/^  background-color: inherit;$/  background-color: #2196F3;/" api/static-assets/styles.css
 
 
-cd
 
 #echo "Symbolic links"
 #FILES=*
@@ -92,7 +89,12 @@ cd
 #ln -s  pages/flutter-sound/api/topics/UI_Widgets-topic.html dartdoc_widgets.html
 
 
-cd
+cd ~/tau10.canardoux.xyz/
+ln -s -v readme.html index.html
+#cd api/topics
+#rm favico*
+#ln -s ../../images/favico* .
+#cd
 rm _toto.tgz _toto3.tgz
 
 

@@ -80,7 +80,9 @@ class _SeekState extends State<Seek> {
   }
 
   Future<void> init() async {
-    await _mPlayer.open();
+    await _mPlayer.open(        from: InputBufferNode(_boumData, codec: Aac(AudioFormat.adts)),
+      to: OutputDeviceNode.speaker(),
+    );
     //await _mPlayer.setSubscriptionDuration(Duration(milliseconds: 50));
     _boumData = await getAssetData(_boum);
     //_mPlayerSubscription = _mPlayer.onProgress!.listen((e) {
@@ -96,8 +98,6 @@ class _SeekState extends State<Seek> {
 
   void play(TauPlayer? player) async {
     await player!.play(
-        from: InputBuffer(_boumData, codec: Aac(AudioFormat.adts)),
-        to: DefaultOutputDevice(),
         onProgress: (Duration position, Duration duration) {
           setPos(position.inMilliseconds);
           setState(() {});

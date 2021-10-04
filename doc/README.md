@@ -9,21 +9,33 @@ summary: The &tau; Project documentation.
 
 {% include image.html file="banner5.png"  caption="The &tau; (tau) Project" %}
 
-The τ (tau) Project is a set of libraries which deal with audio :
+
+![pub version](https://img.shields.io/pub/v/tau_sound.svg?style=flat-square)
+{% include tip.html content="
+This is the GPL branch of Flutter Sound. If you cannot (or don't want to) publish your App under the GPL License, you can consider using the [MPL branch](https://tau.canardoux.xyz/readme.html)
+" %}
+
+The τ (tau) Project (or simply **"τ"**) is a set of libraries which deal with audio :
 
 * A player for audio playback
 * A recorder for recording audio
+* An Audio Graph engine 
 * Several utilities to handle audio files
 
-{% include note.html content="τ is a big project. The goal is to share a maximum of the developments between various Platforms/Frameworks and various target OS." %}
-
-## Overview
+## Supported targets
 
 τ is a library package allowing you to play and record audio for
 
 * iOS
 * Android
 * Web
+
+Later, τ will support also :
+- Linux
+- Macos
+- Windows
+
+## Overview
 
 τ provides both a high level API and widgets for:
 
@@ -39,6 +51,19 @@ The τ package supports playback from:
 * Assets
 * Files
 * URL
+* Streams
+* Remote URI
+
+## SDK requirements
+
+* τ requires an iOS 10.0 SDK \(or later\)
+* τ requires an Android 21 \(or later\)
+
+## Examples \(Demo Apps\)
+
+τ comes with several Demo/Examples :
+
+[The `examples App`](https://github.com/Canardoux/tau10/blob/main/tau_sound/example/lib/main.dart) is a driver which can call all the various examples.
 
 ## Features
 
@@ -59,46 +84,36 @@ The τ package includes the following features :
 * Playback from a Dart Stream
 * The App playback can be controlled from the device lock screen or from an Apple watch
 
-## Supported platforms
+## Supported frameworks
 
 τ is actually supported by the following frameworks:
 
 * Flutter \(Flutter Sound\)
 
-In the future, it will be \(perhaps\) supported by
+τ will eventually be supported in the future by other frameworks :
+- React Native, 
+- Cordova, 
+- JS (React JS, Vue, Pure JS), 
+- ...
 
-* React Native \(Tau React\).  \(Not yet. Later\).
-* Cordova \(Tau Cordova\).  \(Not yet. Later\).
-* Others \(Native Script, Solar 2D, ...\)
-
-## Supported targets
-
-τ is actually supported by the following OS :
-
-* iOS
-* Android
-* Web
-
-In the future, it will be \(perhaps\) supported by
-
-* Linux
-* others \(Windows, MacOS\)
-
-## What about Flutter Sound ?
-
-{% include note.html content="Flutter Sound is not dead, of course. This is exactly the opposite. Flutter Sound is a really alive project."%}
-
-We just changed the name of the project, because we want to encompass others frameworks than Flutter.
 
 ## Licenses
 
-* Flutter Sound and tau_core are copyrighted by Dooboolab (2018, 2019, 2020, 2021).
-* Flutter Sound  and tau_core are released under a license with a *copyleft* clause: the MPL-V2 license. This means that if you modify some of Flutter Sound code you must publish your modifications under the MPL license too.
+Flutter Sound 8.3 was published under the LGPL License.
+A Flutter Sound developer noticed recently that this [license was incorrect](https://github.com/Canardoux/tau/issues/696) :
+the LGPL license does not allow static links to the library. The library must be linked dynamically.
+The problem was that Flutter links-edit the plugins statically. This means that many Flutter Sound users who
+use our library in private/close sources App was in a copyright infringement.
 
-* Tau React, Tau RCL and Tau JS are copyrighted by Canardoux (2021).
-* Tau React, Tau RCL and Tau JS are released under a license with a **strong** *copyleft* clause : the GPL-V3 license. This means that if you use part or all of Tau React, Tau RCL or Tau JS in your App, this App must be published under the GPL-V3 license, too.
+To solve this issue, we forked Flutter Sound 8.3 to two different branches.
 
+* [Flutter Sound 8.4](https://pub.dev/packages/flutter_sound) is published under the permissive Mozilla Public License 2.0.
+* The τ Sound Project 9.0 (this fork) is published under a pure GPL License.
 
+τ Sound is copyrighted by Canardoux (2021).
+
+* τ Sound is released under a license with a *strong copyleft* clause: the GPL-V3 license. This means that if you use total or part of τ Sound, your App must be published under the GPL License too.
+* If you cannot (or don't want to) publish your App under the GPL License, perhaps you can consider using the MPL [Flutter Sound 8.4 branch](https://tau.canardoux.xyz/readme.html).
 
 ## We need help
 
@@ -113,7 +128,7 @@ We are looking to make τ the go to project for mobile Audio with support for va
 
 ## Thanks
 
-Too many projects to manage. I am burning out slowly. If you could help me cheer up, buy me a cup of coffee will make my life really happy and get much energy out of it. As a side effect, we will know that Flutter Sound is important for you, that you appreciate our job and that you can show it with a little money.
+Too many projects to manage. I am burning out slowly. If you could help me cheer up, buy me a cup of coffee will make my life really happy and get much energy out of it. As a side effect, we will know that the τ Project is important for you, that you appreciate our job and that you can show it with a little money.
 
 <a href="https://www.buymeacoffee.com/larpoux"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=💛&slug=larpoux&button_colour=5F7FFF&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00"></a>
 [![Paypal](https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png)](https://paypal.me/thetauproject?locale.x=fr_FR)

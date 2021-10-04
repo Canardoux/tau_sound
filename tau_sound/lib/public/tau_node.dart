@@ -57,9 +57,9 @@ class TauTrack {
 }
 
 /// An InputBuffer is a possible source for a Player playback
-class InputBuffer extends InputNode {
+class InputBufferNode extends InputNode {
   Uint8List inputBuffer;
-  /* ctor */ InputBuffer(
+  /* ctor */ InputBufferNode(
     this.inputBuffer, {
     TauCodec? codec,
     TauTrack? track,
@@ -68,11 +68,11 @@ class InputBuffer extends InputNode {
     this.codec = (codec != null) ? codec : DefaultCodec();
   }
 
-  Future<InputBuffer> toWave() async {
+  Future<InputBufferNode> toWave() async {
     var pcmCodec = codec as Pcm;
     var buffer = await tauHelper.pcmToWaveBuffer(
         inputBuffer: inputBuffer, codec: pcmCodec);
-    return InputBuffer(buffer,
+    return InputBufferNode(buffer,
         codec: Pcm(AudioFormat.wav,
             sampleRate: pcmCodec.sampleRate,
             nbChannels: pcmCodec.nbChannels,
@@ -82,9 +82,9 @@ class InputBuffer extends InputNode {
 }
 
 /// An InputFile  is a possible source for a Player playback
-class InputFile extends InputNode {
+class InputFileNode extends InputNode {
   String uri;
-  /* ctor */ InputFile(
+  /* ctor */ InputFileNode(
     this.uri, {
     TauCodec? codec,
     TauTrack? track,
@@ -93,7 +93,7 @@ class InputFile extends InputNode {
     this.codec = (codec != null) ? codec : DefaultCodec();
   }
 
-  Future<InputFile> toWave() async {
+  Future<InputFileNode> toWave() async {
     var pcmCodec = codec as Pcm;
     var tempDir = await getTemporaryDirectory();
     var path = '${tempDir.path}/flutter_sound_tmp.wav';
@@ -102,7 +102,7 @@ class InputFile extends InputNode {
       outputFile: path,
       codec: pcmCodec,
     );
-    return InputFile(path,
+    return InputFileNode(path,
         codec: Pcm(AudioFormat.wav,
             sampleRate: pcmCodec.sampleRate,
             nbChannels: pcmCodec.nbChannels,
@@ -113,22 +113,26 @@ class InputFile extends InputNode {
 
 /// An InputStream is a possible source for a player playback
 /// The codec is always RAW-PCM
-class InputStream extends InputNode {
+class InputStreamNode extends InputNode {
   Stream<TauFood> stream;
-  /* ctor */ InputStream(this.stream, {Pcm? codec}) {
+  /* ctor */ InputStreamNode(this.stream, {Pcm? codec}) {
     this.codec = (codec != null) ? codec : DefaultCodec();
   }
 }
 
 /// An InputAsset is a possible source for a player playback
-class InputAsset extends InputNode {
+class InputAssetNode extends InputNode {
   String path;
-  /* ctor */ InputAsset(this.path);
+  /* ctor */ InputAssetNode(this.path);
 }
 
 /// An InputDevice can be the Mic, The Blutooth mic, ...
-abstract class InputDevice extends InputNode {
-  AudioSource deprecatedAudioSource = AudioSource.defaultSource;
+class InputDeviceNode extends InputNode {
+  InputDeviceNode(AudioSource audioSource) { this.audioSource = audioSource;}
+  AudioSource audioSource = AudioSource.defaultSource;
+  InputDeviceNode.mic() {audioSource = AudioSource.microphone;}
+  InputDeviceNode.headsetMic() {audioSource = AudioSource.headsetMic;}
+  InputDeviceNode.defaultSource() {audioSource = AudioSource.defaultSource;}
 }
 
 /*
@@ -149,34 +153,6 @@ enum AudioSource {
   lineIn,
 }
 */
-
-/// The defaultInputDevice is a possible source for a player playback
-/// The codec is platform dependant
-class DefaultInputDevice extends InputDevice {
-// Maybe a ctor with the codec
-  /* ctor */ DefaultInputDevice() {
-    deprecatedAudioSource = AudioSource.defaultSource;
-  }
-}
-
-/// The mic is a possible source for a player playback
-/// The codec is platform dependant
-class Mic extends InputDevice {
-// Maybe a ctor with the codec
-  /* ctor */ Mic() {
-    deprecatedAudioSource = AudioSource.microphone;
-  }
-}
-
-/// The GeneralInputDevice is a possible source for a player playback
-/// The codec is platform dependant
-class GeneralInputDevice extends InputDevice {
-// Maybe a ctor with the codec
-  /* ctor */ GeneralInputDevice(AudioSource audioSource) {
-    deprecatedAudioSource = audioSource;
-  }
-}
-
 /// A sound generator is a possible source for a player playback
 class SoundGenerator extends InputNode {
 // TODO
@@ -193,16 +169,16 @@ class Sequencer extends InputNode {
 class OutputNode extends TauNode {}
 
 /// An OutputBuffer is a possible sink for a Recorder
-class OutputBuffer extends OutputNode {}
+class OutputBufferNode extends OutputNode {}
 
 /// An OutputFile is a possible sink for a Recorder
-class OutputFile extends OutputNode {
+class OutputFileNode extends OutputNode {
   String uri;
-  /* ctor */ OutputFile(this.uri, {TauCodec? codec}) {
+  /* ctor */ OutputFileNode(this.uri, {TauCodec? codec}) {
     this.codec = (codec != null) ? codec : DefaultCodec();
   }
 
-  Future<OutputFile> toWave() async {
+  Future<OutputFileNode> toWave() async {
     var pcmCodec = codec as Pcm;
     var tempDir = await getTemporaryDirectory();
     var path = '${tempDir.path}/flutter_sound_tmp.wav';
@@ -211,7 +187,7 @@ class OutputFile extends OutputNode {
       outputFile: path,
       codec: pcmCodec,
     );
-    return OutputFile(path,
+    return OutputFileNode(path,
         codec: Pcm(AudioFormat.wav,
             sampleRate: pcmCodec.sampleRate,
             nbChannels: pcmCodec.nbChannels,
@@ -222,45 +198,59 @@ class OutputFile extends OutputNode {
 
 /// An OutputStream is a possible sink for a Recorder
 /// The codec is always RAW-PCM
-class OutputStream extends OutputNode {
+class OutputStreamNode extends OutputNode {
   StreamSink<TauFood> stream;
-  /* ctor */ OutputStream(this.stream, {Pcm? codec}) {
+  /* ctor */ OutputStreamNode(this.stream, {Pcm? codec}) {
     this.codec = (codec != null) ? codec : DefaultCodec();
   }
   Pcm? getPcmCodec() => (codec is Pcm) ? codec as Pcm : null;
 }
 
+/*
+
+// Audio Flags
+// -----------
+const outputToSpeaker = 1;
+const allowHeadset = 2;
+const allowEarPiece = 4;
+const allowBlueTooth = 8;
+const allowAirPlay = 16;
+const allowBlueToothA2DP = 32;
+
+ */
+
 /// A Output Device can be the Speaker, the Ear Phone or a Blue Tooth Headphone
-class OutputDevice extends OutputNode {}
-
-/// The DefaultOutputDevice is a possible sink for a Recorder
-class DefaultOutputDevice extends OutputDevice {}
-
-/// The Speaker is a possible sink for a Recorder
-class Speaker extends OutputDevice {}
-
-/// The Ear phone is a possible sink for a Recorder
-class Earphone extends OutputDevice {}
-
-/// The Blue Tooth output device is a possible sink for a Recorder
-class HeadPhoneBT extends OutputDevice {}
+class OutputDeviceNode extends OutputNode {
+  int audioFlags = outputToSpeaker;
+  OutputDeviceNode(int audioFlags) {this.audioFlags = audioFlags;}
+  OutputDeviceNode.speaker() { audioFlags = outputToSpeaker;}
+  OutputDeviceNode.headSet() { audioFlags = outputToSpeaker | allowHeadset;}
+  OutputDeviceNode.blueToothA2DP() {audioFlags = outputToSpeaker | allowHeadset | allowBlueToothA2DP;}
+  OutputDeviceNode.any() { audioFlags = outputToSpeaker | allowHeadset | allowBlueToothA2DP | allowAirPlay;}
+}
 
 // ------------------------------------------------------ Filter Node -----------------------------------------------
 
 /// A Filter node is a node with one or two input channels and one or two output channels
-class FilterNode extends TauNode {}
+class PassThrewNode extends TauNode {}
 
 /// A Mixer is a node with two input channels and one output channel
-class Mixer extends FilterNode {}
+class Mixer extends PassThrewNode {}
 
 /// A Splitter is a node with one input channel and two output channels
-class Splitter extends FilterNode {}
+class Splitter extends PassThrewNode {}
 
 /// An equalizer is a node with one input channel and one output channel
-class Equalizer extends FilterNode {}
+class Equalizer extends PassThrewNode {}
 
 /// A Reverb is a node with one input channel and one output channel
-class Reverb extends FilterNode {}
+class Reverb extends PassThrewNode {}
 
 /// An App Filter is a filter implemented inside the Flutter App
-class AppFilterNode extends FilterNode {}
+class AppFilterNode extends PassThrewNode {}
+
+/// An encoder is a filter
+class EncoderNode extends PassThrewNode {}
+
+/// A decoder is a filter
+class DecoderNode extends PassThrewNode {}

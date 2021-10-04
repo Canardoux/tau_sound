@@ -225,11 +225,7 @@ class _MyAppState extends State<Demo> {
   StreamController<TauFood> totoController = StreamController();
 
   Future<void> _initializeExample(bool withUI) async {
-    await playerModule.close();
     _isAudioPlayer = withUI;
-    await playerModule.open(
-      withShadeUI: withUI,
-    );
     await initializeDateFormatting();
     await setCodec(_codec);
   }
@@ -240,12 +236,6 @@ class _MyAppState extends State<Demo> {
       if (status != PermissionStatus.granted) {
         throw RecordingPermissionException('Microphone permission not granted');
       }
-    }
-    await recorderModule.open();
-    if (!await recorderModule
-            .isEncoderSupported(getCodecFromDeprecated(_codec)) &&
-        kIsWeb) {
-      _codec = Codec.opusWebM;
     }
   }
 
@@ -339,9 +329,9 @@ class _MyAppState extends State<Demo> {
             sink!.add(buffer.data!);
           }
         });
-        await recorderModule.record(
-          from: DefaultInputDevice(),
-          to: OutputStream(
+        await recorderModule.close();
+        await recorderModule.open(         from: InputDeviceNode.mic(),
+          to: OutputStreamNode(
             recordingDataController!.sink,
             codec: Pcm(AudioFormat.raw,
                 nbChannels: NbChannels.mono,
@@ -349,17 +339,24 @@ class _MyAppState extends State<Demo> {
                 depth: Depth.int16,
                 sampleRate: tSTREAMSAMPLERATE),
           ),
-          onProgress: _onRecorderProgress,
+        );
+
+        await recorderModule.record(
+           onProgress: _onRecorderProgress,
           interval: Duration(milliseconds: 100),
         );
       } else {
-        await recorderModule.record(
-          from: DefaultInputDevice(),
-          to: OutputFile(
+        await recorderModule.close();
+        await recorderModule.open( from: InputDeviceNode.mic(),
+          to: OutputFileNode(
             path,
             codec: getCodecFromDeprecated(
                 _codec), //Pcm(AudioFormat.raw, nbChannels: NbChannels.mono, endianness: Endianness.littleEndian, depth: Depth.int16, sampleRate: (_codec == Codec.pcm16) ? tSTREAMSAMPLERATE : tSAMPLERATE,),
           ),
+
+        );
+
+        await recorderModule.record(
           onProgress: _onRecorderProgress,
           interval: Duration(milliseconds: 100),
         );
@@ -531,7 +528,7 @@ class _MyAppState extends State<Demo> {
         audioFilePath = remoteSample[_codec.index];
       } else if (_media == Media.stream) {
         totoController = StreamController<TauFood>();
-        InputNode from = InputStream(totoController.stream,
+        InputNode from = InputStreamNode(totoController.stream,
             codec: Pcm(
               AudioFormat.raw,
               depth: Depth.int16,
@@ -539,9 +536,13 @@ class _MyAppState extends State<Demo> {
               nbChannels: NbChannels.mono,
               sampleRate: tSTREAMSAMPLERATE,
             ));
-        await playerModule.play(
+        await playerModule.close();
+        await playerModule.open(
           from: from,
-          to: DefaultOutputDevice(),
+          to: OutputDeviceNode.speaker(),
+          withShadeUI: _isAudioPlayer,
+        );
+        await playerModule.play(
           onProgress: _onProgress,
           interval: Duration(milliseconds: 10),
         );
@@ -556,6 +557,7 @@ class _MyAppState extends State<Demo> {
       String? albumArtUrl;
       String? albumArtAsset;
       String? albumArtFile;
+      /* !!!
       if (_media == Media.remoteExampleFile) {
         albumArtUrl = albumArtPathRemote;
       } else if (!kIsWeb) {
@@ -564,6 +566,8 @@ class _MyAppState extends State<Demo> {
         playerModule.logger.d(albumArtFile);
       } else {}
 
+       */
+
       var track = TauTrack(
           title: 'This is a record',
           author: 'from flutter_sound',
@@ -571,11 +575,26 @@ class _MyAppState extends State<Demo> {
           albumArtAsset: albumArtAsset,
           albumArtURL: albumArtUrl);
       if (audioFilePath != null) {
-        InputNode from = InputFile(audioFilePath,
+            InputNode from = InputFileNode(audioFilePath,
             codec: getCodecFromDeprecated(codec), track: track);
-        await playerModule.play(
-          from: from,
-          to: DefaultOutputDevice(),
+            await playerModule.close();
+            await playerModule.open(
+              from: from,
+              to: OutputDeviceNode.speaker(),
+              withShadeUI: _isAudioPlayer,
+        );
+            await playerModule.close();
+            await playerModule.open(
+              from: InputFileNode(
+                audioFilePath,
+                codec: getCodecFromDeprecated(codec),
+                track: track,
+              ),
+              to: OutputDeviceNode.speaker(),
+              withShadeUI: _isAudioPlayer,
+            );
+
+            await playerModule.play(
           onProgress: _onProgress,
           interval: Duration(milliseconds: 10),
           whenFinished: () {
@@ -610,13 +629,18 @@ class _MyAppState extends State<Demo> {
           );
           codec = Codec.pcm16WAV;
         }
-        await playerModule.play(
-          from: InputBuffer(
+        await playerModule.close();
+        await playerModule.open(
+          from: InputBufferNode(
             dataBuffer,
             codec: getCodecFromDeprecated(codec),
             track: track,
           ),
-          to: DefaultOutputDevice(),
+          to: OutputDeviceNode.speaker(),
+          withShadeUI: _isAudioPlayer,
+        );
+
+        await playerModule.play(
           onProgress: _onProgress,
           interval: Duration(milliseconds: 10),
           whenFinished: () {
@@ -926,10 +950,10 @@ class _MyAppState extends State<Demo> {
   }
 
   Future<void> setCodec(Codec codec) async {
-    _encoderSupported =
-        await recorderModule.isEncoderSupported(getCodecFromDeprecated(codec));
-    _decoderSupported =
-        await playerModule.isDecoderSupported(getCodecFromDeprecated(codec));
+    _encoderSupported = true; // !!! temporary
+       // await recorderModule.isEncoderSupported(getCodecFromDeprecated(codec));
+    _decoderSupported = true; // temporary
+       // await playerModule.isDecoderSupported(getCodecFromDeprecated(codec));
 
     setState(() {
       _codec = codec;

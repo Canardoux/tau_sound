@@ -51,17 +51,22 @@ class _VolumeControlState extends State<VolumeControl> {
   bool _mPlayerIsInited2 = false;
   double _mVolume1 = 100.0;
   double _mVolume2 = 100.0;
-
   @override
   void initState() {
     super.initState();
-    _mPlayer1.open().then((value) {
+    _mPlayer1.open(  from: InputFileNode( _exampleAudioFilePathMP3_1, codec: Mp3()),
+      to: OutputDeviceNode.speaker(),
+
+    ).then((value) {
       setState(() {
         _mPlayerIsInited1 = true;
       });
     });
 
-    _mPlayer2.open().then((value) {
+    _mPlayer2.open(  from: InputFileNode( _exampleAudioFilePathMP3_2, codec: Mp3()),
+      to: OutputDeviceNode.speaker(),
+
+    ).then((value) {
       setState(() {
         _mPlayerIsInited2 = true;
       });
@@ -82,10 +87,8 @@ class _VolumeControlState extends State<VolumeControl> {
 
   // -------  Here is the code to playback a remote file -----------------------
 
-  void play(TauPlayer? player, String uri) async {
+  void play(TauPlayer? player) async {
     await player!.play(
-        from: InputFile(uri, codec: Mp3()),
-        to: DefaultOutputDevice(),
         whenFinished: () {
           setState(() {});
         });
@@ -120,20 +123,19 @@ class _VolumeControlState extends State<VolumeControl> {
 
   // --------------------- UI -------------------
 
-  Fn? getPlaybackFn(TauPlayer? player, String uri) {
+  Fn? getPlaybackFn(TauPlayer? player) {
     if (!(_mPlayerIsInited1 && _mPlayerIsInited2)) {
       return null;
     }
     return player!.isStopped
         ? () {
-            play(player, uri);
+            play(player);
           }
         : () {
             stopPlayer(player).then((value) => setState(() {}));
           };
   }
-
-  @override
+    @override
   Widget build(BuildContext context) {
     Widget makeBody() {
       //return Column(
@@ -154,7 +156,7 @@ class _VolumeControlState extends State<VolumeControl> {
         child: Column(children: [
           Row(children: [
             ElevatedButton(
-              onPressed: getPlaybackFn(_mPlayer1, _exampleAudioFilePathMP3_1),
+              onPressed: getPlaybackFn(_mPlayer1),
               //color: Colors.white,
               //disabledColor: Colors.grey,
               child: Text(_mPlayer1.isPlaying ? 'Stop' : 'Play'),
@@ -175,7 +177,7 @@ class _VolumeControlState extends State<VolumeControl> {
               divisions: 100),
           Row(children: [
             ElevatedButton(
-              onPressed: getPlaybackFn(_mPlayer2, _exampleAudioFilePathMP3_2),
+              onPressed: getPlaybackFn(_mPlayer2),
               //color: Colors.white,
               //disabledColor: Colors.grey,
               child: Text(_mPlayer2.isPlaying ? 'Stop' : 'Play'),

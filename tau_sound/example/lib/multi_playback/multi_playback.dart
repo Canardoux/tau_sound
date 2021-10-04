@@ -81,17 +81,23 @@ class _MultiPlaybackState extends State<MultiPlayback> {
     ).then((value) => setState(() {
           buffer3 = value;
         }));
-    _mPlayer1!.open().then((value) {
+    _mPlayer1!.open(        from: InputFileNode(_exampleAudioFilePathMP3, codec: Mp3()),
+      to: OutputDeviceNode.speaker(),
+    ).then((value) {
       setState(() {
         _mPlayer1IsInited = true;
       });
     });
-    _mPlayer2!.open().then((value) {
+    _mPlayer2!.open(        from: InputBufferNode(buffer2, codec: Aac(AudioFormat.adts)),
+      to: OutputDeviceNode.speaker(),
+    ).then((value) {
       setState(() {
         _mPlayer2IsInited = true;
       });
     });
-    _mPlayer3!.open().then((value) {
+    _mPlayer3!.open(       from: InputBufferNode(buffer3, codec: Aac(AudioFormat.mp4)),
+      to: OutputDeviceNode.speaker(),
+    ).then((value) {
       setState(() {
         _mPlayer3IsInited = true;
       });
@@ -120,8 +126,6 @@ class _MultiPlaybackState extends State<MultiPlayback> {
     //await _mPlayer1!.setSubscriptionDuration(Duration(milliseconds: 10));
     //_addListener2();
     await _mPlayer1!.play(
-        from: InputFile(_exampleAudioFilePathMP3, codec: Mp3()),
-        to: DefaultOutputDevice(),
         onProgress: _onProgress1,
         interval: Duration(milliseconds: 10),
         whenFinished: () {
@@ -165,8 +169,6 @@ class _MultiPlaybackState extends State<MultiPlayback> {
     //await _mPlayer2!.setSubscriptionDuration(Duration(milliseconds: 10));
     //_addListener2();
     await _mPlayer2!.play(
-        from: InputBuffer(buffer2, codec: Aac(AudioFormat.adts)),
-        to: DefaultOutputDevice(),
         onProgress: _onProgress2,
         interval: Duration(milliseconds: 10),
         whenFinished: () {
@@ -210,8 +212,6 @@ class _MultiPlaybackState extends State<MultiPlayback> {
     //await _mPlayer3!.setSubscriptionDuration(Duration(milliseconds: 10));
     //_addListener3();
     await _mPlayer3!.play(
-        from: InputBuffer(buffer3, codec: Aac(AudioFormat.mp4)),
-        to: DefaultOutputDevice(),
         onProgress: _onProgress3,
         interval: Duration(milliseconds: 10),
         whenFinished: () {

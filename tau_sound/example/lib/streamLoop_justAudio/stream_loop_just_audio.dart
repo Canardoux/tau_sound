@@ -55,8 +55,25 @@ class _StreamLoopJustAudioState extends State<StreamLoopJustAudio> {
   final _player = AudioPlayer();
 
   Future<void> init() async {
-    await _mRecorder!.open();
-    await _mPlayer!.open();
+    await _mRecorder!.open(        from: InputDeviceNode.mic(),
+        to: OutputStreamNode(
+          totoStream.sink,
+          codec: Pcm(
+            AudioFormat.raw,
+            nbChannels: NbChannels.mono,
+            endianness: Endianness.littleEndian,
+            depth: Depth.int16,
+            sampleRate: _sampleRateRecorder,
+          ),
+        ));
+    await _mPlayer!.open(      from: InputStreamNode(totoStream.stream,
+        codec: Pcm(AudioFormat.raw,
+            depth: Depth.int16,
+            endianness: Endianness.littleEndian,
+            nbChannels: NbChannels.mono,
+            sampleRate: _sampleRatePlayer)),
+      to: OutputDeviceNode.speaker(),
+    );
     //await _player.setUrl(_exampleAudioFilePathMP3);
   }
 
@@ -105,27 +122,10 @@ class _StreamLoopJustAudioState extends State<StreamLoopJustAudio> {
   Future<void> record() async {
     totoStream = StreamController<TauFood>();
     await _mPlayer!.play(
-      from: InputStream(totoStream.stream,
-          codec: Pcm(AudioFormat.raw,
-              depth: Depth.int16,
-              endianness: Endianness.littleEndian,
-              nbChannels: NbChannels.mono,
-              sampleRate: _sampleRatePlayer)),
-      to: DefaultOutputDevice(),
     );
 
     await _mRecorder!.record(
-        from: DefaultInputDevice(),
-        to: OutputStream(
-          totoStream.sink,
-          codec: Pcm(
-            AudioFormat.raw,
-            nbChannels: NbChannels.mono,
-            endianness: Endianness.littleEndian,
-            depth: Depth.int16,
-            sampleRate: _sampleRateRecorder,
-          ),
-        ));
+);
     setState(() {});
   }
 

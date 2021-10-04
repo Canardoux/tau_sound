@@ -68,7 +68,9 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
 
   @override
   void initState() {
-    _mPlayer!.open().then((value) {
+    _mPlayer!.open(            from: InputFileNode(_mPath),
+      to: OutputDeviceNode.speaker(),
+    ).then((value) {
       setState(() {
         _mPlayerIsInited = true;
       });
@@ -99,7 +101,8 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
         throw RecordingPermissionException('Microphone permission not granted');
       }
     }
-    await _mRecorder!.open();
+    await _mRecorder!.open(
+        from: InputDeviceNode.mic(), to: OutputFileNode(_mPath, codec: _codec));
     if (!await _mRecorder!.isEncoderSupported(_codec) && kIsWeb) {
       _codec = Opus(AudioFormat.webm);
       _mPath = 'tau_file.webm';
@@ -115,8 +118,7 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
 
   void record() {
     _mRecorder!
-        .record(
-            from: DefaultInputDevice(), to: OutputFile(_mPath, codec: _codec))
+        .record()
         .then((value) {
       setState(() {});
     });
@@ -138,8 +140,6 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
         _mPlayer!.isStopped);
     _mPlayer!
         .play(
-            from: InputFile(_mPath),
-            to: DefaultOutputDevice(),
             whenFinished: () {
               setState(() {});
             })

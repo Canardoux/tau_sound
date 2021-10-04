@@ -58,7 +58,25 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
     if (status != PermissionStatus.granted) {
       throw RecordingPermissionException('Microphone permission not granted');
     }
-    await _mRecorder!.open();
+    var sink = await createFile();
+
+    var recordingDataController = StreamController<TauFood>();
+    _mRecordingDataSubscription =
+        recordingDataController.stream.listen((buffer) {
+          if (buffer is TauFoodData) {
+            sink.add(buffer.data!);
+          }
+        });
+
+    await _mRecorder!.open(        from: InputDeviceNode.mic(),
+        to: OutputStreamNode(
+          recordingDataController.sink,
+          codec: Pcm(AudioFormat.raw,
+              sampleRate: tSampleRate,
+              depth: Depth.int16,
+              endianness: Endianness.littleEndian,
+              nbChannels: NbChannels.mono),
+        ));
     setState(() {
       _mRecorderIsInited = true;
     });
@@ -69,7 +87,16 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
     super.initState();
     // Be careful : openAudioSession return a Future.
     // Do not access your TauPlayer or TauRecorder before the completion of the Future
-    _mPlayer!.open().then((value) {
+    _mPlayer!.open(        from: InputFileNode(
+      _mPath,
+      codec: Pcm(AudioFormat.raw,
+          depth: Depth.int16,
+          endianness: Endianness.littleEndian,
+          nbChannels: NbChannels.mono,
+          sampleRate: tSampleRate),
+    ),
+      to: OutputDeviceNode.speaker(),
+    ).then((value) {
       setState(() {
         _mPlayerIsInited = true;
       });
@@ -104,23 +131,7 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
   Future<void> record() async {
     assert(_mRecorderIsInited && _mPlayer!.isStopped);
     var sink = await createFile();
-    var recordingDataController = StreamController<TauFood>();
-    _mRecordingDataSubscription =
-        recordingDataController.stream.listen((buffer) {
-      if (buffer is TauFoodData) {
-        sink.add(buffer.data!);
-      }
-    });
-    await _mRecorder!.record(
-        from: DefaultInputDevice(),
-        to: OutputStream(
-          recordingDataController.sink,
-          codec: Pcm(AudioFormat.raw,
-              sampleRate: tSampleRate,
-              depth: Depth.int16,
-              endianness: Endianness.littleEndian,
-              nbChannels: NbChannels.mono),
-        ));
+    await _mRecorder!.record();
     setState(() {});
   }
   // --------------------- (it was very simple, wasn't it ?) -------------------
@@ -151,15 +162,6 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
         _mRecorder!.isStopped &&
         _mPlayer!.isStopped);
     await _mPlayer!.play(
-        from: InputFile(
-          _mPath,
-          codec: Pcm(AudioFormat.raw,
-              depth: Depth.int16,
-              endianness: Endianness.littleEndian,
-              nbChannels: NbChannels.mono,
-              sampleRate: tSampleRate),
-        ),
-        to: DefaultOutputDevice(),
         whenFinished: () {
           setState(() {});
         }); // The readability of Dart is very special :-(
