@@ -28,6 +28,7 @@ import 'dart:io' show Platform;
 import 'dart:typed_data' show Uint8List;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/services.dart';
 import 'package:tau_platform_interface/tau_platform_interface.dart';
 import 'package:tau_platform_interface/tau_player_platform_interface.dart';
 import 'package:logger/logger.dart' show Level, Logger;
@@ -175,7 +176,6 @@ class TauPlayer implements TauPlayerCallback {
   Future<TauPlayer?> open({
     required InputNode from,
     required OutputDeviceNode to,
-
     AudioFocus? focus,
     SessionCategory category = SessionCategory.playAndRecord,
     SessionMode mode = SessionMode.modeDefault,
@@ -639,7 +639,6 @@ class TauPlayer implements TauPlayerCallback {
   InputNode? _from;
   OutputDeviceNode? _to;
 
-
   ///
   StreamSubscription<TauFood>?
       _foodStreamSubscription; // ignore: cancel_subscriptions
@@ -729,7 +728,6 @@ class TauPlayer implements TauPlayerCallback {
   Future<TauPlayer> _open({
     required InputNode from,
     required OutputDeviceNode to,
-
     AudioFocus? focus,
     SessionCategory category = SessionCategory.playAndRecord,
     SessionMode mode = SessionMode.modeDefault,
@@ -917,6 +915,34 @@ class TauPlayer implements TauPlayerCallback {
     }
 
     return PlayerState.values[state];
+  }
+
+  Future<File> _loadAudioFromAsset(String path) async {
+    final byteData = await rootBundle.load(path);
+    var tempDir = await getTemporaryDirectory();
+    var tempPath = '${tempDir.path}/flutter_sound_tmp.wav';
+    final audioAsset = File(tempPath);
+    await audioAsset.writeAsBytes(byteData.buffer.asUint8List());
+    return audioAsset;
+  }
+
+  Future<PlayerState> _startPlayerFromAsset(
+    InputAssetNode fromAsset,
+    OutputDeviceNode to, {
+    //Parameters for _play from track
+    TonSkip? onSkipForward,
+    TonSkip? onSkipBackward,
+    TonPaused? onPaused,
+    bool defaultPauseResume = true,
+    bool removeUIWhenStopped = true,
+  }) async {
+    var audioFile = await _loadAudioFromAsset(fromAsset.path);
+    return _startPlayerFromURI(InputFileNode(audioFile.path), to,
+        defaultPauseResume: defaultPauseResume,
+        removeUIWhenStopped: removeUIWhenStopped,
+        onPaused: onPaused,
+        onSkipBackward: onSkipBackward,
+        onSkipForward: onSkipForward);
   }
 
   Future<PlayerState> _startPlayerFromBuffer(
@@ -1125,6 +1151,17 @@ class TauPlayer implements TauPlayerCallback {
         case InputFileNode:
           state = await _startPlayerFromURI(
             _from as InputFileNode,
+            _to!,
+            onSkipForward: onSkipForward,
+            defaultPauseResume: defaultPauseResume,
+            onPaused: onPaused,
+            onSkipBackward: onSkipBackward,
+            removeUIWhenStopped: removeUIWhenStopped,
+          );
+          break;
+        case InputAssetNode:
+          state = await _startPlayerFromAsset(
+            _from as InputAssetNode,
             _to!,
             onSkipForward: onSkipForward,
             defaultPauseResume: defaultPauseResume,
