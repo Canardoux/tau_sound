@@ -937,12 +937,60 @@ class TauPlayer implements TauPlayerCallback {
     bool removeUIWhenStopped = true,
   }) async {
     var audioFile = await _loadAudioFromAsset(fromAsset.path);
-    return _startPlayerFromURI(InputFileNode(audioFile.path), to,
+
+    var uri = audioFile.uri.toString();
+    var codec = fromAsset.codec;
+    var fileNode =
+        InputFileNode(uri, codec: fromAsset.codec, track: fromAsset.track);
+    if (codec is Pcm && codec.audioFormat == AudioFormat.raw) {
+      fileNode = await fileNode.toWave();
+      uri = fileNode.uri;
+      codec = fileNode.codec;
+    }
+
+    var oldCodec = codec.deprecatedCodec;
+
+    var what = <String, dynamic>{
+      'codec': oldCodec,
+      'path': uri,
+      'fromDataBuffer': null,
+    };
+    await _convert(oldCodec, what);
+    oldCodec = what['codec'] as Codec;
+    uri = what['path'] as String;
+
+    var state = PlayerState.isStopped.index;
+    if (withShadeUI) {
+      var track = Track(
+          codec: oldCodec,
+          trackPath: uri,
+          trackAuthor: fileNode.track.author,
+          trackTitle: fileNode.track.title,
+          albumArtFile: fileNode.track.albumArtFile,
+          albumArtAsset: fileNode.track.albumArtAsset,
+          albumArtUrl: fileNode.track.albumArtURL);
+
+      state = await TauPlayerPlatform.instance.startPlayerFromTrack(
+        this,
+        progress: Duration.zero,
+        duration: Duration.zero,
+        track: track.toMap(),
+        canPause: (onPaused != null || defaultPauseResume),
+        canSkipForward: (onSkipForward != null),
+        canSkipBackward: (onSkipBackward != null),
         defaultPauseResume: defaultPauseResume,
         removeUIWhenStopped: removeUIWhenStopped,
-        onPaused: onPaused,
-        onSkipBackward: onSkipBackward,
-        onSkipForward: onSkipForward);
+      );
+    } else {
+      state = await TauPlayerPlatform.instance.startPlayer(
+        this,
+        codec: oldCodec,
+        fromURI: uri,
+        fromDataBuffer: null,
+      );
+    }
+
+    return PlayerState.values[state];
   }
 
   Future<PlayerState> _startPlayerFromBuffer(
