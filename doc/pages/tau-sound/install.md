@@ -196,7 +196,17 @@ Please [read this](https://www.jsdelivr.com/features) to understand how you can 
 
 ### Troubles shooting
 
-#### Problem with Cocoapods
+#### Problem of the ios target version
+
+You **must** put the following line on top of your Podfile :
+
+```podfile
+platform :ios, '10.0'
+```
+
+(or a number higher)
+
+#### Other problem with Cocoapods
 
 If you get this message \(specially after the release of a new Flutter Version\) :
 

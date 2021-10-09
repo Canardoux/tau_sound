@@ -578,17 +578,6 @@
 
 
 {
-"title": "Recorder API",
-"tags": "apirecorder",
-"keywords": "API Recorder",
-"url": "tau_api_recorder_on_progress.html",
-"summary": "onProgress"
-}
-,
-
-
-
-{
 "title": "Player API",
 "tags": "apiplayer",
 "keywords": "API Player",
@@ -600,11 +589,11 @@
 
 
 {
-"title": "Player API",
-"tags": "apiplayer",
-"keywords": "API Player",
-"url": "tau_api_player_open_audio_session.html",
-"summary": "`openAudioSession()` and `closeAudioSession()`."
+"title": "Recorder API",
+"tags": "apirecorder",
+"keywords": "API Recorder",
+"url": "tau_api_recorder_on_progress.html",
+"summary": "onProgress"
 }
 ,
 
@@ -616,6 +605,17 @@
 "keywords": "API Recorder",
 "url": "tau_api_recorder_open_audio_session.html",
 "summary": "`openAudioSession()` and `closeAudioSession()`"
+}
+,
+
+
+
+{
+"title": "Player API",
+"tags": "apiplayer",
+"keywords": "API Player",
+"url": "tau_api_player_open_audio_session.html",
+"summary": "`openAudioSession()` and `closeAudioSession()`."
 }
 ,
 
@@ -723,6 +723,17 @@
 
 
 {
+"title": "Processing Flow",
+"tags": "tau",
+"keywords": "tau execution flow",
+"url": "processing_flow.html",
+"summary": "Processing Flow"
+}
+,
+
+
+
+{
 "title": "Examples",
 "tags": "exampledemo",
 "keywords": "Flutter, Flutter Sound, examples, demo",
@@ -802,28 +813,6 @@
 
 
 {
-"title": "Player API",
-"tags": "apiplayer",
-"keywords": "API Player",
-"url": "tau_api_player_setLogLevel.html",
-"summary": "setLogLevel()"
-}
-,
-
-
-
-{
-"title": "Utilities API",
-"tags": "apiutilitieshelpers",
-"keywords": "API, utilities, helpers",
-"url": "tau_api_utilities_setLogLevel.html",
-"summary": "setLogLevel()"
-}
-,
-
-
-
-{
 "title": "Examples",
 "tags": "example",
 "keywords": "Flutter, Flutter Sound, examples",
@@ -846,11 +835,22 @@
 
 
 {
-"title": "Recorder API",
-"tags": "apirecorder",
-"keywords": "API Recorder",
-"url": "tau_api_recorder_set_audio_focus.html",
-"summary": "setAudioFocus()"
+"title": "Player API",
+"tags": "apiplayer",
+"keywords": "API Player",
+"url": "tau_api_player_setLogLevel.html",
+"summary": "setLogLevel()"
+}
+,
+
+
+
+{
+"title": "Utilities API",
+"tags": "apiutilitieshelpers",
+"keywords": "API, utilities, helpers",
+"url": "tau_api_utilities_setLogLevel.html",
+"summary": "setLogLevel()"
 }
 ,
 
@@ -862,6 +862,17 @@
 "keywords": "API Player",
 "url": "tau_api_player_set_audio_focus.html",
 "summary": "setAudioFocus."
+}
+,
+
+
+
+{
+"title": "Recorder API",
+"tags": "apirecorder",
+"keywords": "API Recorder",
+"url": "tau_api_recorder_set_audio_focus.html",
+"summary": "setAudioFocus()"
 }
 ,
 
@@ -912,22 +923,22 @@
 
 
 {
-"title": "Examples",
-"tags": "example",
-"keywords": "Flutter, Flutter Sound, examples",
-"url": "flutter_sound_examples_setVolume.html",
-"summary": "Set the sound volume"
+"title": "Player API",
+"tags": "apiplayer",
+"keywords": "API Player",
+"url": "tau_api_player_set_volume.html",
+"summary": "setVolume()"
 }
 ,
 
 
 
 {
-"title": "Player API",
-"tags": "apiplayer",
-"keywords": "API Player",
-"url": "tau_api_player_set_volume.html",
-"summary": "setVolume()"
+"title": "Examples",
+"tags": "example",
+"keywords": "Flutter, Flutter Sound, examples",
+"url": "flutter_sound_examples_setVolume.html",
+"summary": "Set the sound volume"
 }
 ,
 

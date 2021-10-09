@@ -303,6 +303,13 @@
           
           
           
+          
+          
+          <li><a title="Processing Flow" href="/processing_flow.html">Processing Flow</a></li>
+          
+          
+          
+          
       </ul>
    </li>
      
@@ -1310,7 +1317,16 @@ You just have to add your dependecy line into your pubspec.yaml.</p>
 
 <h3 id="troubles-shooting">Troubles shooting</h3>
 
-<h4 id="problem-with-cocoapods">Problem with Cocoapods</h4>
+<h4 id="problem-of-the-ios-target-version">Problem of the ios target version</h4>
+
+<p>You <strong>must</strong> put the following line on top of your Podfile :</p>
+
+<pre><code class="language-podfile">platform :ios, '10.0'
+</code></pre>
+
+<p>(or a number higher)</p>
+
+<h4 id="other-problem-with-cocoapods">Other problem with Cocoapods</h4>
 
 <p>If you get this message (specially after the release of a new Flutter Version) :</p>
 
@@ -1370,7 +1386,7 @@ cd</span> ..
             <div class="row">
                 <div class="col-lg-12 footer">
                &copy;2021 Canardoux. Licensed under GPL. <br />
- Site last generated: Oct 3, 2021 <br />
+ Site last generated: Oct 9, 2021 <br />
 <p><img src="images/banner5.svg" alt="Company logo" max-width="10"/></p>
                 </div>
             </div>
