@@ -16,3 +16,4 @@ toc: false
 - Remove the stupid assets in tau_web [FS #402](https://github.com/Canardoux/tau/issues/402)
 - Fix all the 404 errors in the documentation of the Dart API
 - No more crashes with Just Audio compatibility. [FS #767](https://github.com/Canardoux/tau/issues/767)
+- Added support to play audio files from assets. [FS #549](https://github.com/Canardoux/tau/issues/549)
