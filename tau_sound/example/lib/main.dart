@@ -17,27 +17,29 @@
  * file, You can obtain one at https://www.gnu.org/licenses/.
  */
 
+import 'package:example/play_from_asset/play_from_asset.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+
+import 'convert_to_mp3/convert_to_mp3.dart';
 import 'demo/demo.dart';
 import 'livePlaybackWithBackPressure/live_playback_with_back_pressure.dart';
 import 'livePlaybackWithoutBackPressure/live_playback_without_back_pressure.dart';
+import 'loglevel/loglevel.dart';
 import 'multi_playback/multi_playback.dart';
 import 'play_from_mic/play_from_mic.dart';
+import 'player_onProgress/player_onProgress.dart';
 import 'recordToStream/record_to_stream_example.dart';
+import 'recorder_onProgress/recorder_onProgress.dart';
+import 'seek/seek.dart';
 import 'simple_playback/simple_playback.dart';
 import 'simple_recorder/simple_recorder.dart';
 import 'soundEffect/sound_effect.dart';
-import 'streamLoop/stream_loop.dart';
-import 'widgetUI/widget_ui_demo.dart';
-import 'convert_to_mp3/convert_to_mp3.dart';
-import 'loglevel/loglevel.dart';
-import 'volume_control/volume_control.dart';
 import 'speed_control/speed_control.dart';
-import 'player_onProgress/player_onProgress.dart';
-import 'recorder_onProgress/recorder_onProgress.dart';
-import 'seek/seek.dart';
+import 'streamLoop/stream_loop.dart';
 import 'streamLoop_justAudio/stream_loop_just_audio.dart';
+import 'volume_control/volume_control.dart';
+import 'widgetUI/widget_ui_demo.dart';
 
 /*
     This APP is just a driver to call the various Flutter Sound examples.
@@ -215,6 +217,16 @@ This is a very simple example showing how to  call `setSubscriptionDuration() an
     description: '''
 This is a very simple example showing how to  call `setSubscriptionDuration() and use onProgress() on a recorder.
 
+''',
+  ),
+
+  Example(
+    title: 'Play from Asset',
+    subTitle: 'Play from asset file',
+    flags: tNotWeb,
+    route: (_) => PlayFromAsset(),
+    description: '''
+This is a very simple example showing how to play an audio file from app asset folder
 ''',
   ),
 
