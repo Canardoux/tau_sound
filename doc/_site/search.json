@@ -578,22 +578,22 @@
 
 
 {
-"title": "Player API",
-"tags": "apiplayer",
-"keywords": "API Player",
-"url": "tau_api_player_on_progress.html",
-"summary": "onProgress."
+"title": "Recorder API",
+"tags": "apirecorder",
+"keywords": "API Recorder",
+"url": "tau_api_recorder_on_progress.html",
+"summary": "onProgress"
 }
 ,
 
 
 
 {
-"title": "Recorder API",
-"tags": "apirecorder",
-"keywords": "API Recorder",
-"url": "tau_api_recorder_on_progress.html",
-"summary": "onProgress"
+"title": "Player API",
+"tags": "apiplayer",
+"keywords": "API Player",
+"url": "tau_api_player_on_progress.html",
+"summary": "onProgress."
 }
 ,
 
@@ -660,6 +660,17 @@
 "keywords": "API, utilities, helpers",
 "url": "tau_api_utilities_pcm_to_wave_buffer.html",
 "summary": "pcmToWaveBuffer()"
+}
+,
+
+
+
+{
+"title": "Examples",
+"tags": "exampledemo",
+"keywords": "Flutter, Flutter Sound, examples, demo",
+"url": "flutter_sound_examples_play_from_asset.html",
+"summary": "A simple example showing how to play an audio file from app asset folder"
 }
 ,
 
@@ -813,21 +824,10 @@
 
 
 {
-"title": "Examples",
-"tags": "example",
-"keywords": "Flutter, Flutter Sound, examples",
-"url": "flutter_sound_examples_setLogLevel.html",
-"summary": "Set Log Level"
-}
-,
-
-
-
-{
-"title": "Recorder API",
-"tags": "apirecorder",
-"keywords": "API Recorder",
-"url": "tau_api_recorder_setLogLevel.html",
+"title": "Utilities API",
+"tags": "apiutilitieshelpers",
+"keywords": "API, utilities, helpers",
+"url": "tau_api_utilities_setLogLevel.html",
 "summary": "setLogLevel()"
 }
 ,
@@ -846,11 +846,22 @@
 
 
 {
-"title": "Utilities API",
-"tags": "apiutilitieshelpers",
-"keywords": "API, utilities, helpers",
-"url": "tau_api_utilities_setLogLevel.html",
+"title": "Recorder API",
+"tags": "apirecorder",
+"keywords": "API Recorder",
+"url": "tau_api_recorder_setLogLevel.html",
 "summary": "setLogLevel()"
+}
+,
+
+
+
+{
+"title": "Examples",
+"tags": "example",
+"keywords": "Flutter, Flutter Sound, examples",
+"url": "flutter_sound_examples_setLogLevel.html",
+"summary": "Set Log Level"
 }
 ,
 
@@ -890,10 +901,10 @@
 
 
 {
-"title": "Player API",
-"tags": "apiplayer",
-"keywords": "API Player",
-"url": "tau_api_player_set_subscription_duration.html",
+"title": "Recorder API",
+"tags": "apirecorder",
+"keywords": "API Recorder",
+"url": "tau_api_recorder_set_subscription_duration.html",
 "summary": "setSubscriptionDuration()"
 }
 ,
@@ -901,10 +912,10 @@
 
 
 {
-"title": "Recorder API",
-"tags": "apirecorder",
-"keywords": "API Recorder",
-"url": "tau_api_recorder_set_subscription_duration.html",
+"title": "Player API",
+"tags": "apiplayer",
+"keywords": "API Player",
+"url": "tau_api_player_set_subscription_duration.html",
 "summary": "setSubscriptionDuration()"
 }
 ,
