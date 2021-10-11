@@ -63,12 +63,13 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
     var recordingDataController = StreamController<TauFood>();
     _mRecordingDataSubscription =
         recordingDataController.stream.listen((buffer) {
-          if (buffer is TauFoodData) {
-            sink.add(buffer.data!);
-          }
-        });
+      if (buffer is TauFoodData) {
+        sink.add(buffer.data!);
+      }
+    });
 
-    await _mRecorder!.open(        from: InputDeviceNode.mic(),
+    await _mRecorder!.open(
+        from: InputDeviceNode.mic(),
         to: OutputStreamNode(
           recordingDataController.sink,
           codec: Pcm(AudioFormat.raw,
@@ -87,16 +88,19 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
     super.initState();
     // Be careful : openAudioSession return a Future.
     // Do not access your TauPlayer or TauRecorder before the completion of the Future
-    _mPlayer!.open(        from: InputFileNode(
-      _mPath,
-      codec: Pcm(AudioFormat.raw,
-          depth: Depth.int16,
-          endianness: Endianness.littleEndian,
-          nbChannels: NbChannels.mono,
-          sampleRate: tSampleRate),
-    ),
+    _mPlayer!
+        .open(
+      from: InputFileNode(
+        _mPath,
+        codec: Pcm(AudioFormat.raw,
+            depth: Depth.int16,
+            endianness: Endianness.littleEndian,
+            nbChannels: NbChannels.mono,
+            sampleRate: tSampleRate),
+      ),
       to: OutputDeviceNode.speaker(),
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         _mPlayerIsInited = true;
       });
@@ -161,10 +165,9 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
         _mplaybackReady &&
         _mRecorder!.isStopped &&
         _mPlayer!.isStopped);
-    await _mPlayer!.play(
-        whenFinished: () {
-          setState(() {});
-        }); // The readability of Dart is very special :-(
+    await _mPlayer!.play(whenFinished: () {
+      setState(() {});
+    }); // The readability of Dart is very special :-(
     setState(() {});
   }
 

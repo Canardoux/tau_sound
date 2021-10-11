@@ -70,7 +70,8 @@ class _SpeedControlState extends State<SpeedControl> {
   }
 
   Future<void> init() async {
-    await _mPlayer.open(        from: InputBufferNode(_boumData, codec: Aac(AudioFormat.adts)),
+    await _mPlayer.open(
+      from: InputBufferNode(_boumData, codec: Aac(AudioFormat.adts)),
       to: OutputDeviceNode.speaker(),
     );
     await _mPlayer.setSpeed(
@@ -86,10 +87,9 @@ class _SpeedControlState extends State<SpeedControl> {
   // -------  Here is the code to playback  -----------------------
 
   void play(TauPlayer? player) async {
-    await player!.play(
-        whenFinished: () {
-          setState(() {});
-        });
+    await player!.play(whenFinished: () {
+      setState(() {});
+    });
     setState(() {});
   }
 

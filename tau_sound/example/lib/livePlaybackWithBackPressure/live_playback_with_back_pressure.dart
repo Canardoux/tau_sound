@@ -75,9 +75,12 @@ class _LivePlaybackWithBackPressureState
 
     // Be careful : openAudioSession return a Future.
     // Do not access your TauPlayer or TauRecorder before the completion of the Future
-    _mPlayer!.open(      from: input,
+    _mPlayer!
+        .open(
+      from: input,
       to: OutputDeviceNode.speaker(),
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         _mPlayerIsInited = true;
       });
@@ -97,8 +100,7 @@ class _LivePlaybackWithBackPressureState
 
   void play() async {
     assert(_mPlayerIsInited && _mPlayer!.isStopped);
-    await _mPlayer!.play(
-    );
+    await _mPlayer!.play();
     setState(() {});
     var data = await getAssetData('assets/samples/sample.pcm');
     await feedHim(data);

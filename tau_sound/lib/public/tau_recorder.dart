@@ -210,9 +210,10 @@ class TauRecorder implements TauRecorderCallback {
   ///     myRecorder.closeAudioSession();
   ///     myRecorder = null;
   /// ```
-  Future<TauRecorder?> open(  { required InputDeviceNode from,
-  required OutputNode to,}
-  ) async {
+  Future<TauRecorder?> open({
+    required InputDeviceNode from,
+    required OutputNode to,
+  }) async {
     if (_isInited) {
       return this;
     }
@@ -271,13 +272,12 @@ class TauRecorder implements TauRecorderCallback {
   ///     await myRecorder.startRecorder(toFile: 'foo', codec: t_CODEC.CODEC_AAC,); // A temporary file named 'foo'
   /// ```
   Future<void> record({
-     TOnRecorderProgress? onProgress,
-     Duration? interval,
+    TOnRecorderProgress? onProgress,
+    Duration? interval,
   }) async {
     _logger.d('FS:---> record ');
     await _lock.synchronized(() async {
-      await _startRecorder(
-          onProgress: onProgress, interval: interval);
+      await _startRecorder(onProgress: onProgress, interval: interval);
     });
     _logger.d('FS:<--- record ');
   }
@@ -406,7 +406,6 @@ class TauRecorder implements TauRecorderCallback {
   InputDeviceNode? _from;
   OutputNode? _to;
 
-
   /// A reference to the User Sink during `StartRecorder(toStream:...)`
   StreamSink<TauFood>? _userStreamSink;
   TOnRecorderProgress? _onProgress;
@@ -421,8 +420,10 @@ class TauRecorder implements TauRecorderCallback {
     }
   }
 
-  Future<TauRecorder> _open( { required InputDeviceNode from,
-    required OutputNode to,}) async {
+  Future<TauRecorder> _open({
+    required InputDeviceNode from,
+    required OutputNode to,
+  }) async {
     _logger.d('---> openAudioSession');
 
     Completer<TauRecorder>? completer;

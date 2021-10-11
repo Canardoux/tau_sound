@@ -51,9 +51,12 @@ class _LogLevelState extends State<LogLevel> {
   @override
   void initState() {
     super.initState();
-    _mPlayer!.open(        from: InputFileNode(_exampleAudioFilePathMP3, codec: Mp3()),
+    _mPlayer!
+        .open(
+      from: InputFileNode(_exampleAudioFilePathMP3, codec: Mp3()),
       to: OutputDeviceNode.speaker(),
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         _mPlayerIsInited = true;
       });
@@ -73,10 +76,9 @@ class _LogLevelState extends State<LogLevel> {
   // -------  Here is the code to playback a remote file -----------------------
 
   void play() async {
-    await _mPlayer!.play(
-        whenFinished: () {
-          setState(() {});
-        });
+    await _mPlayer!.play(whenFinished: () {
+      setState(() {});
+    });
     setState(() {});
   }
 

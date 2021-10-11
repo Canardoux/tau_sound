@@ -78,7 +78,8 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
         throw RecordingPermissionException('Microphone permission not granted');
       }
     }
-    await _mRecorder.open(      from: InputDeviceNode.mic(),
+    await _mRecorder.open(
+      from: InputDeviceNode.mic(),
       to: OutputFileNode(
         _mPath,
         codec: _codec,

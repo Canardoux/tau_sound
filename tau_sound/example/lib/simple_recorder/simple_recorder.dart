@@ -68,9 +68,12 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
 
   @override
   void initState() {
-    _mPlayer!.open(            from: InputFileNode(_mPath),
+    _mPlayer!
+        .open(
+      from: InputFileNode(_mPath),
       to: OutputDeviceNode.speaker(),
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         _mPlayerIsInited = true;
       });
@@ -117,9 +120,7 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
   // ----------------------  Here is the code for recording and playback -------
 
   void record() {
-    _mRecorder!
-        .record()
-        .then((value) {
+    _mRecorder!.record().then((value) {
       setState(() {});
     });
   }
@@ -138,12 +139,9 @@ class _SimpleRecorderState extends State<SimpleRecorder> {
         _mplaybackReady &&
         _mRecorder!.isStopped &&
         _mPlayer!.isStopped);
-    _mPlayer!
-        .play(
-            whenFinished: () {
-              setState(() {});
-            })
-        .then((value) {
+    _mPlayer!.play(whenFinished: () {
+      setState(() {});
+    }).then((value) {
       setState(() {});
     });
   }

@@ -163,7 +163,7 @@
                 
                 
                 
-                <li><a href="https://github.com/Canardoux/tau10/projects/1" target="_blank" rel="noopener"  title="A better &tau;" >Roadmap</a></li>
+                <li><a href="https://github.com/Canardoux/tau/projects/1" target="_blank" rel="noopener"  title="A better &tau;" >Roadmap</a></li>
                 
                 
                 
@@ -175,11 +175,11 @@
                 
                 
                 
-                <li><a href="https://github.com/canardoux/tau10/issues" target="_blank" rel="noopener"  title="Problem Reports" >PR</a></li>
+                <li><a href="https://github.com/canardoux/tau/issues" target="_blank" rel="noopener"  title="Problem Reports" >PR</a></li>
                 
                 
                 
-                <li><a href="https://github.com/Canardoux/tau10" target="_blank" rel="noopener"  title="The sources on Github." >Repo</a></li>
+                <li><a href="https://github.com/Canardoux/tau" target="_blank" rel="noopener"  title="The sources on Github." >Repo</a></li>
                 
                 
                 
@@ -201,6 +201,25 @@
                         
                         
                         <li><a href="/api-react"   title="For future expansion..." >React Native (javascript)</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sharing<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://tau-t7l7803.slack.com" target="_blank" rel="noopener"  title="Slack is not Open Source Software :-(" >Slack</a></li>
+                        
+                        
+                        
+                        <li><a href="https://app.element.io/#/room/#tau:matrix.org" target="_blank" rel="noopener"  title="Free and Open Source. Based on Open Source Protocols" >Element</a></li>
+                        
+                        
+                        
+                        <li><a href="https://discord.gg/MWNfvaTHmQ" target="_blank" rel="noopener"  title="Unfortunately not Open Source" >Discord</a></li>
                         
                         
                     </ul>
@@ -256,7 +275,7 @@
                 
 
 <ul id="mysidebar" class="nav">
-  <li class="sidebarTitle">The &tau; Project - 0.0.1-alpha-10+1</li>
+  <li class="sidebarTitle">The &tau; Project - 9.0.0-alpha-1+1</li>
   
   
   
@@ -805,7 +824,7 @@
           
           
           
-          <li><a title="Live demo" href="https://tau10.canardoux.xyz/web_example/" target="_blank" rel="noopener">Live demo</a></li>
+          <li><a title="Live demo" href="https://tau.canardoux.xyz/web_example/" target="_blank" rel="noopener">Live demo</a></li>
           
           
           
@@ -1020,14 +1039,14 @@
           
           
           
-          <li><a title="Problem Report" href="https://github.com/Canardoux/tau10/issues" target="_blank" rel="noopener">Problem Report</a></li>
+          <li><a title="Problem Report" href="https://github.com/Canardoux/tau/issues" target="_blank" rel="noopener">Problem Report</a></li>
           
           
           
           
           
           
-          <li><a title="Roadmap" href="https://github.com/Canardoux/tau10/projects/1" target="_blank" rel="noopener">Roadmap</a></li>
+          <li><a title="Roadmap" href="https://github.com/Canardoux/tau/projects/1" target="_blank" rel="noopener">Roadmap</a></li>
           
           
           
@@ -1125,11 +1144,11 @@ Pull Requests are welcome and will be considered very carefully.</p>
 <h3 id="clone-the-τ-project-and-the-tau_native-module">Clone the τ project and the tau_native module.</h3>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>some_where
-git clone <span class="nt">--recursive</span> https://github.com/Canardoux/tau10.git
+git clone <span class="nt">--recursive</span> https://github.com/Canardoux/tau.git
 </code></pre></div></div>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> 
-The project name is temporarily named <code class="language-plaintext highlighter-rouge">tau10</code>, because the Flutter Sound project already uses the project name <code class="language-plaintext highlighter-rouge">tau</code>.
+The project name is temporarily named <code class="language-plaintext highlighter-rouge">tau</code>, because the Flutter Sound project already uses the project name <code class="language-plaintext highlighter-rouge">tau</code>.
 Probably in the future, we will change the Flutter Sound name to <code class="language-plaintext highlighter-rouge">flutter_sound</code>, and we will be able to rename the τ project as <code class="language-plaintext highlighter-rouge">tau</code>.
 </div>
 
@@ -1137,7 +1156,7 @@ Probably in the future, we will change the Flutter Sound name to <code class="la
 
 <p>cd to the τ root dir and run the script <code class="language-plaintext highlighter-rouge">bin/reldev.sh DEV</code></p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>tau10
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>tau
 bin/reldev.sh DEV
 </code></pre></div></div>
 
@@ -1160,7 +1179,7 @@ bin/flavor.sh LITE
 
 <p>Probably good to clean the space :</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>tau10/example
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>tau/example
 <span class="nb">rm</span> <span class="nt">-r</span> build ios/.symlinks ios/Podfile.lock
 flutter clean
 flutter pub get
@@ -1174,9 +1193,9 @@ cd</span> ..
 <p>If everything good, you are now ready to run the example in debug mode using either Visual Studio Code, Android Studio or XCode</p>
 
 <ul>
-  <li>To debug/develop the Dart side, you open the project tau10/tau_sound/example/ in Visual Studio Code or Android Studio.</li>
-  <li>To debug/develop the iOS side you open tau10/tau_sound/example/ios/Runner.xcworkspace in XCode.</li>
-  <li>To debug/develop the Android side, you open the project tau10/tau_sound/example/android in Android Studio</li>
+  <li>To debug/develop the Dart side, you open the project tau/tau_sound/example/ in Visual Studio Code or Android Studio.</li>
+  <li>To debug/develop the iOS side you open tau/tau_sound/example/ios/Runner.xcworkspace in XCode.</li>
+  <li>To debug/develop the Android side, you open the project tau/tau_sound/example/android in Android Studio</li>
 </ul>
 
 <h3 id="debug-your-own-app">Debug your own App</h3>
@@ -1187,11 +1206,11 @@ cd</span> ..
 <span class="c1"># The following instructions are just for developing/debugging Flutter Sound</span>
 <span class="c1"># Do not put them in a real App</span>
   <span class="na">tau_platform_interface</span><span class="pi">:</span>
-    <span class="na">path</span><span class="pi">:</span> <span class="s">../tau10/tau_platform_interface</span> <span class="c1"># flutter_sound_platform_interface Dir</span>
+    <span class="na">path</span><span class="pi">:</span> <span class="s">../tau/tau_platform_interface</span> <span class="c1"># flutter_sound_platform_interface Dir</span>
   <span class="na">flutter_sound_web</span><span class="pi">:</span>
-    <span class="na">path</span><span class="pi">:</span> <span class="s">../tau10/tau_web</span> <span class="c1"># flutter_sound_web Dir</span>
+    <span class="na">path</span><span class="pi">:</span> <span class="s">../tau/tau_web</span> <span class="c1"># flutter_sound_web Dir</span>
   <span class="na">flutter_sound</span><span class="pi">:</span> 
-    <span class="na">path</span><span class="pi">:</span> <span class="s">../tau10/flutter_sound</span>
+    <span class="na">path</span><span class="pi">:</span> <span class="s">../tau/flutter_sound</span>
 <span class="c1"># ============================================================================</span>
 </code></pre></div></div>
 
@@ -1204,13 +1223,13 @@ Please refer to this documentation to install ruby and jekyll on your dev machin
 <p>All the τ documentation is in markdown files under tau/doc/pages.
 You can see your modifications in live doing:</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>tau10/doc
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>tau/doc
 jekyll serve
 </code></pre></div></div>
 
 <p>Then, if you have the necessary credentials (but you certainly do not have them), you can do:</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>tau10
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>tau
 bin/doc.sh
 </code></pre></div></div>
 
@@ -1218,7 +1237,7 @@ bin/doc.sh
 
 <p>if you have the necessary credentials (but you certainly do not have them), you can do:</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>tau10
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd </span>tau
 doc/build.sh 9.0.0
 </code></pre></div></div>
 
@@ -1262,7 +1281,7 @@ This will give time to <code class="language-plaintext highlighter-rouge">npm</c
             <div class="row">
                 <div class="col-lg-12 footer">
                &copy;2021 Canardoux. Licensed under GPL. <br />
- Site last generated: Oct 9, 2021 <br />
+ Site last generated: Oct 11, 2021 <br />
 <p><img src="images/banner5.svg" alt="Company logo" max-width="10"/></p>
                 </div>
             </div>

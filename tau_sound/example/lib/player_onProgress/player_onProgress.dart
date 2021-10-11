@@ -70,7 +70,8 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
   }
 
   Future<void> init() async {
-    await _mPlayer.open(        from: InputBufferNode(_boumData, codec: Aac(AudioFormat.adts)),
+    await _mPlayer.open(
+      from: InputBufferNode(_boumData, codec: Aac(AudioFormat.adts)),
       to: OutputDeviceNode.speaker(),
     );
     _boumData = await getAssetData(_boum);

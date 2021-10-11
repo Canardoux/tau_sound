@@ -63,7 +63,7 @@ The τ package supports playback from:
 
 τ comes with several Demo/Examples :
 
-[The `examples App`](https://github.com/Canardoux/tau10/blob/main/tau_sound/example/lib/main.dart) is a driver which can call all the various examples.
+[The `examples App`](https://github.com/Canardoux/tau/blob/main/tau_sound/example/lib/main.dart) is a driver which can call all the various examples.
 
 ## Features
 

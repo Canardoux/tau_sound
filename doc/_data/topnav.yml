@@ -5,7 +5,7 @@ topnav:
   items:
 
     - title: Roadmap
-      external_url: https://github.com/Canardoux/tau10/projects/1
+      external_url: https://github.com/Canardoux/tau/projects/1
       hint: A better &tau;
 
     - title: Changelog
@@ -17,11 +17,11 @@ topnav:
       hint: "The &tau; Project news"
 
     - title: PR
-      external_url: https://github.com/canardoux/tau10/issues
+      external_url: https://github.com/canardoux/tau/issues
       hint: "Problem Reports"
 
     - title: Repo
-      external_url: https://github.com/Canardoux/tau10
+      external_url: https://github.com/Canardoux/tau
       hint: "The sources on Github."
 
     - title: pub.dev
@@ -44,4 +44,21 @@ topnav_dropdowns:
         - title: React Native (javascript)
           hint: "For future expansion..."
           url: /api-react
+
+
+    - title: Sharing
+      folderitems:
+
+        - title: Slack
+          external_url: https://tau-t7l7803.slack.com
+          hint: "Slack is not Open Source Software :-("
+
+        - title: Element
+          hint: "Free and Open Source. Based on Open Source Protocols"
+          external_url: https://app.element.io/#/room/#tau:matrix.org
+
+        - title: Discord
+          hint: "Unfortunately not Open Source"
+          external_url: https://discord.gg/MWNfvaTHmQ
+
 

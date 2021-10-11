@@ -50,7 +50,8 @@ class _StreamLoopState extends State<StreamLoop> {
   StreamController<TauFood> totoStream = StreamController<TauFood>();
 
   Future<void> init() async {
-    await _mRecorder!.open(from: InputDeviceNode.mic(),
+    await _mRecorder!.open(
+        from: InputDeviceNode.mic(),
         to: OutputStreamNode(
           totoStream.sink,
           codec: Pcm(
@@ -61,12 +62,13 @@ class _StreamLoopState extends State<StreamLoop> {
             sampleRate: _sampleRateRecorder,
           ),
         ));
-    await _mPlayer!.open(      from: InputStreamNode(totoStream.stream,
-        codec: Pcm(AudioFormat.raw,
-            depth: Depth.int16,
-            endianness: Endianness.littleEndian,
-            nbChannels: NbChannels.mono,
-            sampleRate: _sampleRatePlayer)),
+    await _mPlayer!.open(
+      from: InputStreamNode(totoStream.stream,
+          codec: Pcm(AudioFormat.raw,
+              depth: Depth.int16,
+              endianness: Endianness.littleEndian,
+              nbChannels: NbChannels.mono,
+              sampleRate: _sampleRatePlayer)),
       to: OutputDeviceNode.speaker(),
     );
   }
@@ -115,11 +117,9 @@ class _StreamLoopState extends State<StreamLoop> {
 
   Future<void> record() async {
     totoStream = StreamController<TauFood>();
-    await _mPlayer!.play(
-    );
+    await _mPlayer!.play();
 
-    await _mRecorder!.record(
-        );
+    await _mRecorder!.record();
     setState(() {});
   }
 

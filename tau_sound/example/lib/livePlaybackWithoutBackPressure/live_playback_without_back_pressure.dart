@@ -78,9 +78,12 @@ class _LivePlaybackWithoutBackPressureState
           nbChannels: NbChannels.mono,
           sampleRate: tSampleRate,
         ));
-    _mPlayer!.open(      from: input,
+    _mPlayer!
+        .open(
+      from: input,
       to: OutputDeviceNode.speaker(),
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         _mPlayerIsInited = true;
       });
@@ -112,8 +115,7 @@ class _LivePlaybackWithoutBackPressureState
   void play() async {
     assert(_mPlayerIsInited && _mPlayer!.isStopped);
     totoController = StreamController<TauFood>();
-    await _mPlayer!.play(
-    );
+    await _mPlayer!.play();
     setState(() {});
     var data = await getAssetData('assets/samples/sample.pcm');
     feedHim(data);

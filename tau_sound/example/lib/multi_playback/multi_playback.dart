@@ -81,23 +81,32 @@ class _MultiPlaybackState extends State<MultiPlayback> {
     ).then((value) => setState(() {
           buffer3 = value;
         }));
-    _mPlayer1!.open(        from: InputFileNode(_exampleAudioFilePathMP3, codec: Mp3()),
+    _mPlayer1!
+        .open(
+      from: InputFileNode(_exampleAudioFilePathMP3, codec: Mp3()),
       to: OutputDeviceNode.speaker(),
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         _mPlayer1IsInited = true;
       });
     });
-    _mPlayer2!.open(        from: InputBufferNode(buffer2, codec: Aac(AudioFormat.adts)),
+    _mPlayer2!
+        .open(
+      from: InputBufferNode(buffer2, codec: Aac(AudioFormat.adts)),
       to: OutputDeviceNode.speaker(),
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         _mPlayer2IsInited = true;
       });
     });
-    _mPlayer3!.open(       from: InputBufferNode(buffer3, codec: Aac(AudioFormat.mp4)),
+    _mPlayer3!
+        .open(
+      from: InputBufferNode(buffer3, codec: Aac(AudioFormat.mp4)),
       to: OutputDeviceNode.speaker(),
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         _mPlayer3IsInited = true;
       });

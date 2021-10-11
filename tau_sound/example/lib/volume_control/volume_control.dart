@@ -54,19 +54,23 @@ class _VolumeControlState extends State<VolumeControl> {
   @override
   void initState() {
     super.initState();
-    _mPlayer1.open(  from: InputFileNode( _exampleAudioFilePathMP3_1, codec: Mp3()),
+    _mPlayer1
+        .open(
+      from: InputFileNode(_exampleAudioFilePathMP3_1, codec: Mp3()),
       to: OutputDeviceNode.speaker(),
-
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         _mPlayerIsInited1 = true;
       });
     });
 
-    _mPlayer2.open(  from: InputFileNode( _exampleAudioFilePathMP3_2, codec: Mp3()),
+    _mPlayer2
+        .open(
+      from: InputFileNode(_exampleAudioFilePathMP3_2, codec: Mp3()),
       to: OutputDeviceNode.speaker(),
-
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         _mPlayerIsInited2 = true;
       });
@@ -88,10 +92,9 @@ class _VolumeControlState extends State<VolumeControl> {
   // -------  Here is the code to playback a remote file -----------------------
 
   void play(TauPlayer? player) async {
-    await player!.play(
-        whenFinished: () {
-          setState(() {});
-        });
+    await player!.play(whenFinished: () {
+      setState(() {});
+    });
     setState(() {});
   }
 
@@ -135,7 +138,8 @@ class _VolumeControlState extends State<VolumeControl> {
             stopPlayer(player).then((value) => setState(() {}));
           };
   }
-    @override
+
+  @override
   Widget build(BuildContext context) {
     Widget makeBody() {
       //return Column(

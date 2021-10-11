@@ -25,11 +25,11 @@ Pull Requests are welcome and will be considered very carefully.
 
 ```sh
 cd some_where
-git clone --recursive https://github.com/Canardoux/tau10.git
+git clone --recursive https://github.com/Canardoux/tau.git
 ```
 
 {% include note.html content="
-The project name is temporarily named `tau10`, because the Flutter Sound project already uses the project name `tau`.
+The project name is temporarily named `tau`, because the Flutter Sound project already uses the project name `tau`.
 Probably in the future, we will change the Flutter Sound name to `flutter_sound`, and we will be able to rename the τ project as `tau`.
 " %}
 
@@ -38,7 +38,7 @@ Probably in the future, we will change the Flutter Sound name to `flutter_sound`
 cd to the &tau; root dir and run the script `bin/reldev.sh DEV`
 
 ```sh
-cd tau10
+cd tau
 bin/reldev.sh DEV
 ```
 
@@ -64,7 +64,7 @@ bin/flavor.sh LITE
 Probably good to clean the space :
 
 ```sh
-cd tau10/example
+cd tau/example
 rm -r build ios/.symlinks ios/Podfile.lock
 flutter clean
 flutter pub get
@@ -77,9 +77,9 @@ cd ..
 
 If everything good, you are now ready to run the example in debug mode using either Visual Studio Code, Android Studio or XCode
 
-- To debug/develop the Dart side, you open the project tau10/tau_sound/example/ in Visual Studio Code or Android Studio.
-- To debug/develop the iOS side you open tau10/tau_sound/example/ios/Runner.xcworkspace in XCode.
-- To debug/develop the Android side, you open the project tau10/tau_sound/example/android in Android Studio
+- To debug/develop the Dart side, you open the project tau/tau_sound/example/ in Visual Studio Code or Android Studio.
+- To debug/develop the iOS side you open tau/tau_sound/example/ios/Runner.xcworkspace in XCode.
+- To debug/develop the Android side, you open the project tau/tau_sound/example/android in Android Studio
 
 ### Debug your own App
 
@@ -90,11 +90,11 @@ You must change the dependencies in your pubspec.yaml file and do a `flutter pub
 # The following instructions are just for developing/debugging Flutter Sound
 # Do not put them in a real App
   tau_platform_interface:
-    path: ../tau10/tau_platform_interface # flutter_sound_platform_interface Dir
+    path: ../tau/tau_platform_interface # flutter_sound_platform_interface Dir
   flutter_sound_web:
-    path: ../tau10/tau_web # flutter_sound_web Dir
+    path: ../tau/tau_web # flutter_sound_web Dir
   flutter_sound: 
-    path: ../tau10/flutter_sound
+    path: ../tau/flutter_sound
 # ============================================================================
 ```
 
@@ -108,14 +108,14 @@ All the &tau; documentation is in markdown files under tau/doc/pages.
 You can see your modifications in live doing:
 
 ```sh
-cd tau10/doc
+cd tau/doc
 jekyll serve
 ```
 
 Then, if you have the necessary credentials (but you certainly do not have them), you can do:
 
 ```sh
-cd tau10
+cd tau
 bin/doc.sh
 ```
 
@@ -124,7 +124,7 @@ bin/doc.sh
 if you have the necessary credentials (but you certainly do not have them), you can do:
 
 ```sh
-cd tau10
+cd tau
 doc/build.sh 9.0.0
 ```
 

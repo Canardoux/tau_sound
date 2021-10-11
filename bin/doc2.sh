@@ -53,10 +53,10 @@ cd
 #ln -s  pages/flutter-sound/api/topics/Utilities-topic.html dartdoc_utilities.html
 #ln -s  pages/flutter-sound/api/topics/UI_Widgets-topic.html dartdoc_widgets.html
 
-rm -rf /var/www/vhosts/canardoux.xyz/tau10.canardoux.xyz/*
-cp -a /tmp/toto_doc/_site/* /var/www/vhosts/canardoux.xyz/tau10.canardoux.xyz/
+rm -rf /var/www/vhosts/canardoux.xyz/tau.canardoux.xyz/*
+cp -a /tmp/toto_doc/_site/* /var/www/vhosts/canardoux.xyz/tau.canardoux.xyz/
 
-cd ~/tau10.canardoux.xyz/
+cd ~/tau.canardoux.xyz/
 echo "Symbolic links of the API"
 echo "--------------------------"
 for dir in $(find api -type d)
@@ -89,7 +89,7 @@ sed -i  "s/^  background-color: inherit;$/  background-color: #2196F3;/" api/sta
 #ln -s  pages/flutter-sound/api/topics/UI_Widgets-topic.html dartdoc_widgets.html
 
 
-cd ~/tau10.canardoux.xyz/
+cd ~/tau.canardoux.xyz/
 ln -s -v readme.html index.html
 #cd api/topics
 #rm favico*
@@ -108,6 +108,6 @@ if [ $? -ne 0 ]; then
 fi
 cd 
 
-rm -rf /var/www/vhosts/canardoux.xyz/tau10.canardoux.xyz/web_example/
+rm -rf /var/www/vhosts/canardoux.xyz/tau.canardoux.xyz/web_example/
 cp -a /tmp/toto_doc/tau_sound/example/assets/samples/ /tmp/toto_doc/tau_sound/example/assets/extract /tmp/toto_doc/tau_sound/example/build/web/assets
-cp -a /tmp/toto_doc/tau_sound/example/build/web /var/www/vhosts/canardoux.xyz/tau10.canardoux.xyz/web_example
+cp -a /tmp/toto_doc/tau_sound/example/build/web /var/www/vhosts/canardoux.xyz/tau.canardoux.xyz/web_example

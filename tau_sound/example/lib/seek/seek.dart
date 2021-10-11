@@ -80,7 +80,8 @@ class _SeekState extends State<Seek> {
   }
 
   Future<void> init() async {
-    await _mPlayer.open(        from: InputBufferNode(_boumData, codec: Aac(AudioFormat.adts)),
+    await _mPlayer.open(
+      from: InputBufferNode(_boumData, codec: Aac(AudioFormat.adts)),
       to: OutputDeviceNode.speaker(),
     );
     //await _mPlayer.setSubscriptionDuration(Duration(milliseconds: 50));

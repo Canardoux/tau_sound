@@ -128,11 +128,19 @@ class InputAssetNode extends InputNode {
 
 /// An InputDevice can be the Mic, The Blutooth mic, ...
 class InputDeviceNode extends InputNode {
-  InputDeviceNode(AudioSource audioSource) { this.audioSource = audioSource;}
+  InputDeviceNode(AudioSource audioSource) {
+    this.audioSource = audioSource;
+  }
   AudioSource audioSource = AudioSource.defaultSource;
-  InputDeviceNode.mic() {audioSource = AudioSource.microphone;}
-  InputDeviceNode.headsetMic() {audioSource = AudioSource.headsetMic;}
-  InputDeviceNode.defaultSource() {audioSource = AudioSource.defaultSource;}
+  InputDeviceNode.mic() {
+    audioSource = AudioSource.microphone;
+  }
+  InputDeviceNode.headsetMic() {
+    audioSource = AudioSource.headsetMic;
+  }
+  InputDeviceNode.defaultSource() {
+    audioSource = AudioSource.defaultSource;
+  }
 }
 
 /*
@@ -222,11 +230,22 @@ const allowBlueToothA2DP = 32;
 /// A Output Device can be the Speaker, the Ear Phone or a Blue Tooth Headphone
 class OutputDeviceNode extends OutputNode {
   int audioFlags = outputToSpeaker;
-  OutputDeviceNode(int audioFlags) {this.audioFlags = audioFlags;}
-  OutputDeviceNode.speaker() { audioFlags = outputToSpeaker;}
-  OutputDeviceNode.headSet() { audioFlags = outputToSpeaker | allowHeadset;}
-  OutputDeviceNode.blueToothA2DP() {audioFlags = outputToSpeaker | allowHeadset | allowBlueToothA2DP;}
-  OutputDeviceNode.any() { audioFlags = outputToSpeaker | allowHeadset | allowBlueToothA2DP | allowAirPlay;}
+  OutputDeviceNode(int audioFlags) {
+    this.audioFlags = audioFlags;
+  }
+  OutputDeviceNode.speaker() {
+    audioFlags = outputToSpeaker;
+  }
+  OutputDeviceNode.headSet() {
+    audioFlags = outputToSpeaker | allowHeadset;
+  }
+  OutputDeviceNode.blueToothA2DP() {
+    audioFlags = outputToSpeaker | allowHeadset | allowBlueToothA2DP;
+  }
+  OutputDeviceNode.any() {
+    audioFlags =
+        outputToSpeaker | allowHeadset | allowBlueToothA2DP | allowAirPlay;
+  }
 }
 
 // ------------------------------------------------------ Filter Node -----------------------------------------------

@@ -49,9 +49,12 @@ class _SimplePlaybackState extends State<SimplePlayback> {
   @override
   void initState() {
     super.initState();
-    _mPlayer!.open(      from: InputFileNode(_exampleAudioFilePathMP3, codec: Mp3()),
+    _mPlayer!
+        .open(
+      from: InputFileNode(_exampleAudioFilePathMP3, codec: Mp3()),
       to: OutputDeviceNode.speaker(),
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         _mPlayerIsInited = true;
       });

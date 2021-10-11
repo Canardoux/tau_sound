@@ -8,8 +8,8 @@ the `MPL Flutter-Sound 8.4` branch :" %}
 [Banner](https://tau.canardoux.xyz/images/banner5.png)
 
 
-- ## The [Tau documentation](https://tau10.canardoux.xyz/readme.html) is there
-- ## The [Tau CHANGELOG](https://tau10.canardoux.xyz/changelog.html) is there
+- ## The [Tau documentation](https://tau.canardoux.xyz/readme.html) is there
+- ## The [Tau CHANGELOG](https://tau.canardoux.xyz/changelog.html) is there
 
 -----------------------------------------------------------------------------------------------------------------------------------
 
@@ -62,12 +62,12 @@ The Flutter Sound package includes the following features
 
 ## Changelog
 
-You can find the [changes here](https://tau10.canardoux.xyz/changelog.html)
+You can find the [changes here](https://tau.canardoux.xyz/changelog.html)
 
 
 ## Documentation
 
-The [documentation is here](https://tau10.canardoux.xyz/readme.html)
+The [documentation is here](https://tau.canardoux.xyz/readme.html)
 
 ## Licenses
 

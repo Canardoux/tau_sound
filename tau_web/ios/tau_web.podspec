@@ -3,12 +3,12 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tau_web'
-  s.version          = '0.0.1-alpha-10+1'
+  s.version          = '9.0.0-alpha-1+1'
   s.summary          = 'No-op implementation of tau_web web plugin to avoid build issues on iOS'
   s.description      = <<-DESC
 temp fake tau_web plugin
                        DESC
-                       s.homepage         = s.homepage         = 'https://github.com/Canardoux/tau10/tau_web'
+                       s.homepage         = s.homepage         = 'https://github.com/Canardoux/tau/tau_web'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Larpoux' => 'larpoux@gmail.com' }
   s.source           = { :path => '.' }

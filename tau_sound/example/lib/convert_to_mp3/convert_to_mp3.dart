@@ -60,9 +60,12 @@ class _ConvertToMp3State extends State<ConvertToMp3> {
 
   @override
   void initState() {
-    _mPlayer!.open(        from: InputFileNode(_mPathMP3, codec: Mp3()),
+    _mPlayer!
+        .open(
+      from: InputFileNode(_mPathMP3, codec: Mp3()),
       to: OutputDeviceNode.speaker(),
-    ).then((value) {
+    )
+        .then((value) {
       setState(() {
         _mPlayerIsInited = true;
       });
@@ -96,16 +99,15 @@ class _ConvertToMp3State extends State<ConvertToMp3> {
         throw RecordingPermissionException('Microphone permission not granted');
       }
     }
-    await _mRecorder!.open(from: InputDeviceNode.mic(), to: OutputFileNode(_mPathAAC));
+    await _mRecorder!
+        .open(from: InputDeviceNode.mic(), to: OutputFileNode(_mPathAAC));
     _mRecorderIsInited = true;
   }
 
   // ----------------------  Here is the code for recording, convertFile(), and playback -------
 
   void record() {
-    _mRecorder!
-        .record()
-        .then((value) {
+    _mRecorder!.record().then((value) {
       setState(() {});
     });
   }
@@ -130,10 +132,9 @@ class _ConvertToMp3State extends State<ConvertToMp3> {
       print('`convertFile` not successful');
       return; // Something bad. Perhaps we are running the LITE flavor
     }
-    await _mPlayer!.play(
-        whenFinished: () {
-          setState(() {});
-        });
+    await _mPlayer!.play(whenFinished: () {
+      setState(() {});
+    });
     setState(() {});
   }
 

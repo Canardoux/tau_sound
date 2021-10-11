@@ -330,7 +330,8 @@ class _MyAppState extends State<Demo> {
           }
         });
         await recorderModule.close();
-        await recorderModule.open(         from: InputDeviceNode.mic(),
+        await recorderModule.open(
+          from: InputDeviceNode.mic(),
           to: OutputStreamNode(
             recordingDataController!.sink,
             codec: Pcm(AudioFormat.raw,
@@ -342,18 +343,18 @@ class _MyAppState extends State<Demo> {
         );
 
         await recorderModule.record(
-           onProgress: _onRecorderProgress,
+          onProgress: _onRecorderProgress,
           interval: Duration(milliseconds: 100),
         );
       } else {
         await recorderModule.close();
-        await recorderModule.open( from: InputDeviceNode.mic(),
+        await recorderModule.open(
+          from: InputDeviceNode.mic(),
           to: OutputFileNode(
             path,
             codec: getCodecFromDeprecated(
                 _codec), //Pcm(AudioFormat.raw, nbChannels: NbChannels.mono, endianness: Endianness.littleEndian, depth: Depth.int16, sampleRate: (_codec == Codec.pcm16) ? tSTREAMSAMPLERATE : tSAMPLERATE,),
           ),
-
         );
 
         await recorderModule.record(
@@ -575,26 +576,26 @@ class _MyAppState extends State<Demo> {
           albumArtAsset: albumArtAsset,
           albumArtURL: albumArtUrl);
       if (audioFilePath != null) {
-            InputNode from = InputFileNode(audioFilePath,
+        InputNode from = InputFileNode(audioFilePath,
             codec: getCodecFromDeprecated(codec), track: track);
-            await playerModule.close();
-            await playerModule.open(
-              from: from,
-              to: OutputDeviceNode.speaker(),
-              withShadeUI: _isAudioPlayer,
+        await playerModule.close();
+        await playerModule.open(
+          from: from,
+          to: OutputDeviceNode.speaker(),
+          withShadeUI: _isAudioPlayer,
         );
-            await playerModule.close();
-            await playerModule.open(
-              from: InputFileNode(
-                audioFilePath,
-                codec: getCodecFromDeprecated(codec),
-                track: track,
-              ),
-              to: OutputDeviceNode.speaker(),
-              withShadeUI: _isAudioPlayer,
-            );
+        await playerModule.close();
+        await playerModule.open(
+          from: InputFileNode(
+            audioFilePath,
+            codec: getCodecFromDeprecated(codec),
+            track: track,
+          ),
+          to: OutputDeviceNode.speaker(),
+          withShadeUI: _isAudioPlayer,
+        );
 
-            await playerModule.play(
+        await playerModule.play(
           onProgress: _onProgress,
           interval: Duration(milliseconds: 10),
           whenFinished: () {
@@ -951,9 +952,9 @@ class _MyAppState extends State<Demo> {
 
   Future<void> setCodec(Codec codec) async {
     _encoderSupported = true; // !!! temporary
-       // await recorderModule.isEncoderSupported(getCodecFromDeprecated(codec));
+    // await recorderModule.isEncoderSupported(getCodecFromDeprecated(codec));
     _decoderSupported = true; // temporary
-       // await playerModule.isDecoderSupported(getCodecFromDeprecated(codec));
+    // await playerModule.isDecoderSupported(getCodecFromDeprecated(codec));
 
     setState(() {
       _codec = codec;

@@ -57,16 +57,17 @@ class _SoundEffectState extends State<SoundEffect> {
 
   Future<void> init() async {
     var totoController = StreamController<TauFood>();
-    await _mPlayer!.open(      from: InputStreamNode(
-      totoController.stream,
-      codec: Pcm(
-        AudioFormat.raw,
-        depth: Depth.int16,
-        endianness: Endianness.littleEndian,
-        nbChannels: NbChannels.mono,
-        sampleRate: _tSampleRate,
+    await _mPlayer!.open(
+      from: InputStreamNode(
+        totoController.stream,
+        codec: Pcm(
+          AudioFormat.raw,
+          depth: Depth.int16,
+          endianness: Endianness.littleEndian,
+          nbChannels: NbChannels.mono,
+          sampleRate: _tSampleRate,
+        ),
       ),
-    ),
       to: OutputDeviceNode.speaker(),
     );
     bimData = TauHelper().waveToPCMBuffer(
@@ -78,8 +79,7 @@ class _SoundEffectState extends State<SoundEffect> {
     boumData = TauHelper().waveToPCMBuffer(
       inputBuffer: await getAssetData(_boum),
     );
-    await _mPlayer!.play(
-    );
+    await _mPlayer!.play();
   }
 
   @override
