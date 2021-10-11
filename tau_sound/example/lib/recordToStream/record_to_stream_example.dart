@@ -134,7 +134,6 @@ class _RecordToStreamExampleState extends State<RecordToStreamExample> {
 
   Future<void> record() async {
     assert(_mRecorderIsInited && _mPlayer!.isStopped);
-    var sink = await createFile();
     await _mRecorder!.record();
     setState(() {});
   }
