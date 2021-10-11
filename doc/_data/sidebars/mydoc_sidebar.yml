@@ -425,6 +425,10 @@ entries:
           url: /flutter_sound_examples_simple_recorder.html
           output: web, pdf
 
+        - title: Play from Asset
+          url: /flutter_sound_examples_play_from_asset.html
+          output: web, pdf
+
         - title: Play from Mic
           url: /flutter_sound_examples_play_from_mic.html
           output: web, pdf
