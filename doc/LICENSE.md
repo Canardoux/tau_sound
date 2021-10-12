@@ -2,7 +2,7 @@
 title:  "License"
 description: "Tau License"
 summary: "Flutter Sound License"
-permalink: LICENSE-GPL3.html
+permalink: license.html
 tags: [license]
 keywords: license
 ---

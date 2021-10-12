@@ -556,7 +556,7 @@ entries:
       output: web, pdf
 
     - title: License
-      url: /links_license.html
+      url: /license.html
       output: web, pdf
 
 
