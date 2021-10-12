@@ -12,7 +12,7 @@ summary: The &tau; Project documentation.
 
 ![pub version](https://img.shields.io/pub/v/tau_sound.svg?style=flat-square)
 {% include tip.html content="
-This is the GPL branch of Flutter Sound. If you cannot (or don't want to) publish your App under the GPL License, you can consider using the [MPL branch](https://tau.canardoux.xyz/readme.html)
+This is the GPL branch of Flutter Sound. If you cannot (or don't want to) publish your App under the GPL License, you can consider using the [MPL branch](https://flutter-sound.canardoux.xyz/readme.html)
 " %}
 
 The τ (tau) Project (or simply **"τ"**) is a set of libraries which deal with audio :

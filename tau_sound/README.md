@@ -1,11 +1,10 @@
 
-{% include tip.html content="This is the GPL fork of Flutter Sound. If you cannot (or don't want to) publish your App under the GPL License, you probably want to consider using
-the `MPL Flutter-Sound 8.4` branch :" %}
-# [MPL Flutter-Sound 8.4](https://pub.dev/packages/flutter_sound)
+This is the GPL fork of Flutter Sound. If you cannot (or don't want to) publish your App under the GPL License, you probably want to consider using
+the [MPL Flutter-Sound 8.4(https://pub.dev/packages/flutter_sound) branch.
 
 -------------------------------------------------------------------------------------
 
-[Banner](https://tau.canardoux.xyz/images/banner5.png)
+![Banner](https://tau.canardoux.xyz/images/banner5.png)
 
 
 - ## The [Tau documentation](https://tau.canardoux.xyz/readme.html) is there

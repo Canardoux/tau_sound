@@ -551,6 +551,10 @@ entries:
       url: /links_contribution.html
       output: web, pdf
 
+    - title: hacktoberfest
+      url: /hacktoberfest.html
+      output: web, pdf
+
     - title: License
       url: /links_license.html
       output: web, pdf
