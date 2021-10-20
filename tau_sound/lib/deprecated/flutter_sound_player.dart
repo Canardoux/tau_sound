@@ -2073,36 +2073,3 @@ class Track {
     return map;
   }
 }
-
-/// Used to stream data about the position of the
-/// playback as playback proceeds.
-/// @nodoc
-@deprecated
-class PlaybackDisposition {
-  /// The duration of the media.
-  final Duration duration;
-
-  /// The current position within the media
-  /// that we are playing.
-  final Duration position;
-
-  /// A convenience ctor. If you are using a stream builder
-  /// you can use this to set initialData with both duration
-  /// and postion as 0.
-  PlaybackDisposition.zero()
-      : position = Duration(seconds: 0),
-        duration = Duration(seconds: 0);
-
-  /// The constructor
-  PlaybackDisposition({
-    this.position = Duration.zero,
-    this.duration = Duration.zero,
-  });
-
-  ///
-  @override
-  String toString() {
-    return 'duration: $duration, '
-        'position: $position';
-  }
-}
