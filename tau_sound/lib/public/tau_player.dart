@@ -149,7 +149,6 @@ class TauPlayer implements TauPlayerCallback {
   Stream<PlaybackDisposition>? get onProgress =>
       _playerController != null ? _playerController!.stream : null;
 
-
   /// Used if the App wants to dynamically change the Log Level.
   /// Seldom used. Most of the time the Log Level is specified during the constructor.
   Future<void> setLogLevel(Level aLevel) async {
@@ -463,7 +462,6 @@ class TauPlayer implements TauPlayerCallback {
     });
   }
 
-
   /// Specify the callbacks frenquency, before calling [startPlayer].
   ///
   /// The default value is 0 (zero) which means that there is no callbacks.
@@ -477,7 +475,7 @@ class TauPlayer implements TauPlayerCallback {
   Future<void> setSubscriptionDuration(Duration duration) async {
     _logger.d('FS:---> setSubscriptionDuration ');
     await _waitOpen();
-    if (!_isInited ) {
+    if (!_isInited) {
       throw Exception('Player is not open');
     }
     var state = await TauPlayerPlatform.instance
@@ -485,7 +483,6 @@ class TauPlayer implements TauPlayerCallback {
     _playerState = PlayerState.values[state];
     _logger.d('FS:<---- setSubscriptionDuration ');
   }
-
 
   /// Get the resource path.
   ///
@@ -757,7 +754,6 @@ class TauPlayer implements TauPlayerCallback {
     Codec.defaultCodec, // vorbisWebM
   ];
 
-
   ///
   void _setPlayerCallback() {
     _playerController ??= StreamController<PlaybackDisposition>.broadcast();
@@ -767,7 +763,6 @@ class TauPlayer implements TauPlayerCallback {
     _playerController?.close();
     _playerController = null;
   }
-
 
   Future<void> _waitOpen() async {
     while (_openPlayerCompleter != null) {
@@ -1184,7 +1179,7 @@ class TauPlayer implements TauPlayerCallback {
       // We could have used a virtual function in InputNode,
       // but I wanted to keep the InputNode hierarchy independant of `tauPlayer`
       var state = PlayerState.isStopped;
-       switch (_from.runtimeType) {
+      switch (_from.runtimeType) {
         case InputFileNode:
           state = await _startPlayerFromURI(
             _from as InputFileNode,

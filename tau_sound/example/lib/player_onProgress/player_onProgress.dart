@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:tau_sound_lite/tau_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -72,14 +72,12 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
     super.dispose();
   }
 
-
   void cancelPlayerSubscriptions() {
     if (_mPlayerSubscription != null) {
       _mPlayerSubscription!.cancel();
       _mPlayerSubscription = null;
     }
   }
-
 
   Future<void> init() async {
     _boumData = await getAssetData(_boum);
@@ -93,7 +91,6 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
         pos = e.position.inMilliseconds;
       });
     });
-
   }
 
   Future<Uint8List> getAssetData(String path) async {
@@ -104,10 +101,9 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
   // -------  Here is the code to playback  -----------------------
 
   void play(TauPlayer? player) async {
-    await player!.play(
-        whenFinished: () {
-          setState(() {});
-        });
+    await player!.play(whenFinished: () {
+      setState(() {});
+    });
     setState(() {});
   }
 
@@ -115,18 +111,15 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
     await player.stop();
   }
 
-
   Future<void> setSubscriptionDuration(
       double d) async // v is between 0.0 and 2000 (milliseconds)
-      {
+  {
     _mSubscriptionDuration = d;
     setState(() {});
     await _mPlayer.setSubscriptionDuration(
       Duration(milliseconds: d.floor()),
     );
   }
-
-
 
   // --------------------- UI -------------------
 

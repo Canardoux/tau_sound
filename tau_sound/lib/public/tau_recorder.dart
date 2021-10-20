@@ -92,7 +92,6 @@ class TauRecorder implements TauRecorderCallback {
   Stream<RecordingDisposition>? get onProgress =>
       (_recorderController != null) ? _recorderController!.stream : null;
 
-
   /// True if `recorderState.isRecording`
   bool get isRecording => (_recorderState == RecorderState.isRecording);
 
@@ -351,7 +350,6 @@ class TauRecorder implements TauRecorderCallback {
     _logger.d('FS:<--- resumeRecorder ');
   }
 
-
   void _setRecorderCallback() {
     _recorderController ??= StreamController.broadcast();
   }
@@ -360,7 +358,6 @@ class TauRecorder implements TauRecorderCallback {
     _recorderController?.close();
     _recorderController = null;
   }
-
 
   /// Sets the frequency at which duration updates are sent to
   /// duration listeners.
@@ -377,7 +374,6 @@ class TauRecorder implements TauRecorderCallback {
         .setSubscriptionDuration(this, duration: duration);
     _logger.d('FS:<--- setSubscriptionDuration ');
   }
-
 
   /// Delete a temporary file
   ///
@@ -450,7 +446,6 @@ class TauRecorder implements TauRecorderCallback {
   /// A reference to the User Sink during `StartRecorder(toStream:...)`
   StreamSink<TauFood>? _userStreamSink;
   StreamController<RecordingDisposition>? _recorderController;
-
 
   Future<void> _waitOpen() async {
     while (_openRecorderCompleter != null) {
@@ -817,11 +812,11 @@ class TauRecorder implements TauRecorderCallback {
     }
   }
 
-
   /// Callback from the &tau; Core. Must not be called by the App
   /// @nodoc
   @override
-  void updateRecorderProgress({required int duration, required double dbPeakLevel}) {
+  void updateRecorderProgress(
+      {required int duration, required double dbPeakLevel}) {
     //int duration = call['duration'] as int;
     //double dbPeakLevel = call['dbPeakLevel'] as double;
     _recorderController!.add(RecordingDisposition(
@@ -829,7 +824,6 @@ class TauRecorder implements TauRecorderCallback {
       dbPeakLevel,
     ));
   }
-
 
   /// Callback from the &tau; Core. Must not be called by the App
   /// @nodoc

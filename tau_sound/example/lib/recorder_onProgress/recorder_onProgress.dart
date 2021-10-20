@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:tau_sound_lite/tau_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -73,14 +73,12 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
     super.dispose();
   }
 
-
   void cancelRecorderSubscriptions() {
     if (_recorderSubscription != null) {
       _recorderSubscription!.cancel();
       _recorderSubscription = null;
     }
   }
-
 
   Future<void> openTheRecorder() async {
     if (!kIsWeb) {
@@ -127,8 +125,7 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
   // -------  Here is the code to playback  -----------------------
 
   void record(TauRecorder? recorder) async {
-    await recorder!.record(
-    );
+    await recorder!.record();
     setState(() {});
   }
 
@@ -136,10 +133,9 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
     await recorder.stop();
   }
 
-
   Future<void> setSubscriptionDuration(
       double d) async // v is between 0.0 and 2000 (milliseconds)
-      {
+  {
     _mSubscriptionDuration = d;
     setState(() {});
     await _mRecorder.setSubscriptionDuration(

@@ -7,7 +7,7 @@ permalink: changelog.html
 summary: The Changelog of The &tau; Project.
 toc: false
 ---
-## 9.0.0-alpha.10
+## 9.0.0-alpha.11
 
 - τ Sound and τ Native are now published under GPL3.0 . [FS #696](https://github.com/Canardoux/tau/issues/696). See [here](tau_sound_birth-post.html)
 - τ Sound FULL flavor is now correctly linked with Flutter_ffmpeg. This means that if the App needs to access flutter_ffmpeg, it can use either the FULL flavor or the LITE flavor as it wants. [install](flutter_sound_install.html#ffmpeg). Goodbye the old hack :-)

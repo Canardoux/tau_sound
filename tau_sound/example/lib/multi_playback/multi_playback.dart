@@ -22,7 +22,7 @@ import 'dart:typed_data';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:flutter/material.dart';
-import 'package:tau_sound_lite/tau_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 /*
@@ -85,8 +85,7 @@ class _MultiPlaybackState extends State<MultiPlayback> {
               _mPlayer2IsInited = true;
             });
           });
-
-    }));
+        }));
     _getAssetData(
       'assets/samples/sample.mp4',
     ).then((value) => setState(() {
@@ -101,8 +100,7 @@ class _MultiPlaybackState extends State<MultiPlayback> {
               _mPlayer3IsInited = true;
             });
           });
-
-    }));
+        }));
     _mPlayer1!
         .open(
       from: InputFileNode(_exampleAudioFilePathMP3, codec: Mp3()),
@@ -113,7 +111,7 @@ class _MultiPlaybackState extends State<MultiPlayback> {
         _mPlayer1IsInited = true;
       });
     });
-   }
+  }
 
   @override
   void dispose() {
@@ -136,10 +134,9 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   void play1() async {
     await _mPlayer1!.setSubscriptionDuration(Duration(milliseconds: 10));
     _addListener1();
-    await _mPlayer1!.play(
-        whenFinished: () {
-          setState(() {});
-        });
+    await _mPlayer1!.play(whenFinished: () {
+      setState(() {});
+    });
     setState(() {});
   }
 
@@ -177,10 +174,9 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   void play2() async {
     await _mPlayer2!.setSubscriptionDuration(Duration(milliseconds: 10));
     _addListener2();
-    await _mPlayer2!.play(
-        whenFinished: () {
-          setState(() {});
-        });
+    await _mPlayer2!.play(whenFinished: () {
+      setState(() {});
+    });
     setState(() {});
   }
 
@@ -218,10 +214,9 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   void play3() async {
     await _mPlayer3!.setSubscriptionDuration(Duration(milliseconds: 10));
     _addListener3();
-    await _mPlayer3!.play(
-        whenFinished: () {
-          setState(() {});
-        });
+    await _mPlayer3!.play(whenFinished: () {
+      setState(() {});
+    });
     setState(() {});
   }
 
@@ -255,7 +250,6 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   }
 
   // ------------------------------------------------------------------------------------
-
 
   void _addListener1() {
     cancelPlayerSubscriptions1();

@@ -17,7 +17,7 @@
  * file, You can obtain one at https://www.gnu.org/licenses/.
  */
 
-import 'package:tau_sound_lite/tau_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 
 import 'demo_common.dart';
 

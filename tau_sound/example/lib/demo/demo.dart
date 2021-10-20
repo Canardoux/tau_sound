@@ -27,7 +27,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:tau_sound_lite/tau_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -230,7 +230,6 @@ class _MyAppState extends State<Demo> {
     _isAudioPlayer = withUI;
     await initializeDateFormatting();
     await setCodec(_codec);
-
   }
 
   Future<void> openTheRecorder() async {
@@ -266,6 +265,7 @@ class _MyAppState extends State<Demo> {
     super.initState();
     init();
   }
+
   void cancelPlayerSubscriptions() {
     if (_playerSubscription != null) {
       _playerSubscription!.cancel();
@@ -273,14 +273,12 @@ class _MyAppState extends State<Demo> {
     }
   }
 
-
   void cancelRecorderSubscriptions() {
     if (_recorderSubscription != null) {
       _recorderSubscription!.cancel();
       _recorderSubscription = null;
     }
   }
-
 
   void cancelRecordingDataSubscription() {
     if (_recordingDataSubscription != null) {
@@ -362,8 +360,7 @@ class _MyAppState extends State<Demo> {
           ),
         );
 
-        await recorderModule.record(
-        );
+        await recorderModule.record();
       } else {
         await recorderModule.close();
         await recorderModule.open(
@@ -375,8 +372,7 @@ class _MyAppState extends State<Demo> {
           ),
         );
 
-        await recorderModule.record(
-        );
+        await recorderModule.record();
       }
       recorderModule.logger.d('startRecorder');
 
@@ -391,13 +387,11 @@ class _MyAppState extends State<Demo> {
         _isRecording = false;
         cancelRecordingDataSubscription();
         cancelRecorderSubscriptions();
-
       });
     }
 
     _recorderSubscription = recorderModule.onProgress!.listen((e) {
-      var date = DateTime.fromMillisecondsSinceEpoch(
-          e.duration.inMilliseconds,
+      var date = DateTime.fromMillisecondsSinceEpoch(e.duration.inMilliseconds,
           isUtc: true);
       var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
 
@@ -408,8 +402,6 @@ class _MyAppState extends State<Demo> {
     });
 
     await recorderModule.setSubscriptionDuration(Duration(milliseconds: 10));
-
-
   }
 
   void _onRecorderProgress(Duration position, double decibels) {
@@ -579,8 +571,7 @@ class _MyAppState extends State<Demo> {
           to: OutputDeviceNode.speaker(),
           withShadeUI: _isAudioPlayer,
         );
-        await playerModule.play(
-        );
+        await playerModule.play();
         await _addListeners();
         setState(() {});
         await feedHim(audioFilePath!);
