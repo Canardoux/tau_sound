@@ -1955,7 +1955,6 @@ abstract class TauFood {
 
 /// Used to stream data about the position of the
 /// playback as playback proceeds.
-/// @nodoc
 class PlaybackDisposition {
   /// The duration of the media.
   final Duration duration;

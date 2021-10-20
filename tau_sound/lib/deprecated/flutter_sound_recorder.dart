@@ -1090,35 +1090,3 @@ class _RecorderRunningException extends _RecorderException {
 class _CodecNotSupportedException extends _RecorderException {
   _CodecNotSupportedException(String message) : super(message);
 }
-
-/// Holds point in time details of the recording disposition
-/// including the current duration and decibels.
-///
-/// Use the `dispositionStream` method to subscribe to a stream
-/// of `RecordingDisposition` will be emmmited while recording.
-/// @nodoc
-@deprecated
-class RecordingDisposition {
-  /// The total duration of the recording at this point in time.
-  final Duration duration;
-
-  /// The volume of the audio being captured
-  /// at this point in time.
-  /// Value ranges from 0 to 120
-  final double? decibels;
-
-  /// ctor
-  RecordingDisposition(this.duration, this.decibels);
-
-  /// use this ctor to as the initial value when building
-  /// a `StreamBuilder`
-  RecordingDisposition.zero()
-      : duration = Duration(seconds: 0),
-        decibels = 0;
-
-  /// Return a String representation of the Disposition
-  @override
-  String toString() {
-    return 'duration: $duration decibels: $decibels';
-  }
-}

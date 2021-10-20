@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'tau_web'
-  s.version          = '9.0.0-alpha.12'
+  s.version          = '9.0.0-alpha.13'
   s.summary          = 'No-op implementation of tau_web web plugin to avoid build issues on iOS'
   s.description      = <<-DESC
 temp fake tau_web plugin

@@ -1,7 +1,7 @@
 ext.flutterFFmpegPackage = 'audio'
 
 group 'xyz.canardoux.tausound'
-version '9.0.0-alpha.12'
+version '9.0.0-alpha.13'
 
 buildscript {
     repositories {
