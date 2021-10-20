@@ -77,6 +77,22 @@ class TauRecorder implements TauRecorderCallback {
   /// The current state of the Recorder
   RecorderState get recorderState => _recorderState;
 
+  /// A stream on which FlutterSound will post the recorder progression.
+  /// You may listen to this Stream to have feedback on the current recording.
+  ///
+  /// *Example:*
+  /// ```dart
+  ///         _recorderSubscription = myRecorder.onProgress.listen((e)
+  ///         {
+  ///                 Duration maxDuration = e.duration;
+  ///                 double decibels = e.decibels
+  ///                 ...
+  ///         }
+  /// ```
+  Stream<RecordingDisposition>? get onProgress =>
+      (_recorderController != null) ? _recorderController!.stream : null;
+
+
   /// True if `recorderState.isRecording`
   bool get isRecording => (_recorderState == RecorderState.isRecording);
 
@@ -271,13 +287,10 @@ class TauRecorder implements TauRecorderCallback {
   ///
   ///     await myRecorder.startRecorder(toFile: 'foo', codec: t_CODEC.CODEC_AAC,); // A temporary file named 'foo'
   /// ```
-  Future<void> record({
-    TOnRecorderProgress? onProgress,
-    Duration? interval,
-  }) async {
+  Future<void> record() async {
     _logger.d('FS:---> record ');
     await _lock.synchronized(() async {
-      await _startRecorder(onProgress: onProgress, interval: interval);
+      await _startRecorder();
     });
     _logger.d('FS:<--- record ');
   }
@@ -337,6 +350,34 @@ class TauRecorder implements TauRecorderCallback {
     });
     _logger.d('FS:<--- resumeRecorder ');
   }
+
+
+  void _setRecorderCallback() {
+    _recorderController ??= StreamController.broadcast();
+  }
+
+  void _removeRecorderCallback() {
+    _recorderController?.close();
+    _recorderController = null;
+  }
+
+
+  /// Sets the frequency at which duration updates are sent to
+  /// duration listeners.
+  ///
+  /// Zero means "no callbacks".
+  /// The default is zero.
+  Future<void> setSubscriptionDuration(Duration duration) async {
+    _logger.d('FS:---> setSubscriptionDuration ');
+    await _waitOpen();
+    if (!_isInited) {
+      throw Exception('Recorder is not open');
+    }
+    await TauRecorderPlatform.instance
+        .setSubscriptionDuration(this, duration: duration);
+    _logger.d('FS:<--- setSubscriptionDuration ');
+  }
+
 
   /// Delete a temporary file
   ///
@@ -408,7 +449,8 @@ class TauRecorder implements TauRecorderCallback {
 
   /// A reference to the User Sink during `StartRecorder(toStream:...)`
   StreamSink<TauFood>? _userStreamSink;
-  TOnRecorderProgress? _onProgress;
+  StreamController<RecordingDisposition>? _recorderController;
+
 
   Future<void> _waitOpen() async {
     while (_openRecorderCompleter != null) {
@@ -430,6 +472,7 @@ class TauRecorder implements TauRecorderCallback {
     if (_isInited) {
       throw Exception('Recorder is already open');
     }
+    _setRecorderCallback();
 
     if (_userStreamSink != null) {
       await _userStreamSink!.close();
@@ -488,6 +531,7 @@ class TauRecorder implements TauRecorderCallback {
     } catch (e) {
       _logger.e(e.toString());
     }
+    _removeRecorderCallback(); // _recorderController will be closed by this function
     if (_userStreamSink != null) {
       await _userStreamSink!.close();
       _userStreamSink = null;
@@ -590,21 +634,13 @@ class TauRecorder implements TauRecorderCallback {
     );
   }
 
-  Future<void> _startRecorder({
-    TOnRecorderProgress? onProgress,
-    Duration? interval,
-  }) async {
+  Future<void> _startRecorder() async {
     _logger.d('FS:---> _startRecorder.');
     await _waitOpen();
     if (!_isInited) {
       throw Exception('Recorder is not open');
     }
     await _stop();
-    if ((onProgress != null && interval == null) ||
-        (onProgress == null && interval != null)) {
-      throw (Exception(
-          'You must specify both the `onProgress` and the `interval` parameters'));
-    }
 
     //var codec = to.codec;
 
@@ -625,11 +661,6 @@ class TauRecorder implements TauRecorderCallback {
       _startRecorderCompleter = Completer<void>();
       completer = _startRecorderCompleter;
 
-      _onProgress = onProgress;
-      if (_onProgress != null) {
-        await TauRecorderPlatform.instance
-            .setSubscriptionDuration(this, duration: interval);
-      }
       switch (_to.runtimeType) {
         case OutputFileNode:
           await _startRecorderToURI(_from!, _to as OutputFileNode);
@@ -653,7 +684,6 @@ class TauRecorder implements TauRecorderCallback {
 
   Future<String> _stop() async {
     _logger.d('FS:---> _stop');
-    _onProgress = null;
     _stopRecorderCompleter = Completer<String>();
     var completer = _stopRecorderCompleter!;
     try {
@@ -787,15 +817,19 @@ class TauRecorder implements TauRecorderCallback {
     }
   }
 
+
   /// Callback from the &tau; Core. Must not be called by the App
   /// @nodoc
   @override
-  void updateRecorderProgress(
-      {required int duration, required double dbPeakLevel}) {
-    if (_onProgress != null) {
-      _onProgress!(Duration(milliseconds: duration), dbPeakLevel);
-    }
+  void updateRecorderProgress({required int duration, required double dbPeakLevel}) {
+    //int duration = call['duration'] as int;
+    //double dbPeakLevel = call['dbPeakLevel'] as double;
+    _recorderController!.add(RecordingDisposition(
+      Duration(milliseconds: duration),
+      dbPeakLevel,
+    ));
   }
+
 
   /// Callback from the &tau; Core. Must not be called by the App
   /// @nodoc

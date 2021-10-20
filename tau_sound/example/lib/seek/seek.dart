@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:tau_sound/tau_sound.dart';
+import 'package:tau_sound_lite/tau_sound.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -80,16 +80,16 @@ class _SeekState extends State<Seek> {
   }
 
   Future<void> init() async {
+    _boumData = await getAssetData(_boum);
     await _mPlayer.open(
       from: InputBufferNode(_boumData, codec: Aac(AudioFormat.adts)),
       to: OutputDeviceNode.speaker(),
     );
-    //await _mPlayer.setSubscriptionDuration(Duration(milliseconds: 50));
-    _boumData = await getAssetData(_boum);
-    //_mPlayerSubscription = _mPlayer.onProgress!.listen((e) {
-    //setPos(e.position.inMilliseconds);
-    //setState(() {});
-    //});
+    await _mPlayer.setSubscriptionDuration(Duration(milliseconds: 50));
+    _mPlayerSubscription = _mPlayer.onProgress!.listen((e) {
+      setPos(e.position.inMilliseconds);
+      setState(() {});
+    });
   }
 
   Future<Uint8List> getAssetData(String path) async {
@@ -99,11 +99,6 @@ class _SeekState extends State<Seek> {
 
   void play(TauPlayer? player) async {
     await player!.play(
-        onProgress: (Duration position, Duration duration) {
-          setPos(position.inMilliseconds);
-          setState(() {});
-        },
-        interval: Duration(milliseconds: 100),
         whenFinished: () {
           setState(() {});
         });

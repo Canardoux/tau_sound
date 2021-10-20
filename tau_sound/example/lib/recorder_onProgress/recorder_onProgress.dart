@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:tau_sound/tau_sound.dart';
+import 'package:tau_sound_lite/tau_sound.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -49,6 +49,7 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
   String _mPath = 'tau_file.mp4';
   bool _mRecorderIsInited = false;
   double _mSubscriptionDuration = 0;
+  StreamSubscription? _recorderSubscription;
   int pos = 0;
   double dbLevel = 0;
 
@@ -66,10 +67,20 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
   void dispose() {
     stopRecorder(_mRecorder);
     // Be careful : you must `close` the audio session when you have finished with it.
+    cancelRecorderSubscriptions();
     _mRecorder.close();
 
     super.dispose();
   }
+
+
+  void cancelRecorderSubscriptions() {
+    if (_recorderSubscription != null) {
+      _recorderSubscription!.cancel();
+      _recorderSubscription = null;
+    }
+  }
+
 
   Future<void> openTheRecorder() async {
     if (!kIsWeb) {
@@ -96,15 +107,16 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
     _mRecorderIsInited = true;
   }
 
-  void _onProgressRecorder(Duration position, double decibels) {
-    setState(() {
-      pos = position.inMilliseconds;
-      dbLevel = decibels;
-    });
-  }
-
   Future<void> init() async {
     await openTheRecorder();
+    _recorderSubscription = _mRecorder.onProgress!.listen((e) {
+      setState(() {
+        pos = e.duration.inMilliseconds;
+        if (e.decibels != null) {
+          dbLevel = e.decibels as double;
+        }
+      });
+    });
   }
 
   Future<Uint8List> getAssetData(String path) async {
@@ -116,14 +128,23 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
 
   void record(TauRecorder? recorder) async {
     await recorder!.record(
-      onProgress: _onProgressRecorder,
-      interval: Duration(milliseconds: _mSubscriptionDuration.floor()),
     );
     setState(() {});
   }
 
   Future<void> stopRecorder(TauRecorder recorder) async {
     await recorder.stop();
+  }
+
+
+  Future<void> setSubscriptionDuration(
+      double d) async // v is between 0.0 and 2000 (milliseconds)
+      {
+    _mSubscriptionDuration = d;
+    setState(() {});
+    await _mRecorder.setSubscriptionDuration(
+      Duration(milliseconds: d.floor()),
+    );
   }
 
   // --------------------- UI -------------------
@@ -179,10 +200,7 @@ class _RecorderOnProgressState extends State<RecorderOnProgress> {
             value: _mSubscriptionDuration,
             min: 0.0,
             max: 2000.0,
-            onChanged: (double d) {
-              _mSubscriptionDuration = d;
-              setState(() {});
-            },
+            onChanged: setSubscriptionDuration,
             //divisions: 100
           ),
         ]),

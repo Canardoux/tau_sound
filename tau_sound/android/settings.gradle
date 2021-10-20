@@ -4,6 +4,6 @@ rootProject.name = 'tau_sound_lite'
 // -------------------------------------------------------------------------------------
 // CAUTION: The following instruction is for developping and debugging the Flauto Engine
 // DO NOT INCLUDE THE FOLLOWING LINES IN A REAL APP !!!
-//project(':tau_native').projectDir = file('../../tau_native/android')
+    project(':tau_native').projectDir = file('../../tau_native/android')
 // -------------------------------------------------------------------------------------
 

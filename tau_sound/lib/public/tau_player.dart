@@ -128,6 +128,28 @@ class TauPlayer implements TauPlayerCallback {
   /// Test the Player State
   bool get isStopped => _playerState == PlayerState.isStopped;
 
+  /// The stream side of the Food Controller
+  ///
+  /// This is a stream on which FlutterSound will post the player progression.
+  /// You may listen to this Stream to have feedback on the current playback.
+  ///
+  /// PlaybackDisposition has two fields :
+  /// - Duration duration  (the total playback duration)
+  /// - Duration position  (the current playback position)
+  ///
+  /// *Example:*
+  /// ```dart
+  ///         _playerSubscription = myPlayer.onProgress.listen((e)
+  ///         {
+  ///                 Duration maxDuration = e.duration;
+  ///                 Duration position = e.position;
+  ///                 ...
+  ///         }
+  /// ```
+  Stream<PlaybackDisposition>? get onProgress =>
+      _playerController != null ? _playerController!.stream : null;
+
+
   /// Used if the App wants to dynamically change the Log Level.
   /// Seldom used. Most of the time the Log Level is specified during the constructor.
   Future<void> setLogLevel(Level aLevel) async {
@@ -321,8 +343,6 @@ class TauPlayer implements TauPlayerCallback {
   /// ```
   Future<Duration?> play({
     TWhenFinished? whenFinished,
-    TOnProgress? onProgress,
-    Duration? interval,
 
     //Parameters for _play from track
     TonSkip? onSkipForward,
@@ -335,8 +355,6 @@ class TauPlayer implements TauPlayerCallback {
     await _lock.synchronized(() async {
       r = await _play(
         whenFinished: whenFinished,
-        onProgress: onProgress,
-        interval: interval,
         onSkipForward: onSkipForward,
         defaultPauseResume: defaultPauseResume,
         onPaused: onPaused,
@@ -444,6 +462,30 @@ class TauPlayer implements TauPlayerCallback {
       await _setSpeed(speed);
     });
   }
+
+
+  /// Specify the callbacks frenquency, before calling [startPlayer].
+  ///
+  /// The default value is 0 (zero) which means that there is no callbacks.
+  ///
+  /// This verb will be Deprecated soon.
+  ///
+  /// *Example:*
+  /// ```dart
+  /// myPlayer.setSubscriptionDuration(Duration(milliseconds: 100));
+  /// ```
+  Future<void> setSubscriptionDuration(Duration duration) async {
+    _logger.d('FS:---> setSubscriptionDuration ');
+    await _waitOpen();
+    if (!_isInited ) {
+      throw Exception('Player is not open');
+    }
+    var state = await TauPlayerPlatform.instance
+        .setSubscriptionDuration(this, duration: duration);
+    _playerState = PlayerState.values[state];
+    _logger.d('FS:<---- setSubscriptionDuration ');
+  }
+
 
   /// Get the resource path.
   ///
@@ -625,7 +667,7 @@ class TauPlayer implements TauPlayerCallback {
 
   /// User callback "whenFinished:"
   TWhenFinished? _audioPlayerFinishedPlaying;
-  TOnProgress? _onProgress;
+  StreamController<PlaybackDisposition>? _playerController;
 
   /// The default blocksize used when playing from Stream.
   static const _blockSize = 4096;
@@ -715,6 +757,18 @@ class TauPlayer implements TauPlayerCallback {
     Codec.defaultCodec, // vorbisWebM
   ];
 
+
+  ///
+  void _setPlayerCallback() {
+    _playerController ??= StreamController<PlaybackDisposition>.broadcast();
+  }
+
+  void _removePlayerCallback() {
+    _playerController?.close();
+    _playerController = null;
+  }
+
+
   Future<void> _waitOpen() async {
     while (_openPlayerCompleter != null) {
       _logger.d('Waiting for the player being opened');
@@ -757,8 +811,7 @@ class TauPlayer implements TauPlayerCallback {
         ? AudioFocus.doNotRequestFocus
         : AudioFocus.requestFocusAndStopOthers;
     TauPlayerPlatform.instance.openSession(this);
-    //_setPlayerCallback();
-    _onProgress = null;
+    _setPlayerCallback();
     assert(_openPlayerCompleter == null);
     _openPlayerCompleter = Completer<TauPlayer>();
     completer = _openPlayerCompleter;
@@ -807,7 +860,7 @@ class TauPlayer implements TauPlayerCallback {
     try {
       await _stop(); // Stop the player if running
 
-      //_removePlayerCallback();
+      _removePlayerCallback();
       assert(_closePlayerCompleter == null);
       _closePlayerCompleter = Completer<void>();
       completer = _closePlayerCompleter;
@@ -1098,8 +1151,6 @@ class TauPlayer implements TauPlayerCallback {
 
   Future<Duration> _play({
     TWhenFinished? whenFinished,
-    TOnProgress? onProgress,
-    Duration? interval,
 
     //Parameters for _play from track
     TonSkip? onSkipForward,
@@ -1115,11 +1166,6 @@ class TauPlayer implements TauPlayerCallback {
     }
 
     await _stop(); // Just in case
-    if ((onProgress != null && interval == null) ||
-        (onProgress == null && interval != null)) {
-      throw (Exception(
-          'You must specify both the `onProgress` and the `interval` parameters'));
-    }
 
     Completer<Duration>? completer;
     _audioPlayerFinishedPlaying = whenFinished;
@@ -1138,13 +1184,7 @@ class TauPlayer implements TauPlayerCallback {
       // We could have used a virtual function in InputNode,
       // but I wanted to keep the InputNode hierarchy independant of `tauPlayer`
       var state = PlayerState.isStopped;
-      _onProgress = onProgress;
-      if (_onProgress != null) {
-        var state = await TauPlayerPlatform.instance
-            .setSubscriptionDuration(this, duration: interval);
-        _playerState = PlayerState.values[state];
-      }
-      switch (_from.runtimeType) {
+       switch (_from.runtimeType) {
         case InputFileNode:
           state = await _startPlayerFromURI(
             _from as InputFileNode,
@@ -1301,7 +1341,6 @@ class TauPlayer implements TauPlayerCallback {
     //await _foodStreamController!.sink.close();
     //await _FoodStreamController.stream.drain<bool>();
     //await _foodStreamController!.close();
-    _onProgress = null;
     _foodStream = null;
     //}
     Completer<void>? completer;
@@ -1548,19 +1587,12 @@ class TauPlayer implements TauPlayerCallback {
     if (duration < position) {
       _logger.d(' Duration = $duration,   Position = $position');
     }
-    if (_onProgress != null) {
-      _onProgress!(
-          Duration(milliseconds: position), Duration(milliseconds: duration));
-    }
-    /*
     _playerController!.add(
       PlaybackDisposition(
         position: Duration(milliseconds: position),
         duration: Duration(milliseconds: duration),
       ),
     );
-
-     */
   }
 
   /// Callback from the τ Core. Must not be called by the App
@@ -1879,41 +1911,7 @@ class TauPlayer implements TauPlayerCallback {
   Stream<PlaybackDisposition>? dispositionStream() {
     return _playerController != null ? _playerController!.stream : null;
   }
-
-
-  /// Specify the callbacks frenquency, before calling [startPlayer].
-  ///
-  /// The default value is 0 (zero) which means that there is no callbacks.
-  ///
-  /// This verb will be Deprecated soon.
-  ///
-  /// *Example:*
-  /// ```dart
-  /// myPlayer.setSubscriptionDuration(Duration(milliseconds: 100));
-  /// ```
-  Future<void> setSubscriptionDuration(Duration duration) async {
-    _logger.d('FS:---> setSubscriptionDuration ');
-    await _waitOpen();
-    if (!_isInited ) {
-      throw Exception('Player is not open');
-    }
-    var state = await FlutterSoundPlayerPlatform.instance
-        .setSubscriptionDuration(this, duration: duration);
-    _playerState = PlayerState.values[state];
-    _logger.d('FS:<---- setSubscriptionDuration ');
-  }
-
-  ///
-  void _setPlayerCallback() {
-    _playerController ??= StreamController<PlaybackDisposition>.broadcast();
-  }
-
-  void _removePlayerCallback() {
-    _playerController?.close();
-    _playerController = null;
-  }
-}
-   */
+*/
 }
 
 /// FoodData are the regular objects received from a recorder when recording to a Dart Stream

@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:tau_sound/tau_sound.dart';
+import 'package:tau_sound_lite/tau_sound.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 
@@ -46,7 +46,10 @@ class PlayerOnProgress extends StatefulWidget {
 class _PlayerOnProgressState extends State<PlayerOnProgress> {
   final TauPlayer _mPlayer = TauPlayer();
   bool _mPlayerIsInited = false;
+  double _mSubscriptionDuration = 0;
   Uint8List _boumData = Uint8List(0);
+  StreamSubscription? _mPlayerSubscription;
+
   int pos = 0;
   double _interval = 0.0;
 
@@ -69,12 +72,28 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
     super.dispose();
   }
 
+
+  void cancelPlayerSubscriptions() {
+    if (_mPlayerSubscription != null) {
+      _mPlayerSubscription!.cancel();
+      _mPlayerSubscription = null;
+    }
+  }
+
+
   Future<void> init() async {
+    _boumData = await getAssetData(_boum);
     await _mPlayer.open(
       from: InputBufferNode(_boumData, codec: Aac(AudioFormat.adts)),
       to: OutputDeviceNode.speaker(),
     );
-    _boumData = await getAssetData(_boum);
+
+    _mPlayerSubscription = _mPlayer.onProgress!.listen((e) {
+      setState(() {
+        pos = e.position.inMilliseconds;
+      });
+    });
+
   }
 
   Future<Uint8List> getAssetData(String path) async {
@@ -86,12 +105,6 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
 
   void play(TauPlayer? player) async {
     await player!.play(
-        onProgress: (Duration position, Duration duration) {
-          setState(() {
-            pos = position.inMilliseconds;
-          });
-        },
-        interval: Duration(milliseconds: _interval.floor()),
         whenFinished: () {
           setState(() {});
         });
@@ -101,6 +114,19 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
   Future<void> stopPlayer(TauPlayer player) async {
     await player.stop();
   }
+
+
+  Future<void> setSubscriptionDuration(
+      double d) async // v is between 0.0 and 2000 (milliseconds)
+      {
+    _mSubscriptionDuration = d;
+    setState(() {});
+    await _mPlayer.setSubscriptionDuration(
+      Duration(milliseconds: d.floor()),
+    );
+  }
+
+
 
   // --------------------- UI -------------------
 
@@ -156,13 +182,10 @@ class _PlayerOnProgressState extends State<PlayerOnProgress> {
           ]),
           Text('Subscription Duration:'),
           Slider(
-            value: _interval,
+            value: _mSubscriptionDuration,
             min: 0.0,
             max: 2000.0,
-            onChanged: (double d) {
-              _interval = d;
-              setState(() {});
-            },
+            onChanged: setSubscriptionDuration,
             //divisions: 100
           ),
         ]),

@@ -22,7 +22,7 @@ import 'dart:typed_data';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:flutter/material.dart';
-import 'package:tau_sound/tau_sound.dart';
+import 'package:tau_sound_lite/tau_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 /*
@@ -75,12 +75,34 @@ class _MultiPlaybackState extends State<MultiPlayback> {
       'assets/samples/sample.aac',
     ).then((value) => setState(() {
           buffer2 = value;
-        }));
+          _mPlayer2!
+              .open(
+            from: InputBufferNode(buffer2, codec: Aac(AudioFormat.adts)),
+            to: OutputDeviceNode.speaker(),
+          )
+              .then((value) {
+            setState(() {
+              _mPlayer2IsInited = true;
+            });
+          });
+
+    }));
     _getAssetData(
       'assets/samples/sample.mp4',
     ).then((value) => setState(() {
           buffer3 = value;
-        }));
+          _mPlayer3!
+              .open(
+            from: InputBufferNode(buffer3, codec: Aac(AudioFormat.mp4)),
+            to: OutputDeviceNode.speaker(),
+          )
+              .then((value) {
+            setState(() {
+              _mPlayer3IsInited = true;
+            });
+          });
+
+    }));
     _mPlayer1!
         .open(
       from: InputFileNode(_exampleAudioFilePathMP3, codec: Mp3()),
@@ -91,27 +113,7 @@ class _MultiPlaybackState extends State<MultiPlayback> {
         _mPlayer1IsInited = true;
       });
     });
-    _mPlayer2!
-        .open(
-      from: InputBufferNode(buffer2, codec: Aac(AudioFormat.adts)),
-      to: OutputDeviceNode.speaker(),
-    )
-        .then((value) {
-      setState(() {
-        _mPlayer2IsInited = true;
-      });
-    });
-    _mPlayer3!
-        .open(
-      from: InputBufferNode(buffer3, codec: Aac(AudioFormat.mp4)),
-      to: OutputDeviceNode.speaker(),
-    )
-        .then((value) {
-      setState(() {
-        _mPlayer3IsInited = true;
-      });
-    });
-  }
+   }
 
   @override
   void dispose() {
@@ -132,11 +134,9 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   // -------  Player1 play a remote file -----------------------
 
   void play1() async {
-    //await _mPlayer1!.setSubscriptionDuration(Duration(milliseconds: 10));
-    //_addListener2();
+    await _mPlayer1!.setSubscriptionDuration(Duration(milliseconds: 10));
+    _addListener1();
     await _mPlayer1!.play(
-        onProgress: _onProgress1,
-        interval: Duration(milliseconds: 10),
         whenFinished: () {
           setState(() {});
         });
@@ -175,11 +175,9 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   // -------  Player2 play a AAC file -----------------------
 
   void play2() async {
-    //await _mPlayer2!.setSubscriptionDuration(Duration(milliseconds: 10));
-    //_addListener2();
+    await _mPlayer2!.setSubscriptionDuration(Duration(milliseconds: 10));
+    _addListener2();
     await _mPlayer2!.play(
-        onProgress: _onProgress2,
-        interval: Duration(milliseconds: 10),
         whenFinished: () {
           setState(() {});
         });
@@ -218,11 +216,9 @@ class _MultiPlaybackState extends State<MultiPlayback> {
   // -------  Player3 play a MP4 file -----------------------
 
   void play3() async {
-    //await _mPlayer3!.setSubscriptionDuration(Duration(milliseconds: 10));
-    //_addListener3();
+    await _mPlayer3!.setSubscriptionDuration(Duration(milliseconds: 10));
+    _addListener3();
     await _mPlayer3!.play(
-        onProgress: _onProgress3,
-        interval: Duration(milliseconds: 10),
         whenFinished: () {
           setState(() {});
         });
@@ -260,17 +256,17 @@ class _MultiPlaybackState extends State<MultiPlayback> {
 
   // ------------------------------------------------------------------------------------
 
-  //void _addListener1() {
-  //cancelPlayerSubscriptions1();
-  //_playerSubscription1 = _mPlayer1!.onProgress!.listen((e) {
-  void _onProgress1(Duration position, Duration duration) {
-    var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
-        isUtc: true);
-    var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
-    setState(() {
-      _playerTxt1 = txt.substring(0, 8);
+
+  void _addListener1() {
+    cancelPlayerSubscriptions1();
+    _playerSubscription1 = _mPlayer1!.onProgress!.listen((e) {
+      var date = DateTime.fromMillisecondsSinceEpoch(e.position.inMilliseconds,
+          isUtc: true);
+      var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+      setState(() {
+        _playerTxt1 = txt.substring(0, 8);
+      });
     });
-    //});
   }
 
   Fn? getPlaybackFn1() {
@@ -291,19 +287,17 @@ class _MultiPlaybackState extends State<MultiPlayback> {
     return _mPlayer1!.isPaused ? resume1 : pause1;
   }
 
-  //void _addListener2() {
-  //cancelPlayerSubscriptions2();
-  //_playerSubscription2 = _mPlayer2!.onProgress!.listen((e) {
-  void _onProgress2(Duration position, Duration duration) {
-    var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
-        isUtc: true);
-    var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
-    setState(() {
-      _playerTxt2 = txt.substring(0, 8);
+  void _addListener2() {
+    cancelPlayerSubscriptions2();
+    _playerSubscription2 = _mPlayer2!.onProgress!.listen((e) {
+      var date = DateTime.fromMillisecondsSinceEpoch(e.position.inMilliseconds,
+          isUtc: true);
+      var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+      setState(() {
+        _playerTxt2 = txt.substring(0, 8);
+      });
     });
   }
-  //});
-  //}
 
   Fn? getPlaybackFn2() {
     if (!_mPlayer2IsInited) {
@@ -323,17 +317,16 @@ class _MultiPlaybackState extends State<MultiPlayback> {
     return _mPlayer2!.isPaused ? resume2 : pause2;
   }
 
-  //void _addListener3() {
-  //cancelPlayerSubscriptions3();
-  //_playerSubscription3 = _mPlayer3!.onProgress!.listen((e) {
-  void _onProgress3(Duration position, Duration duration) {
-    var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
-        isUtc: true);
-    var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
-    setState(() {
-      _playerTxt3 = txt.substring(0, 8);
+  void _addListener3() {
+    cancelPlayerSubscriptions3();
+    _playerSubscription3 = _mPlayer3!.onProgress!.listen((e) {
+      var date = DateTime.fromMillisecondsSinceEpoch(e.position.inMilliseconds,
+          isUtc: true);
+      var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+      setState(() {
+        _playerTxt3 = txt.substring(0, 8);
+      });
     });
-    //});
   }
 
   Fn? getPlaybackFn3() {

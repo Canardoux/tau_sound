@@ -30,7 +30,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <tau_native/Flauto.h>
 
-#define FULL_FLAVOR
+#define LITE_FLAVOR
 
 @interface TauSound : NSObject <FlutterPlugin, AVAudioPlayerDelegate>
 {

@@ -27,7 +27,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:tau_sound/tau_sound.dart';
+import 'package:tau_sound_lite/tau_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -199,7 +199,9 @@ class _MyAppState extends State<Demo> {
     'https://tau.canardoux.xyz/web_example/assets/extract/03-vorbis.webm', // 'assets/samples/sample_vorbis.webm', // vorbisWebM
   ];
 
+  StreamSubscription? _playerSubscription;
   StreamSubscription? _recordingDataSubscription;
+  StreamSubscription? _recorderSubscription;
 
   TauPlayer playerModule = TauPlayer();
   TauRecorder recorderModule = TauRecorder();
@@ -228,6 +230,7 @@ class _MyAppState extends State<Demo> {
     _isAudioPlayer = withUI;
     await initializeDateFormatting();
     await setCodec(_codec);
+
   }
 
   Future<void> openTheRecorder() async {
@@ -263,6 +266,21 @@ class _MyAppState extends State<Demo> {
     super.initState();
     init();
   }
+  void cancelPlayerSubscriptions() {
+    if (_playerSubscription != null) {
+      _playerSubscription!.cancel();
+      _playerSubscription = null;
+    }
+  }
+
+
+  void cancelRecorderSubscriptions() {
+    if (_recorderSubscription != null) {
+      _recorderSubscription!.cancel();
+      _recorderSubscription = null;
+    }
+  }
+
 
   void cancelRecordingDataSubscription() {
     if (_recordingDataSubscription != null) {
@@ -279,8 +297,10 @@ class _MyAppState extends State<Demo> {
   @override
   void dispose() {
     super.dispose();
-    //cancelPlayerSubscriptions();
+    cancelPlayerSubscriptions();
     cancelRecordingDataSubscription();
+    cancelRecorderSubscriptions();
+
     releaseFlauto();
   }
 
@@ -343,8 +363,6 @@ class _MyAppState extends State<Demo> {
         );
 
         await recorderModule.record(
-          onProgress: _onRecorderProgress,
-          interval: Duration(milliseconds: 100),
         );
       } else {
         await recorderModule.close();
@@ -358,8 +376,6 @@ class _MyAppState extends State<Demo> {
         );
 
         await recorderModule.record(
-          onProgress: _onRecorderProgress,
-          interval: Duration(milliseconds: 100),
         );
       }
       recorderModule.logger.d('startRecorder');
@@ -374,8 +390,26 @@ class _MyAppState extends State<Demo> {
         stopRecorder();
         _isRecording = false;
         cancelRecordingDataSubscription();
+        cancelRecorderSubscriptions();
+
       });
     }
+
+    _recorderSubscription = recorderModule.onProgress!.listen((e) {
+      var date = DateTime.fromMillisecondsSinceEpoch(
+          e.duration.inMilliseconds,
+          isUtc: true);
+      var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+
+      setState(() {
+        _recorderTxt = txt.substring(0, 8);
+        _dbLevel = e.decibels;
+      });
+    });
+
+    await recorderModule.setSubscriptionDuration(Duration(milliseconds: 10));
+
+
   }
 
   void _onRecorderProgress(Duration position, double decibels) {
@@ -413,6 +447,8 @@ class _MyAppState extends State<Demo> {
       await recorderModule.stop();
       recorderModule.logger.d('stopRecorder');
       cancelRecordingDataSubscription();
+      cancelRecorderSubscriptions();
+
       await getDuration();
     } on Exception catch (err) {
       recorderModule.logger.d('stopRecorder error: $err');
@@ -441,27 +477,27 @@ class _MyAppState extends State<Demo> {
     }
   }
 
-  //void _addListeners() {
-  //cancelPlayerSubscriptions();
-  //_playerSubscription = playerModule.onProgress!.listen((e) {
-  void _onProgress(Duration position, Duration duration) {
-    maxDuration = duration.inMilliseconds.toDouble();
-    if (maxDuration <= 0) maxDuration = 0.0;
+  Future<void> _addListeners() async {
+    cancelPlayerSubscriptions();
+    await playerModule.setSubscriptionDuration(Duration(milliseconds: 10));
 
-    sliderCurrentPosition =
-        min(position.inMilliseconds.toDouble(), maxDuration);
-    if (sliderCurrentPosition < 0.0) {
-      sliderCurrentPosition = 0.0;
-    }
+    _playerSubscription = playerModule.onProgress!.listen((e) {
+      maxDuration = e.duration.inMilliseconds.toDouble();
+      if (maxDuration <= 0) maxDuration = 0.0;
 
-    var date = DateTime.fromMillisecondsSinceEpoch(position.inMilliseconds,
-        isUtc: true);
-    var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
-    setState(() {
-      _playerTxt = txt.substring(0, 8);
+      sliderCurrentPosition =
+          min(e.position.inMilliseconds.toDouble(), maxDuration);
+      if (sliderCurrentPosition < 0.0) {
+        sliderCurrentPosition = 0.0;
+      }
+
+      var date = DateTime.fromMillisecondsSinceEpoch(e.position.inMilliseconds,
+          isUtc: true);
+      var txt = DateFormat('mm:ss:SS', 'en_GB').format(date);
+      setState(() {
+        _playerTxt = txt.substring(0, 8);
+      });
     });
-    //});
-    //}
   }
 
   Future<Uint8List> _readFileByte(String filePath) async {
@@ -544,10 +580,8 @@ class _MyAppState extends State<Demo> {
           withShadeUI: _isAudioPlayer,
         );
         await playerModule.play(
-          onProgress: _onProgress,
-          interval: Duration(milliseconds: 10),
         );
-        //_addListeners();
+        await _addListeners();
         setState(() {});
         await feedHim(audioFilePath!);
         //await finishPlayer();
@@ -580,12 +614,6 @@ class _MyAppState extends State<Demo> {
             codec: getCodecFromDeprecated(codec), track: track);
         await playerModule.close();
         await playerModule.open(
-          from: from,
-          to: OutputDeviceNode.speaker(),
-          withShadeUI: _isAudioPlayer,
-        );
-        await playerModule.close();
-        await playerModule.open(
           from: InputFileNode(
             audioFilePath,
             codec: getCodecFromDeprecated(codec),
@@ -596,8 +624,6 @@ class _MyAppState extends State<Demo> {
         );
 
         await playerModule.play(
-          onProgress: _onProgress,
-          interval: Duration(milliseconds: 10),
           whenFinished: () {
             playerModule.logger.d('Play finished');
             setState(() {});
@@ -642,8 +668,6 @@ class _MyAppState extends State<Demo> {
         );
 
         await playerModule.play(
-          onProgress: _onProgress,
-          interval: Duration(milliseconds: 10),
           whenFinished: () {
             playerModule.logger.d('Play finished');
             setState(() {});
@@ -668,7 +692,7 @@ class _MyAppState extends State<Demo> {
           defaultPauseResume: false,
         );
       }
-      //_addListeners();
+      await _addListeners();
       setState(() {});
       playerModule.logger.d('<--- startPlayer');
     } on Exception catch (err) {
