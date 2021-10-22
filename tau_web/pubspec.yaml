@@ -27,8 +27,8 @@ flutter:
 
 
 dependencies:
-  tau_platform_interface: 9.0.0-beta-1
-#    path: ../tau_platform_interface # Flutter Sound Dir
+  tau_platform_interface: # 9.0.0-beta-1
+    path: ../tau_platform_interface # Flutter Sound Dir
   flutter:
     sdk: flutter
   logger: ^1.0.0

@@ -1,4 +1,4 @@
-name: tau_sound
+name: tau_sound_lite
 version: 9.0.0-beta-1
 description: A complete api for audio playback and recording. Audio player, audio recorder, media player, media recorder, sound player, sound recorder.
 author: larpoux<larpoux@canardoux.xyz>
@@ -19,12 +19,12 @@ dependencies:
   logger: ^1.1.0
   flutter:
     sdk: flutter
-  flutter_ffmpeg: ^0.4.2    
+#  flutter_ffmpeg: ^0.4.2    
 # ============================================================================
-  tau_platform_interface: 9.0.0-beta-1
-#    path: ../tau_platform_interface # Flutter Sound Dir
-  tau_web: 9.0.0-beta-1
-#    path: ../tau_web # Flutter Sound Dir
+  tau_platform_interface: # 9.0.0-beta-1
+    path: ../tau_platform_interface # Flutter Sound Dir
+  tau_web: # 9.0.0-beta-1
+    path: ../tau_web # Flutter Sound Dir
 # ============================================================================
 
 dev_dependencies:

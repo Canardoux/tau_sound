@@ -17,3 +17,6 @@ toc: false
 - Fix all the 404 errors in the documentation of the Dart API
 - No more crashes with Just Audio compatibility. [FS #767](https://github.com/Canardoux/tau/issues/767)
 - Added support to play audio files from assets. [FS #549](https://github.com/Canardoux/tau/issues/549)
+- When the App wants to play a remote file, the file is downloaded asynchronously. [#762](https://github.com/Canardoux/flutter_sound/issues/762) and [#771](https://github.com/Canardoux/flutter_sound/issues/771). Thanks to Alvarocda who did a very good job on this issue. Now there are two things that we probably want to do in the future : 
+   - Download the file in the `open()` verb instead of `play()`
+   - Do not keep the semaphore so long, during the download, and allow the use of `close()` during the download.

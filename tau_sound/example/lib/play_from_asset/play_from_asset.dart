@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tau_sound/public/tau_node.dart';
-import 'package:tau_sound/public/tau_player.dart';
+import 'package:tau_sound_lite/public/tau_node.dart';
+import 'package:tau_sound_lite/public/tau_player.dart';
 
 typedef Fn = void Function();
 

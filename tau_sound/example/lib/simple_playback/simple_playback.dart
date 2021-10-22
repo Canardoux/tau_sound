@@ -19,7 +19,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:tau_sound/tau_sound.dart';
+import 'package:tau_sound_lite/tau_sound.dart';
 
 /*
  *
@@ -74,7 +74,7 @@ class _SimplePlaybackState extends State<SimplePlayback> {
   // -------  Here is the code to playback a remote file -----------------------
 
   void play() async {
-    await _mPlayer!.play(
+    Duration? d = await _mPlayer!.play(
       whenFinished: () {
         setState(() {});
       },
