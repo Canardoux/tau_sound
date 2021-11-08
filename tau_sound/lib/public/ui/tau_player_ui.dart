@@ -63,6 +63,18 @@ class TauPlayerUI extends StatefulWidget {
   /// should do when user press the play/pause button.
   final Future<void> Function(TauPlayer tauPlayer) onTap;
 
+  /// A callback from TauPlayerUI that notifies when user clicks in the Slider to change actual audio position
+  final Function(double position)? onPositionChanged;
+
+  /// A Flag to set if player should show progressbar or not, default is TRUE
+  final bool? showProgressBar;
+
+  /// Style for player position label
+  final TextStyle? playerPositionTextStyle;
+
+  /// Style for player duration label
+  final TextStyle? playerDurationTextStyle;
+
   ///
   ///
   ///
@@ -70,6 +82,10 @@ class TauPlayerUI extends StatefulWidget {
     required this.player,
     required this.onTap,
     this.onSpeedChanged,
+    this.onPositionChanged,
+    this.showProgressBar = true,
+    this.playerDurationTextStyle,
+    this.playerPositionTextStyle,
     this.iconSize = 45,
     this.playerRefreshDuration = const Duration(milliseconds: 500),
     this.playPauseColor,
@@ -124,6 +140,7 @@ class _TauPlayerUIState extends State<TauPlayerUI>
           _animationController!.reverse();
           break;
         case PlayerState.isPlaying:
+        default:
           _animationController!.forward();
           break;
       }
@@ -145,109 +162,140 @@ class _TauPlayerUIState extends State<TauPlayerUI>
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<PlaybackDisposition>(
-        stream: widget.player.onProgress,
-        builder: (context, snapshot) {
-          if (snapshot.data != null) {
-            _audioDuration ??= snapshot.data!.duration;
-          }
-          return Row(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              Material(
-                color: Colors.transparent,
-                shape: CircleBorder(),
-                child: InkWell(
-                  onTap: () async {
-                    await widget.onTap(widget.player);
-                  },
-                  child: AnimatedIcon(
-                    icon: AnimatedIcons.play_pause,
-                    progress: _animationController!,
-                    size: widget.iconSize ?? 45,
-                    color:
-                        widget.playPauseColor ?? Theme.of(context).primaryColor,
-                  ),
+      stream: widget.player.onProgress,
+      builder: (context, snapshot) {
+        if (snapshot.data != null) {
+          _audioDuration = snapshot.data!.duration;
+          _actualPlayerPosition = snapshot.data!.position;
+        }
+
+        return Row(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Material(
+              color: Colors.transparent,
+              shape: CircleBorder(),
+              child: InkWell(
+                onTap: () async {
+                  await widget.onTap(widget.player);
+                },
+                child: AnimatedIcon(
+                  icon: AnimatedIcons.play_pause,
+                  progress: _animationController!,
+                  size: widget.iconSize ?? 45,
+                  color:
+                      widget.playPauseColor ?? Theme.of(context).primaryColor,
                 ),
               ),
+            ),
+            if (widget.showProgressBar! &&
+                (snapshot.data != null &&
+                    !snapshot.data!.duration.inMilliseconds.isNegative))
               Expanded(
                 child: Theme(
                   data: ThemeData(
                     sliderTheme: widget.sliderThemeData ??
                         SliderThemeData(
-                          trackHeight: 18,
-                          thumbShape: RoundSliderThumbShape(
-                            enabledThumbRadius: 0,
-                            disabledThumbRadius: 0,
-                            elevation: 25,
-                          ),
+                          trackHeight: 5,
+                          thumbColor: Theme.of(context).primaryColor,
+                          activeTrackColor:
+                              Theme.of(context).toggleableActiveColor,
+                          inactiveTrackColor:
+                              Theme.of(context).unselectedWidgetColor,
                         ),
                   ),
-                  child: Slider(
-                    value: snapshot.data == null
-                        ? 0.0
-                        : snapshot.data!.position.inMilliseconds.toDouble(),
-                    max: _audioDuration == null
-                        ? 0
-                        : _audioDuration!.inMilliseconds.toDouble(),
-                    onChanged: (double value) {
-                      widget.player.seekTo(
-                        Duration(
-                          milliseconds: value.toInt(),
-                        ),
-                      );
-                    },
-                    onChangeEnd: (value) {
-                      setState(() {});
-                    },
-                  ),
+                  child: _audioDuration != null &&
+                          _audioDuration!.inMilliseconds > 0
+                      ? Slider.adaptive(
+                          value: _actualPlayerPosition == null
+                              ? 0.0
+                              : _actualPlayerPosition!.inMilliseconds
+                                  .toDouble(),
+                          max: _audioDuration == null
+                              ? 0
+                              : _audioDuration!.inMilliseconds.toDouble(),
+                          onChanged: _onChanged,
+                          onChangeStart: _onChanged,
+                          onChangeEnd: _onChanged,
+                        )
+                      : SizedBox(),
                 ),
               ),
-              if (widget.speeds != null && widget.speeds!.isNotEmpty)
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  width: widget.alwaysShowPlayerSpeed
-                      ? 35
-                      : widget.player.isPlaying
-                          ? 35
-                          : 0,
-                  padding: EdgeInsets.zero,
-                  margin: EdgeInsets.zero,
-                  curve: Curves.easeIn,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _speedIndex++;
-                      if (_speedIndex == widget.speeds!.length) {
-                        _speedIndex = 0;
-                      }
-                      _actualSpeed = widget.speeds![_speedIndex];
-                      widget.player.setSpeed(_actualSpeed!);
-                      if (widget.onSpeedChanged != null) {
-                        widget.onSpeedChanged!(_actualSpeed!);
-                      }
-                      setState(() {});
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.zero,
-                    ),
-                    child: FittedBox(
-                      child: Text(
-                        '${_actualSpeed}x',
-                      ),
+            if (widget.speeds != null && widget.speeds!.isNotEmpty)
+              AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                width: widget.alwaysShowPlayerSpeed
+                    ? 35
+                    : widget.player.isPlaying
+                        ? 35
+                        : 0,
+                padding: EdgeInsets.zero,
+                margin: EdgeInsets.zero,
+                curve: Curves.easeIn,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _speedIndex++;
+                    if (_speedIndex == widget.speeds!.length) {
+                      _speedIndex = 0;
+                    }
+                    _actualSpeed = widget.speeds![_speedIndex];
+                    widget.player.setSpeed(_actualSpeed!);
+                    if (widget.onSpeedChanged != null) {
+                      widget.onSpeedChanged!(_actualSpeed!);
+                    }
+                    setState(() {});
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: CircleBorder(),
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: FittedBox(
+                    child: Text(
+                      '${_actualSpeed}x',
                     ),
                   ),
                 ),
-              SizedBox(
-                width: 10,
               ),
-              if (_audioDuration != null)
-                Text(
-                    '${_convertDurationToTime(snapshot.data?.position)}/${_convertDurationToTime(_audioDuration)}')
-              else
-                Text(_convertDurationToTime(_actualPlayerPosition))
-            ],
-          );
-        });
+            SizedBox(
+              width: 10,
+            ),
+            if (_audioDuration != null && _audioDuration!.inMilliseconds > 0)
+              Column(
+                children: <Widget>[
+                  Text(
+                    '${_convertDurationToTime(snapshot.data?.position)}',
+                    style: widget.playerPositionTextStyle,
+                  ),
+                  Text(
+                    '${_convertDurationToTime(_audioDuration)}',
+                    style: widget.playerDurationTextStyle,
+                  )
+                ],
+              )
+            else if (snapshot.data != null &&
+                snapshot.data!.position.inSeconds > 0)
+              Text(
+                _convertDurationToTime(snapshot.data?.position),
+                style: widget.playerPositionTextStyle,
+              )
+          ],
+        );
+      },
+    );
+  }
+
+  void _onChanged(double position) {
+    setState(() {
+      _actualPlayerPosition = Duration(
+        milliseconds: position.toInt(),
+      );
+      widget.player.seekTo(
+        _actualPlayerPosition!,
+      );
+    });
+    if (widget.onPositionChanged != null) {
+      widget.onPositionChanged!(position);
+    }
   }
 
   ///
