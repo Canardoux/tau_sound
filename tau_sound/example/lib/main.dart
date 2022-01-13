@@ -39,7 +39,6 @@ import 'speed_control/speed_control.dart';
 import 'streamLoop/stream_loop.dart';
 import 'streamLoop_justAudio/stream_loop_just_audio.dart';
 import 'volume_control/volume_control.dart';
-import 'widgetUI/widget_ui_demo.dart';
 
 /*
     This APP is just a driver to call the various Flutter Sound examples.
@@ -108,23 +107,6 @@ The biggest interest of this Demo is that it shows most of the features of Flutt
 This Demo does not make use of the Flutter Sound UI Widgets.
 
 It would be really great if someone rewrite this demo soon'''),
-
-  Example(
-    title: 'WidgetUIDemo',
-    subTitle: 'Demonstration of the UI Widget',
-    flags: 0,
-    route: (_) => WidgetUIDemo(),
-    description:
-// If you update the following test, please update also the Examples/README.md file and the comment inside the dart file.
-        '''
-This is a Demo of an App which uses the Flutter Sound UI Widgets.
-
-My own feeling is that this Demo is really too much complicated for doing something very simple.
-There is too many dependencies and too many sources.
-
-I really hope that someone will write soon another simpler Demo App.
-''',
-  ),
 
   Example(
     title: 'simplePlayback',

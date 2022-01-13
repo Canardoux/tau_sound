@@ -35,10 +35,6 @@ abstract class TauPlayerCallback
 {
 
   void updateProgress({int duration, int position,}) ;
-  void pauseCallback(int state);
-  void resumeCallback(int state);
-  void skipBackward(int state);
-  void skipForward(int state);
   void updatePlaybackState(int state);
   void needSomeFood(int ln);
   void audioPlayerFinished(int state);
@@ -152,7 +148,7 @@ abstract class TauPlayerPlatform extends PlatformInterface {
     throw UnimplementedError('resetPlugin() has not been implemented.');
   }
 
-  Future<int> openPlayer(TauPlayerCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device, bool? withUI,})
+  Future<int> openPlayer(TauPlayerCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device, })
   {
     throw UnimplementedError('openPlayer() has not been implemented.');
   }

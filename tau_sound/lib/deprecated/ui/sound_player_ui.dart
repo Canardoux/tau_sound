@@ -261,7 +261,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
             mode: SessionMode.modeDefault,
             device: AudioDevice.speaker,
             audioFlags: outputToSpeaker | allowBlueToothA2DP | allowAirPlay,
-            withUI: true)
+            )
         .then((_) {
       _setCallbacks();
       _player!.setSubscriptionDuration(Duration(milliseconds: 100));
@@ -527,24 +527,7 @@ class SoundPlayerUIState extends State<SoundPlayerUI> {
 
   /// internal start method.
   void _start() async {
-    var trck = _track;
-    if (trck != null) {
-      await _player!
-          .startPlayerFromTrack(trck, whenFinished: _onStopped)
-          .then((_) {
-        _playState = _PlayState.playing;
-        onPlaybackStart(context);
-      }).catchError((dynamic e) {
-        _logger.w('Error calling play() ${e.toString()}');
-        _playState = _PlayState.stopped;
-        return null;
-      }).whenComplete(() {
-        _loading = false;
-        _transitioning = false;
-        _logger.d('Transitioning = false');
-      });
-    }
-  }
+   }
 
   /// Call [stop] to stop the audio playing.
   ///

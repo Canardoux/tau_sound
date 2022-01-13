@@ -38,22 +38,6 @@ abstract class TauNode {
 
 /// An InputNode is a node with one output channel and no input channel
 abstract class InputNode extends TauNode {
-  TauTrack track = TauTrack();
-}
-
-/// A Track can be an InputFile or an InputBuffer
-class TauTrack {
-  String title;
-  String author;
-  String? albumArtURL;
-  String? albumArtAsset;
-  String? albumArtFile;
-  /* ctor */ TauTrack(
-      {this.title = 'A sound from Flutter Sound',
-      this.author = 'τ',
-      this.albumArtURL,
-      this.albumArtAsset,
-      this.albumArtFile});
 }
 
 /// An InputBuffer is a possible source for a Player playback
@@ -62,9 +46,7 @@ class InputBufferNode extends InputNode {
   /* ctor */ InputBufferNode(
     this.inputBuffer, {
     TauCodec? codec,
-    TauTrack? track,
   }) {
-    this.track = (track != null) ? track : TauTrack();
     this.codec = (codec != null) ? codec : DefaultCodec();
   }
 
@@ -87,9 +69,7 @@ class InputFileNode extends InputNode {
   /* ctor */ InputFileNode(
     this.uri, {
     TauCodec? codec,
-    TauTrack? track,
   }) {
-    this.track = (track != null) ? track : TauTrack();
     this.codec = (codec != null) ? codec : DefaultCodec();
   }
 

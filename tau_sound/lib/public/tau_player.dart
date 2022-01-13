@@ -54,20 +54,6 @@ enum PlayerState {
 /// Note : this type must include a parameter with a reference to the FlutterSoundPlayer object involved.
 typedef TWhenFinished = void Function();
 
-/// Playback function type for [FlutterSoundPlayer.startPlayer()].
-///
-/// Note : this type must include a parameter with a reference to the FlutterSoundPlayer object involved.
-typedef TOnProgress = void Function(Duration position, Duration duration);
-
-/// Playback function type for [FlutterSoundPlayer.startPlayerFromTrack()].
-///
-/// Note : this type must include a parameter with a reference to the FlutterSoundPlayer object involved.
-typedef TonPaused = void Function(bool paused);
-
-/// Playback function type for [FlutterSoundPlayer.startPlayerFromTrack()].
-///
-/// Note : this type must include a parameter with a reference to the FlutterSoundPlayer object involved.
-typedef TonSkip = void Function();
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -177,7 +163,6 @@ class TauPlayer implements TauPlayerCallback {
   /// Returns a Future, but the App does not need to wait the completion of this future before doing a [start()].
   /// The Future will be automaticaly awaited by [start()]
   ///
-  /// - [withShadeUI] : true if the App wants to show an UI on the lock screen. (Ignored on Flutter Web).
   /// - [focus] : What to do with the focus. Useful if you want to open a player and at the same time acquire the focus.
   /// But be aware that the focus is a global resource for the App:
   /// If you have several players, you cannot handle their focus independantely.
@@ -202,7 +187,6 @@ class TauPlayer implements TauPlayerCallback {
     SessionMode mode = SessionMode.modeDefault,
     //AudioDevice device = AudioDevice.speaker,
     int audioFlags = outputToSpeaker | allowBlueToothA2DP | allowAirPlay,
-    bool withShadeUI = false,
   }) async {
     if (_isInited) {
       return this;
@@ -219,7 +203,6 @@ class TauPlayer implements TauPlayerCallback {
         mode: mode,
         //device: device,
         audioFlags: audioFlags,
-        withShadeUI: withShadeUI,
       );
     });
     return r;
@@ -342,23 +325,10 @@ class TauPlayer implements TauPlayerCallback {
   /// ```
   Future<Duration?> play({
     TWhenFinished? whenFinished,
-
-    //Parameters for _play from track
-    TonSkip? onSkipForward,
-    TonSkip? onSkipBackward,
-    TonPaused? onPaused,
-    bool defaultPauseResume = true,
-    bool removeUIWhenStopped = true,
   }) async {
     Duration? r;
     await _lock.synchronized(() async {
       r = await _play(
-        whenFinished: whenFinished,
-        onSkipForward: onSkipForward,
-        defaultPauseResume: defaultPauseResume,
-        onPaused: onPaused,
-        onSkipBackward: onSkipBackward,
-        removeUIWhenStopped: removeUIWhenStopped,
       );
     });
     return r;
@@ -502,59 +472,6 @@ class TauPlayer implements TauPlayerCallback {
     }
   }
 
-  /// Set the Lock screen fields without starting a new playback.
-  ///
-  /// The fields 'dataBuffer' and 'trackPath' of the Track parameter are not used.
-  /// Please refer to 'startPlayerFromTrack' for the meaning of the others parameters.
-  /// Remark `setUIProgressBar()` is implemented only on iOS.
-  ///
-  ///  *Example:*
-  ///  ```dart
-  ///  Track track = Track( codec: Codec.opusOGG, trackPath: fileUri, trackAuthor: '3 Inches of Blood', trackTitle: 'Axes of Evil', albumArtAsset: albumArt );
-  ///  await nowPlaying(Track);
-  ///  ```
-  Future<void> nowPlaying(
-    Track track, {
-    Duration? duration,
-    Duration? progress,
-    TonSkip? onSkipForward,
-    TonSkip? onSkipBackward,
-    TonPaused? onPaused,
-    bool? defaultPauseResume,
-  }) async {
-    await _lock.synchronized(() async {
-      await _nowPlaying(
-        track,
-        duration: duration,
-        progress: progress,
-        onSkipBackward: _onSkipBackward,
-        onSkipForward: _onSkipForward,
-        onPaused: onPaused,
-        defaultPauseResume: defaultPauseResume,
-      );
-    });
-  }
-
-  /// Used if the App wants to control itself the Progress Bar on the lock screen.
-  ///
-  /// By default, this progress bar is handled automaticaly by Flutter Sound.
-  /// Remark `setUIProgressBar()` is implemented only on iOS.
-  ///
-  /// *Example:*
-  /// ```dart
-  ///
-  ///         Duration progress = (await getProgress())['progress'];
-  ///         Duration duration = (await getProgress())['duration'];
-  ///         setUIProgressBar(progress: Duration(milliseconds: progress.milliseconds - 500), duration: duration)
-  /// ````
-  Future<void> setUIProgressBar({
-    Duration? duration,
-    Duration? progress,
-  }) async {
-    await _lock.synchronized(() async {
-      await _setUIProgressBar(progress: progress, duration: duration);
-    });
-  }
 
   ///  Used when you want to play live PCM data synchronously.
   ///
@@ -668,11 +585,7 @@ class TauPlayer implements TauPlayerCallback {
 
   /// The default blocksize used when playing from Stream.
   static const _blockSize = 4096;
-  bool withShadeUI = false;
 
-  TonSkip? _onSkipForward; // User callback "onPaused:"
-  TonSkip? _onSkipBackward; // User callback "onPaused:"
-  TonPaused? _onPaused; // user callback "whenPause:"
   //static bool _reStarted = true;
 
   InputNode? _from;
@@ -782,7 +695,6 @@ class TauPlayer implements TauPlayerCallback {
     SessionMode mode = SessionMode.modeDefault,
     //AudioDevice device = AudioDevice.speaker,
     int audioFlags = outputToSpeaker | allowBlueToothA2DP | allowAirPlay,
-    bool withShadeUI = false,
   }) async {
     _logger.d('FS:---> open()');
     while (_openPlayerCompleter != null) {
@@ -818,14 +730,13 @@ class TauPlayer implements TauPlayerCallback {
           category: category,
           device: AudioDevice.obsolete,
           mode: mode,
-          withUI: withShadeUI);
+          );
       if (focus != AudioFocus.doNotRequestFocus) {
         _hasFocus = focus != AudioFocus.abandonFocus;
       }
       _from = from;
       _to = to;
       _playerState = PlayerState.values[state];
-      this.withShadeUI = withShadeUI;
     } on Exception {
       _openPlayerCompleter = null;
       rethrow;
@@ -904,14 +815,7 @@ class TauPlayer implements TauPlayerCallback {
 
   Future<PlayerState> _startPlayerFromURI(
     InputFileNode fromURI,
-    OutputDeviceNode to, {
-    //Parameters for _play from track
-    TonSkip? onSkipForward,
-    TonSkip? onSkipBackward,
-    TonPaused? onPaused,
-    bool defaultPauseResume = true,
-    bool removeUIWhenStopped = true,
-  }) async {
+    OutputDeviceNode to, ) async {
     var uri = fromURI.uri;
     var codec = fromURI.codec;
     if (codec is Pcm && codec.audioFormat == AudioFormat.raw) {
@@ -932,74 +836,32 @@ class TauPlayer implements TauPlayerCallback {
     uri = what['path'] as String;
 
     var state = PlayerState.isStopped.index;
-    if (withShadeUI) {
-      var track = Track(
-          codec: oldCodec,
-          trackPath: uri,
-          trackAuthor: fromURI.track.author,
-          trackTitle: fromURI.track.title,
-          albumArtFile: fromURI.track.albumArtFile,
-          albumArtAsset: fromURI.track.albumArtAsset,
-          albumArtUrl: fromURI.track.albumArtURL);
-
-      state = await TauPlayerPlatform.instance.startPlayerFromTrack(
-        this,
-        progress: Duration.zero,
-        duration: Duration.zero,
-        track: track.toMap(),
-        canPause: (onPaused != null || defaultPauseResume),
-        canSkipForward: (onSkipForward != null),
-        canSkipBackward: (onSkipBackward != null),
-        defaultPauseResume: defaultPauseResume,
-        removeUIWhenStopped: removeUIWhenStopped,
-      );
-    } else {
-      state = await TauPlayerPlatform.instance.startPlayer(
+       state = await TauPlayerPlatform.instance.startPlayer(
         this,
         codec: oldCodec,
         fromURI: uri,
         fromDataBuffer: null,
       );
-    }
 
     return PlayerState.values[state];
   }
 
   Future<PlayerState> _startPlayerFromAsset(
     InputAssetNode fromAsset,
-    OutputDeviceNode to, {
-    //Parameters for _play from track
-    TonSkip? onSkipForward,
-    TonSkip? onSkipBackward,
-    TonPaused? onPaused,
-    bool defaultPauseResume = true,
-    bool removeUIWhenStopped = true,
-  }) async {
+    OutputDeviceNode to, ) async {
     final byteData = await rootBundle.load(fromAsset.path);
     var assetBuffer = byteData.buffer.asUint8List();
     var bufferNode = InputBufferNode(assetBuffer,
-        codec: fromAsset.codec, track: fromAsset.track);
+        codec: fromAsset.codec, );
     return await _startPlayerFromBuffer(
       bufferNode,
       to,
-      defaultPauseResume: defaultPauseResume,
-      onPaused: onPaused,
-      onSkipBackward: onSkipBackward,
-      onSkipForward: onSkipForward,
-      removeUIWhenStopped: removeUIWhenStopped,
     );
   }
 
   Future<PlayerState> _startPlayerFromBuffer(
     InputBufferNode fromBuffer,
-    OutputDeviceNode to, {
-    //Parameters for _play from track
-    TonSkip? onSkipForward,
-    TonSkip? onSkipBackward,
-    TonPaused? onPaused,
-    bool defaultPauseResume = true,
-    bool removeUIWhenStopped = true,
-  }) async {
+    OutputDeviceNode to, ) async {
     var buffer = fromBuffer.inputBuffer;
     var codec = fromBuffer.codec;
     if (codec is Pcm && codec.audioFormat == AudioFormat.raw) {
@@ -1018,35 +880,12 @@ class TauPlayer implements TauPlayerCallback {
     oldCodec = what['codec'] as Codec;
     buffer = what['fromDataBuffer'] as Uint8List;
     var state = PlayerState.isStopped.index;
-    if (withShadeUI) {
-      var track = Track(
-          codec: oldCodec,
-          dataBuffer: buffer,
-          trackAuthor: fromBuffer.track.author,
-          trackTitle: fromBuffer.track.title,
-          albumArtFile: fromBuffer.track.albumArtFile,
-          albumArtAsset: fromBuffer.track.albumArtAsset,
-          albumArtUrl: fromBuffer.track.albumArtURL);
-
-      state = await TauPlayerPlatform.instance.startPlayerFromTrack(
-        this,
-        progress: Duration.zero,
-        duration: Duration.zero,
-        track: track.toMap(),
-        canPause: (onPaused != null || defaultPauseResume),
-        canSkipForward: (onSkipForward != null),
-        canSkipBackward: (onSkipBackward != null),
-        defaultPauseResume: defaultPauseResume,
-        removeUIWhenStopped: removeUIWhenStopped,
-      );
-    } else {
-      state = await TauPlayerPlatform.instance.startPlayer(
+     state = await TauPlayerPlatform.instance.startPlayer(
         this,
         codec: oldCodec,
         fromDataBuffer: buffer,
         fromURI: null,
       );
-    }
 
     return PlayerState.values[state];
   }
@@ -1146,13 +985,6 @@ class TauPlayer implements TauPlayerCallback {
 
   Future<Duration> _play({
     TWhenFinished? whenFinished,
-
-    //Parameters for _play from track
-    TonSkip? onSkipForward,
-    TonSkip? onSkipBackward,
-    TonPaused? onPaused,
-    bool defaultPauseResume = true,
-    bool removeUIWhenStopped = true,
   }) async {
     _logger.d('FS:---> startPlayer ');
     await _waitOpen();
@@ -1184,33 +1016,18 @@ class TauPlayer implements TauPlayerCallback {
           state = await _startPlayerFromURI(
             _from as InputFileNode,
             _to!,
-            onSkipForward: onSkipForward,
-            defaultPauseResume: defaultPauseResume,
-            onPaused: onPaused,
-            onSkipBackward: onSkipBackward,
-            removeUIWhenStopped: removeUIWhenStopped,
           );
           break;
         case InputAssetNode:
           state = await _startPlayerFromAsset(
             _from as InputAssetNode,
             _to!,
-            onSkipForward: onSkipForward,
-            defaultPauseResume: defaultPauseResume,
-            onPaused: onPaused,
-            onSkipBackward: onSkipBackward,
-            removeUIWhenStopped: removeUIWhenStopped,
           );
           break;
         case InputBufferNode:
           state = await _startPlayerFromBuffer(
             _from as InputBufferNode,
             _to!,
-            onSkipForward: onSkipForward,
-            defaultPauseResume: defaultPauseResume,
-            onPaused: onPaused,
-            onSkipBackward: onSkipBackward,
-            removeUIWhenStopped: removeUIWhenStopped,
           );
           break;
         case InputStreamNode:
@@ -1464,57 +1281,6 @@ class TauPlayer implements TauPlayerCallback {
     _logger.d('FS:<--- _setSpeed ');
   }
 
-  Future<void> _nowPlaying(
-    Track track, {
-    Duration? duration,
-    Duration? progress,
-    TonSkip? onSkipForward,
-    TonSkip? onSkipBackward,
-    TonPaused? onPaused,
-    bool? defaultPauseResume,
-  }) async {
-    _logger.d('FS:---> nowPlaying ');
-    await _waitOpen();
-    if (!_isInited) {
-      throw Exception('Player is not open');
-    }
-
-    _onSkipForward = onSkipForward;
-    _onSkipBackward = onSkipBackward;
-    _onPaused = onPaused;
-
-    var trackDico = track.toMap();
-    defaultPauseResume ??= (onPaused == null);
-    var state = await TauPlayerPlatform.instance.nowPlaying(
-      this,
-      track: trackDico,
-      duration: duration,
-      progress: progress,
-      canPause: (onPaused != null || defaultPauseResume),
-      canSkipForward: (onSkipForward != null),
-      canSkipBackward: (onSkipBackward != null),
-      defaultPauseResume: defaultPauseResume,
-    );
-    _playerState = PlayerState.values[state];
-    _logger.d('FS:<--- nowPlaying ');
-  }
-
-  Future<void> _setUIProgressBar({
-    Duration? duration,
-    Duration? progress,
-  }) async {
-    _logger
-        .d('FS:---> setUIProgressBar : duration=$duration  progress=$progress');
-    await _waitOpen();
-    if (!_isInited) {
-      throw Exception('Player is not open');
-    }
-    var state = await TauPlayerPlatform.instance
-        .setUIProgressBar(this, duration: duration, progress: progress);
-    _playerState = PlayerState.values[state];
-    _logger.d('FS:<--- setUIProgressBar ');
-  }
-
   Future<void> _feedFromStream(Uint8List buffer) async {
     var lnData = 0;
     var totalLength = buffer.length;
@@ -1589,65 +1355,7 @@ class TauPlayer implements TauPlayerCallback {
       ),
     );
   }
-
-  /// Callback from the τ Core. Must not be called by the App
-  /// @nodoc
-  @override
-  void pauseCallback(int state) async {
-    _logger.d('FS:---> pause ');
-    await _lock.synchronized(() async {
-      _playerState = PlayerState.values[state];
-      if (_onPaused != null) // Probably always true
-      {
-        _onPaused!(true);
-      }
-    });
-    _logger.d('FS:<--- pause ');
-  }
-
-  /// Callback from the &tau; Core. Must not be called by the App
-  /// @nodoc
-  @override
-  void resumeCallback(int state) async {
-    _logger.d('FS:---> resume');
-    await _lock.synchronized(() async {
-      _playerState = PlayerState.values[state];
-      if (_onPaused != null) // Probably always true
-      {
-        _onPaused!(false);
-      }
-    });
-    _logger.d('FS:<--- resume');
-  }
-
-  /// Callback from the &tau; Core. Must not be called by the App
-  /// @nodoc
-  @override
-  void skipBackward(int state) async {
-    _logger.d('FS:---> skipBackward ');
-    await _lock.synchronized(() async {
-      _playerState = PlayerState.values[state];
-
-      if (_onSkipBackward != null) {
-        _onSkipBackward!();
-      }
-    });
-    _logger.d('FS:<--- skipBackward ');
-  }
-
-  /// Callback from the &tau; Core. Must not be called by the App
-  /// @nodoc
-  @override
-  void skipForward(int state) async {
-    _logger.d('FS:---> skipForward ');
-    await _lock.synchronized(() async {
-      _playerState = PlayerState.values[state];
-      if (_onSkipForward != null) {
-        _onSkipForward!();
-      }
-    });
-    _logger.d('FS:<--- skipForward ');
-  }
+ty
 
   /// Callback from the &tau; Core. Must not be called by the App
   /// @nodoc

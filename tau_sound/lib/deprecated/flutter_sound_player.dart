@@ -161,9 +161,6 @@ class FlutterSoundPlayer implements TauPlayerCallback {
     });
   }
 
-  TonSkip? _onSkipForward; // User callback "onPaused:"
-  TonSkip? _onSkipBackward; // User callback "onPaused:"
-  TonPaused? _onPaused; // user callback "whenPause:"
   final _lock = Lock();
   //static bool _reStarted = true;
 
@@ -217,68 +214,7 @@ class FlutterSoundPlayer implements TauPlayerCallback {
     );
   }
 
-  /// Callback from the &tau; Core. Must not be called by the App
-  /// @nodoc
-  @deprecated
-  @override
-  void pauseCallback(int state) async {
-    _logger.d('FS:---> pause ');
-    await _lock.synchronized(() async {
-      _playerState = PlayerState.values[state];
-      if (_onPaused != null) // Probably always true
-      {
-        _onPaused!(true);
-      }
-    });
-    _logger.d('FS:<--- pause ');
-  }
 
-  /// Callback from the &tau; Core. Must not be called by the App
-  /// @nodoc
-  @deprecated
-  @override
-  void resumeCallback(int state) async {
-    _logger.d('FS:---> resume');
-    await _lock.synchronized(() async {
-      _playerState = PlayerState.values[state];
-      if (_onPaused != null) // Probably always true
-      {
-        _onPaused!(false);
-      }
-    });
-    _logger.d('FS:<--- resume');
-  }
-
-  /// Callback from the &tau; Core. Must not be called by the App
-  /// @nodoc
-  @deprecated
-  @override
-  void skipBackward(int state) async {
-    _logger.d('FS:---> skipBackward ');
-    await _lock.synchronized(() async {
-      _playerState = PlayerState.values[state];
-
-      if (_onSkipBackward != null) {
-        _onSkipBackward!();
-      }
-    });
-    _logger.d('FS:<--- skipBackward ');
-  }
-
-  /// Callback from the &tau; Core. Must not be called by the App
-  /// @nodoc
-  @deprecated
-  @override
-  void skipForward(int state) async {
-    _logger.d('FS:---> skipForward ');
-    await _lock.synchronized(() async {
-      _playerState = PlayerState.values[state];
-      if (_onSkipForward != null) {
-        _onSkipForward!();
-      }
-    });
-    _logger.d('FS:<--- skipForward ');
-  }
 
   /// Callback from the &tau; Core. Must not be called by the App
   /// @nodoc
@@ -630,7 +566,6 @@ class FlutterSoundPlayer implements TauPlayerCallback {
   /// - [category] : An optional parameter for iOS. See [iOS documentation](https://developer.apple.com/documentation/avfoundation/avaudiosessioncategory?language=objc).
   /// - [mode] : an optional parameter for iOS. See [iOS documentation](https://developer.apple.com/documentation/avfoundation/avaudiosessionmode?language=objc) to understand the meaning of this parameter.
   /// - [audioFlags] : an optional parameter for iOS
-  /// - [withUI] : true if the App plan to use [closeAudioSession] later.
   ///
   ///
   /// *Example:*
@@ -652,7 +587,6 @@ class FlutterSoundPlayer implements TauPlayerCallback {
     SessionMode mode = SessionMode.modeDefault,
     AudioDevice device = AudioDevice.speaker,
     int audioFlags = outputToSpeaker | allowBlueToothA2DP | allowAirPlay,
-    bool withUI = false,
   }) async {
     if (_isInited != Initialized.notInitialized) {
       throw Exception('Player is already open');
@@ -665,7 +599,6 @@ class FlutterSoundPlayer implements TauPlayerCallback {
         mode: mode,
         device: device,
         audioFlags: audioFlags,
-        withUI: withUI,
       );
     });
     return r;
@@ -677,7 +610,6 @@ class FlutterSoundPlayer implements TauPlayerCallback {
     SessionMode mode = SessionMode.modeDefault,
     AudioDevice device = AudioDevice.speaker,
     int audioFlags = outputToSpeaker | allowBlueToothA2DP | allowAirPlay,
-    bool withUI = false,
   }) async {
     _logger.d('FS:---> openAudioSession');
     while (_openPlayerCompleter != null) {
@@ -711,7 +643,7 @@ class FlutterSoundPlayer implements TauPlayerCallback {
           mode: mode,
           audioFlags: audioFlags,
           device: device,
-          withUI: withUI);
+          );
       _playerState = PlayerState.values[state];
       //isInited = success ?  Initialized.fullyInitialized : Initialized.notInitialized;
     } on Exception {
@@ -722,21 +654,6 @@ class FlutterSoundPlayer implements TauPlayerCallback {
     return completer!.future;
   }
 
-  /// @nodoc
-  @deprecated
-  Future<FlutterSoundPlayer?> openAudioSessionWithUI(
-      {AudioFocus focus = AudioFocus.requestFocusAndKeepOthers,
-      SessionCategory category = SessionCategory.playAndRecord,
-      SessionMode mode = SessionMode.modeDefault,
-      AudioDevice device = AudioDevice.speaker,
-      int audioFlags = outputToSpeaker | allowBlueToothA2DP | allowAirPlay}) {
-    return openAudioSession(
-        focus: focus,
-        category: category,
-        mode: mode,
-        device: device,
-        withUI: true);
-  }
 
   /// Set or unset the Audio Focus.
   ///
@@ -1410,224 +1327,6 @@ class FlutterSoundPlayer implements TauPlayerCallback {
       return _needSomeFoodCompleter!.future;
     }
     return 0;
-  }
-
-  /// Play data from a track specification and display controls on the lock screen or an Apple Watch.
-  ///
-  /// The Audio Session must have been open with the parameter `withUI`.
-  ///
-  /// - `track` parameter is a simple structure which describe the sound to play.
-  ///
-  ///   - `whenFinished:()` : A function for specifying what to do when the playback will be finished.
-  ///
-  ///  - `onPaused:()` : this parameter can be :
-  ///  - a call back function to call when the user hit the Skip Pause button on the lock screen
-  ///  - `null` : The pause button will be handled by Flutter Sound internal
-  ///
-  ///   - `onSkipForward:()` : this parameter can be :
-  ///   - a call back function to call when the user hit the Skip Forward button on the lock screen
-  ///   - `null` : The Skip Forward button will be disabled
-  ///
-  ///  - `onSkipBackward:()` : this parameter can be :
-  ///   - a call back function to call when the user hit the Skip Backward button on the lock screen
-  ///   - <null> : The Skip Backward button will be disabled
-  ///
-  ///   - `removeUIWhenStopped` : is a boolean to specify if the UI on the lock screen must be removed when the sound is finished or when the App does a `stopPlayer()`.
-  ///   Most of the time this parameter must be true. It is used only for the rare cases where the App wants to control the lock screen between two playbacks.
-  ///   Be aware that if the UI is not removed, the button Pause/Resume, Skip Backward and Skip Forward remain active between two playbacks.
-  ///   If you want to disable those button, use the API verb ```nowPlaying()```.
-  ///   Remark: actually this parameter is implemented only on iOS.
-  ///
-  ///   - `defaultPauseResume` : is a boolean value to specify if Flutter Sound must pause/resume the playback by itself when the user hit the pause/resume button. Set this parameter to *FALSE* if the App wants to manage itself the pause/resume button. If you do not specify this parameter and the `onPaused` parameter is specified then Flutter Sound will assume `FALSE`. If you do not specify this parameter and the `onPaused` parameter is not specified then Flutter Sound will assume `TRUE`.
-  ///   Remark: actually this parameter is implemented only on iOS.
-  ///
-  ///
-  ///  `startPlayerFromTrack()` returns a Duration Future, which is the record duration.
-  ///
-  ///
-  ///   *Example:*
-  ///   ```dart
-  ///   final fileUri = "https://file-examples.com/wp-content/uploads/2017/11/file_example_MP3_700KB.mp3";
-  ///   Track track = Track( codec: Codec.opusOGG, trackPath: fileUri, trackAuthor: '3 Inches of Blood', trackTitle: 'Axes of Evil', albumArtAsset: albumArt )
-  ///   Duration d = await myPlayer.startPlayerFromTrack
-  ///   (
-  ///   track,
-  ///   whenFinished: ()
-  ///   {
-  ///     logger.d( 'I hope you enjoyed listening to this song' );
-  ///   },
-  ///   );
-  ///   ```
-  /// @nodoc
-  @deprecated
-  Future<Duration?> startPlayerFromTrack(
-    Track track, {
-    TonSkip? onSkipForward,
-    TonSkip? onSkipBackward,
-    TonPaused? onPaused,
-    TWhenFinished? whenFinished,
-    Duration? progress,
-    Duration? duration,
-    bool? defaultPauseResume,
-    bool removeUIWhenStopped = true,
-  }) async {
-    var r = Duration.zero;
-    await _lock.synchronized(() async {
-      r = await _startPlayerFromTrack(
-        track,
-        onSkipForward: onSkipForward,
-        onSkipBackward: onSkipBackward,
-        onPaused: onPaused,
-        whenFinished: whenFinished,
-        progress: progress,
-        duration: duration,
-        defaultPauseResume: defaultPauseResume,
-        removeUIWhenStopped: removeUIWhenStopped,
-      );
-    });
-    return r;
-  }
-
-  Future<Duration> _startPlayerFromTrack(
-    Track track, {
-    TonSkip? onSkipForward,
-    TonSkip? onSkipBackward,
-    TonPaused? onPaused,
-    TWhenFinished? whenFinished,
-    Duration? progress,
-    Duration? duration,
-    bool? defaultPauseResume,
-    bool removeUIWhenStopped = true,
-  }) async {
-    _logger.d('FS:---> startPlayerFromTrack ');
-    await _waitOpen();
-    if (_isInited != Initialized.fullyInitialized) {
-      throw Exception('Player is not open');
-    }
-    Completer<Duration>? completer;
-    //Map retMap;
-    try {
-      await _stop(); // Just in case
-      _audioPlayerFinishedPlaying = whenFinished;
-      _onSkipForward = onSkipForward;
-      _onSkipBackward = onSkipBackward;
-      _onPaused = onPaused;
-      var trackDico = track.toMap();
-      var what = <String, dynamic>{
-        'codec': track.codec,
-        'path': track.trackPath,
-        'fromDataBuffer': track.dataBuffer,
-      };
-      var codec = what['codec'] as Codec;
-      await _convert(codec, what);
-      trackDico['bufferCodecIndex'] = codec.index;
-      trackDico['path'] = what['path'];
-      trackDico['dataBuffer'] = what['fromDataBuffer'];
-      trackDico['codec'] = codec.index;
-
-      defaultPauseResume ??= (onPaused == null);
-      if (_playerState != PlayerState.isStopped) {
-        throw Exception('Player is not stopped');
-      }
-
-      if (_startPlayerCompleter != null) {
-        _logger.w('Killing another startPlayer()');
-        _startPlayerCompleter!.completeError('Killed by another startPlayer()');
-      }
-      _startPlayerCompleter = Completer<Duration>();
-      completer = _startPlayerCompleter;
-
-      var state = await TauPlayerPlatform.instance.startPlayerFromTrack(
-        this,
-        progress: progress,
-        duration: duration,
-        track: trackDico,
-        canPause: (onPaused != null || defaultPauseResume),
-        canSkipForward: (onSkipForward != null),
-        canSkipBackward: (onSkipBackward != null),
-        defaultPauseResume: defaultPauseResume,
-        removeUIWhenStopped: removeUIWhenStopped,
-      );
-      _playerState = PlayerState.values[state];
-    } on Exception {
-      _startPlayerCompleter = null;
-      rethrow;
-    }
-    //Duration d = Duration(milliseconds: retMap['duration'] as int);
-    //int state = retMap['state'] as int;
-    //playerState = PlayerState.values[state];
-    _logger.d('FS:<--- startPlayerFromTrack ');
-    return completer!.future;
-  }
-
-  /// Set the Lock screen fields without starting a new playback.
-  ///
-  /// The fields 'dataBuffer' and 'trackPath' of the Track parameter are not used.
-  /// Please refer to 'startPlayerFromTrack' for the meaning of the others parameters.
-  /// Remark `setUIProgressBar()` is implemented only on iOS.
-  ///
-  ///  *Example:*
-  ///  ```dart
-  ///  Track track = Track( codec: Codec.opusOGG, trackPath: fileUri, trackAuthor: '3 Inches of Blood', trackTitle: 'Axes of Evil', albumArtAsset: albumArt );
-  ///  await nowPlaying(Track);
-  ///  ```
-  /// @nodoc
-  @deprecated
-  Future<void> nowPlaying(
-    Track track, {
-    Duration? duration,
-    Duration? progress,
-    TonSkip? onSkipForward,
-    TonSkip? onSkipBackward,
-    TonPaused? onPaused,
-    bool? defaultPauseResume,
-  }) async {
-    await _lock.synchronized(() async {
-      await _nowPlaying(
-        track,
-        duration: duration,
-        progress: progress,
-        onSkipBackward: _onSkipBackward,
-        onSkipForward: _onSkipForward,
-        onPaused: onPaused,
-        defaultPauseResume: defaultPauseResume,
-      );
-    });
-  }
-
-  Future<void> _nowPlaying(
-    Track track, {
-    Duration? duration,
-    Duration? progress,
-    TonSkip? onSkipForward,
-    TonSkip? onSkipBackward,
-    TonPaused? onPaused,
-    bool? defaultPauseResume,
-  }) async {
-    _logger.d('FS:---> nowPlaying ');
-    await _waitOpen();
-    if (_isInited != Initialized.fullyInitialized) {
-      throw Exception('Player is not open');
-    }
-
-    _onSkipForward = onSkipForward;
-    _onSkipBackward = onSkipBackward;
-    _onPaused = onPaused;
-
-    var trackDico = track.toMap();
-    defaultPauseResume ??= (onPaused == null);
-    var state = await TauPlayerPlatform.instance.nowPlaying(
-      this,
-      track: trackDico,
-      duration: duration,
-      progress: progress,
-      canPause: (onPaused != null || defaultPauseResume),
-      canSkipForward: (onSkipForward != null),
-      canSkipBackward: (onSkipBackward != null),
-      defaultPauseResume: defaultPauseResume,
-    );
-    _playerState = PlayerState.values[state];
-    _logger.d('FS:<--- nowPlaying ');
   }
 
   /// Stop a playback.

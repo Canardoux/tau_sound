@@ -143,13 +143,7 @@ class TauSoundPlayerManager extends TauSoundManager
                         }
                         break;
 
-                        case "startPlayerFromTrack":
-                        {
-                                aPlayer.startPlayerFromTrack ( call, result );
-                        }
-                        break;
-
-
+ 
                         case "stopPlayer":
                         {
                                 aPlayer.stopPlayer ( call, result );

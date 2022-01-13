@@ -26,8 +26,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
 
 import xyz.canardoux.TauNative.*;
-import xyz.canardoux.TauNative.FlautoTrack;
-import xyz.canardoux.TauNative.FlautoTrackPlayer;
 import xyz.canardoux.TauNative.FlautoPlayerCallback;
 import xyz.canardoux.TauNative.Flauto.*;
 
@@ -130,14 +128,7 @@ public class TauSoundPlayer extends TauSoundSession implements  FlautoPlayerCall
 
 	/* ctor */ TauSoundPlayer (final MethodCall call)
 	{
-		int withUI  = call.argument("withUI");
-		if (withUI != 0)
-		{
-			m_flautoPlayer = new FlautoTrackPlayer(this);
-		} else
-		{
-			m_flautoPlayer = new FlautoPlayer(this);
-		}
+		m_flautoPlayer = new FlautoPlayer(this);
 	}
 
 	TauSoundManager getPlugin ()
@@ -275,35 +266,6 @@ public class TauSoundPlayer extends TauSoundSession implements  FlautoPlayerCall
 		}
 	}
 
-
-	public void startPlayerFromTrack ( final MethodCall call, final Result result )
-	{
-		final HashMap<String, Object> trackMap = call.argument( "track" );
-		final FlautoTrack track = new FlautoTrack( trackMap );
-		boolean canSkipForward = call.argument( "canSkipForward" );
-		boolean canSkipBackward = call.argument( "canSkipBackward" );
-		boolean canPause = call.argument( "canPause" );
-		int progress = (call.argument( "progress" ) == null) ? -1 : call.argument( "progress" );
-		int duration = (call.argument( "duration" ) == null) ? -1 : call.argument( "duration" );
-		boolean removeUIWhenStopped = call.argument( "removeUIWhenStopped" );
-		boolean defaultPauseResume = call.argument( "defaultPauseResume" );
-
-		boolean r = m_flautoPlayer.startPlayerFromTrack
-		(
-			track,
-			canPause,
-			canSkipForward,
-			canSkipBackward,
-			progress,
-			duration,
-			removeUIWhenStopped,
-			defaultPauseResume
-		);
-		if (r)
-			result.success(getPlayerState());
-		else
-			result.error(ERR_UNKNOWN, ERR_UNKNOWN, "startPlayerFromTrack() error");
-	}
 
 
 	public void stopPlayer ( final MethodCall call, final Result result )

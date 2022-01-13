@@ -177,18 +177,6 @@ const allowAirPlay = 16;
 const allowBlueToothA2DP = 32;
 
 
-/*
-final List<String> iosSessionCategory = [
-  'AVAudioSessionCategoryAmbient',
-  'AVAudioSessionCategoryMultiRoute',
-  'AVAudioSessionCategoryPlayAndRecord',
-  'AVAudioSessionCategoryPlayback',
-  'AVAudioSessionCategoryRecord',
-  'AVAudioSessionCategorySoloAmbient',
-];
-
- */
-
 // Values for AUDIO_FOCUS_GAIN on Android
 enum AndroidFocusGain {
   defaultFocusGain,

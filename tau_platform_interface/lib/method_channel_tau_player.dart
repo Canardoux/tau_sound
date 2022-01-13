@@ -81,30 +81,6 @@ class MethodChannelTauPlayer extends TauPlayerPlatform
         }
         break;
 
-      case 'pause': // Pause/Resume
-        {
-          aPlayer.pauseCallback(arg['arg']);
-        }
-        break;
-
-        case 'resume': // Pause/Resume
-        {
-          aPlayer.resumeCallback(arg['arg']);
-        }
-        break;
-
-
-      case 'skipForward':
-        {
-          aPlayer.skipForward(arg['arg']);
-        }
-        break;
-
-      case 'skipBackward':
-        {
-          aPlayer.skipBackward(arg['arg']);
-        }
-        break;
 
       case 'updatePlaybackState':
         {
@@ -210,9 +186,9 @@ class MethodChannelTauPlayer extends TauPlayerPlatform
 
 
   @override
-  Future<int> openPlayer(TauPlayerCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device, bool? withUI})
+  Future<int> openPlayer(TauPlayerCallback callback, {required Level logLevel, AudioFocus? focus, SessionCategory? category, SessionMode? mode, int? audioFlags, AudioDevice? device,})
   {
-    return  invokeMethod( callback, 'openPlayer', {'logLevel': logLevel.index, 'focus': focus!.index, 'category': category!.index, 'mode': mode!.index, 'audioFlags': audioFlags, 'device': device!.index, 'withUI': withUI! ? 1 : 0 ,},) ;
+    return  invokeMethod( callback, 'openPlayer', {'logLevel': logLevel.index, 'focus': focus!.index, 'category': category!.index, 'mode': mode!.index, 'audioFlags': audioFlags, 'device': device!.index,},) ;
   }
 
   @override

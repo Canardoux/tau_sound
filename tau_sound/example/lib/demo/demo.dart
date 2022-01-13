@@ -218,16 +218,13 @@ class _MyAppState extends State<Demo> {
   bool? _encoderSupported = true; // Optimist
   bool _decoderSupported = true; // Optimist
 
-  // Whether the user wants to use the audio player features
-  bool _isAudioPlayer = false;
 
   double? _duration;
   StreamController<TauFood>? recordingDataController;
   IOSink? sink;
   StreamController<TauFood> totoController = StreamController();
 
-  Future<void> _initializeExample(bool withUI) async {
-    _isAudioPlayer = withUI;
+  Future<void> _initializeExample() async {
     await initializeDateFormatting();
     await setCodec(_codec);
   }
@@ -243,7 +240,7 @@ class _MyAppState extends State<Demo> {
 
   Future<void> init() async {
     await openTheRecorder();
-    await _initializeExample(false);
+    await _initializeExample();
 
     if ((!kIsWeb) && Platform.isAndroid) {
       await copyAssets();
@@ -569,7 +566,6 @@ class _MyAppState extends State<Demo> {
         await playerModule.open(
           from: from,
           to: OutputDeviceNode.speaker(),
-          withShadeUI: _isAudioPlayer,
         );
         await playerModule.play();
         await _addListeners();
@@ -593,25 +589,16 @@ class _MyAppState extends State<Demo> {
       } else {}
 
        */
-
-      var track = TauTrack(
-          title: 'This is a record',
-          author: 'from flutter_sound',
-          albumArtFile: albumArtFile,
-          albumArtAsset: albumArtAsset,
-          albumArtURL: albumArtUrl);
       if (audioFilePath != null) {
         InputNode from = InputFileNode(audioFilePath,
-            codec: getCodecFromDeprecated(codec), track: track);
+            codec: getCodecFromDeprecated(codec));
         await playerModule.close();
         await playerModule.open(
           from: InputFileNode(
             audioFilePath,
             codec: getCodecFromDeprecated(codec),
-            track: track,
           ),
           to: OutputDeviceNode.speaker(),
-          withShadeUI: _isAudioPlayer,
         );
 
         await playerModule.play(
@@ -619,25 +606,6 @@ class _MyAppState extends State<Demo> {
             playerModule.logger.d('Play finished');
             setState(() {});
           },
-          removeUIWhenStopped: true,
-          onSkipBackward: () {
-            playerModule.logger.d('Skip backward');
-            stopPlayer();
-            startPlayer();
-          },
-          onSkipForward: () {
-            playerModule.logger.d('Skip forward');
-            stopPlayer();
-            startPlayer();
-          },
-          onPaused: (b) {
-            if (b) {
-              playerModule.pause();
-            } else {
-              playerModule.resume();
-            }
-          },
-          defaultPauseResume: false,
         );
       } else if (dataBuffer != null) {
         if (codec == Codec.pcm16) {
@@ -652,10 +620,8 @@ class _MyAppState extends State<Demo> {
           from: InputBufferNode(
             dataBuffer,
             codec: getCodecFromDeprecated(codec),
-            track: track,
           ),
           to: OutputDeviceNode.speaker(),
-          withShadeUI: _isAudioPlayer,
         );
 
         await playerModule.play(
@@ -663,24 +629,6 @@ class _MyAppState extends State<Demo> {
             playerModule.logger.d('Play finished');
             setState(() {});
           },
-          onSkipBackward: () {
-            playerModule.logger.d('Skip backward');
-            stopPlayer();
-            startPlayer();
-          },
-          onSkipForward: () {
-            playerModule.logger.d('Skip forward');
-            stopPlayer();
-            startPlayer();
-          },
-          onPaused: (b) {
-            if (b) {
-              playerModule.pause();
-            } else {
-              playerModule.resume();
-            }
-          },
-          defaultPauseResume: false,
         );
       }
       await _addListeners();
@@ -929,10 +877,6 @@ class _MyAppState extends State<Demo> {
       return null;
     }
 
-    if (_media == Media.stream && _isAudioPlayer) {
-      return null;
-    }
-
     // Disable the button if the selected codec is not supported
     if (!(_decoderSupported || _codec == Codec.pcm16)) {
       return null;
@@ -976,37 +920,10 @@ class _MyAppState extends State<Demo> {
     });
   }
 
-  void Function(bool)? audioPlayerSwitchChanged() {
-    if ((!playerModule.isStopped) || (!recorderModule.isStopped)) return null;
-    return ((newVal) async {
-      try {
-        await _initializeExample(newVal);
-        setState(() {});
-      } on Exception catch (err) {
-        playerModule.logger.e(err);
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     final dropdowns = makeDropdowns(context);
-    final trackSwitch = Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 4),
-          child: Text('Track Player:'),
-        ),
-        Switch(
-          value: _isAudioPlayer,
-          onChanged: audioPlayerSwitchChanged(),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(right: 4.0),
-        )
-      ]),
-    );
 
     Widget recorderSection = Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -1165,7 +1082,6 @@ class _MyAppState extends State<Demo> {
           recorderSection,
           playerSection,
           dropdowns,
-          trackSwitch,
         ],
       ),
     );
