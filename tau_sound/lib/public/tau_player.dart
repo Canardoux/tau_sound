@@ -582,6 +582,10 @@ class TauPlayer implements TauPlayerCallback {
   /// User callback "whenFinished:"
   TWhenFinished? _audioPlayerFinishedPlaying;
   StreamController<PlaybackDisposition>? _playerController;
+  final StreamController<PlayerState> _playerStateController =
+      StreamController<PlayerState>.broadcast();
+
+  Stream<PlayerState> get onPlayerStateChanged => _playerStateController.stream;
 
   /// The default blocksize used when playing from Stream.
   static const _blockSize = 4096;
@@ -696,6 +700,7 @@ class TauPlayer implements TauPlayerCallback {
     //AudioDevice device = AudioDevice.speaker,
     int audioFlags = outputToSpeaker | allowBlueToothA2DP | allowAirPlay,
   }) async {
+    _playerStateController.add(PlayerState.isStopped);
     _logger.d('FS:---> open()');
     while (_openPlayerCompleter != null) {
       _logger.w('Another openPlayer() in progress');
@@ -781,6 +786,7 @@ class TauPlayer implements TauPlayerCallback {
       _closePlayerCompleter = null;
       rethrow;
     }
+    await _playerStateController.close();
     _logger.d('FS:<--- close() ');
     return completer!.future;
   }
@@ -1043,6 +1049,7 @@ class TauPlayer implements TauPlayerCallback {
           throw Exception('Invalid Input Node');
       }
       _playerState = state;
+      _playerStateController.add(state);
     } on Exception {
       _startPlayerCompleter = null;
       rethrow;
@@ -1169,6 +1176,7 @@ class TauPlayer implements TauPlayerCallback {
       _stopPlayerCompleter = null;
       rethrow;
     }
+    _playerStateController.add(_playerState);
 
     _logger.d('FS:<--- _stop ');
     return completer!.future;
@@ -1198,6 +1206,7 @@ class TauPlayer implements TauPlayerCallback {
       _pausePlayerCompleter = null;
       rethrow;
     }
+    _playerStateController.add(_playerState);
     _logger.d('FS:<--- _pausePlayer ');
     return completer!.future;
   }
@@ -1226,6 +1235,7 @@ class TauPlayer implements TauPlayerCallback {
       _resumePlayerCompleter = null;
       rethrow;
     }
+    _playerStateController.add(_playerState);
     _logger.d('FS:<--- _resumePlayer');
     return completer!.future;
   }
