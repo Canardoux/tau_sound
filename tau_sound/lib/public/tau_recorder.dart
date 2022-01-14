@@ -705,40 +705,7 @@ class TauRecorder implements TauRecorderCallback {
       _logger.d('<--- _stopRecorder : Recorder is not open');
       return '';
     }
-    var r = '';
-
-    try {
-      r = await _stop();
-
-      if (_isOggOpus) {
-        // delete the target if it exists
-        // (ffmpeg gives an error if the output file already exists)
-        var f = File(_savedUri!);
-        if (f.existsSync()) {
-          await f.delete();
-        }
-        // The following ffmpeg instruction re-encode the Apple CAF to OPUS.
-        // Unfortunately we cannot just remix the OPUS data,
-        // because Apple does not set the "extradata" in its private OPUS format.
-        // It will be good if we can improve this...
-        var rc = await TauHelper().executeFFmpegWithArguments([
-          '-loglevel',
-          'error',
-          '-y',
-          '-i',
-          _tmpUri,
-          '-c:a',
-          'libopus',
-          _savedUri,
-        ]); // remux CAF to OGG
-        if (rc != 0) {
-          return '';
-        }
-        r = _savedUri!;
-      }
-    } on Exception catch (e) {
-      _logger.e(e);
-    }
+    var  r = await _stop();
     _logger.d('FS:<--- _stopRecorder : $r');
     return r;
   }

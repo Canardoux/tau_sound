@@ -20,7 +20,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:tau_sound_lite/tau_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -127,12 +127,7 @@ class _ConvertToMp3State extends State<ConvertToMp3> {
         _mRecorder!.isStopped &&
         _mPlayer!.isStopped);
 
-    if (!await TauHelper()
-        .convertFile(_mPathAAC, Codec.aacADTS, _mPathMP3, Codec.mp3)) {
-      print('`convertFile` not successful');
-      return; // Something bad. Perhaps we are running the LITE flavor
-    }
-    await _mPlayer!.play(whenFinished: () {
+     await _mPlayer!.play(whenFinished: () {
       setState(() {});
     });
     setState(() {});

@@ -8,7 +8,6 @@ fi
 
 VERSION=$1
 
-bin/flavor.sh FULL
 bin/reldev.sh REL
 bin/setver.sh $VERSION
 
@@ -121,16 +120,6 @@ if [ $? -ne 0 ]; then
 fi
 cd ..
 
-bin/flavor.sh LITE
-cd tau_sound
-flutter pub publish
-if [ $? -ne 0 ]; then
-    echo "Error"
-    exit -1
-fi
-cd ..
-
-bin/flavor.sh FULL
 
 
 

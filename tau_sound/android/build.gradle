@@ -1,5 +1,3 @@
-//ext.flutterFFmpegPackage = 'audio'
-
 group 'xyz.canardoux.tausound'
 version '9.0.0-beta-1'
 
@@ -46,7 +44,6 @@ String safeExtGet(String prop, String fallback) {
 
 
 dependencies {
-    //---implementation 'com.arthenica:mobile-ffmpeg-full:4.4.LTS'
     implementation 'androidx.core:core:1.3.2'
     implementation 'androidx.media:media:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'

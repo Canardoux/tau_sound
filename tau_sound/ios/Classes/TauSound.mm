@@ -30,9 +30,6 @@
 #import "TauSound.h"
 #import "FlutterSoundPlayerManager.h"
 #import "FlutterSoundRecorderManager.h"
-#ifdef FULL_FLAVOR
-        #import "FlutterSoundFFmpeg.h"
-#endif
 
 @implementation TauSound
 {
@@ -43,9 +40,6 @@
 {
         FlutterSoundPlayerReg(registrar);
         FlutterSoundRecorderReg(registrar);
-        #ifdef FULL_FLAVORXXXX
-                FlutterSoundFFmpegReg(registrar);
-        #endif
 }
 
 @end

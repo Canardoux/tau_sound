@@ -7,7 +7,7 @@ permalink: changelog.html
 summary: The Changelog of The &tau; Project.
 toc: false
 ---
-## 9.0.0-alpha.13
+## 9.0.0-beta-1
 
 - τ Sound and τ Native are now published under GPL3.0 . [FS #696](https://github.com/Canardoux/tau/issues/696). See [here](tau_sound_birth-post.html)
 - τ Sound FULL flavor is now correctly linked with Flutter_ffmpeg. This means that if the App needs to access flutter_ffmpeg, it can use either the FULL flavor or the LITE flavor as it wants. [install](flutter_sound_install.html#ffmpeg). Goodbye the old hack :-)
@@ -20,3 +20,5 @@ toc: false
 - When the App wants to play a remote file, the file is downloaded asynchronously. [#762](https://github.com/Canardoux/flutter_sound/issues/762) and [#771](https://github.com/Canardoux/flutter_sound/issues/771). Thanks to [@Alvarocda](https://github.com/Alvarocda) who did a very good job on this issue. Now there are two things that we probably want to do in the future : 
    - Download the file in the `open()` verb instead of `play()`
    - Do not keep the semaphore so long, during the download, and allow the use of `close()` during the download.
+- Remove everything about the "With UI" flag, the Audio Service on Android, and all the API about "Now Playing". The App will use `Just Audio Service` if it needs to use the Lock Screen.
+- Rewrite the UI Widgets [#15](https://github.com/Canardoux/tau/pull/15)

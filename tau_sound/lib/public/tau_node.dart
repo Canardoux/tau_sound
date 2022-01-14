@@ -209,21 +209,21 @@ const allowBlueToothA2DP = 32;
 
 /// A Output Device can be the Speaker, the Ear Phone or a Blue Tooth Headphone
 class OutputDeviceNode extends OutputNode {
-  int audioFlags = outputToSpeaker;
+  int _audioFlags = outputToSpeaker;
   OutputDeviceNode(int audioFlags) {
-    this.audioFlags = audioFlags;
+    this._audioFlags = audioFlags;
   }
   OutputDeviceNode.speaker() {
-    audioFlags = outputToSpeaker;
+    _audioFlags = outputToSpeaker;
   }
   OutputDeviceNode.headSet() {
-    audioFlags = outputToSpeaker | allowHeadset;
+    _audioFlags = outputToSpeaker | allowHeadset;
   }
   OutputDeviceNode.blueToothA2DP() {
-    audioFlags = outputToSpeaker | allowHeadset | allowBlueToothA2DP;
+    _audioFlags = outputToSpeaker | allowHeadset | allowBlueToothA2DP;
   }
   OutputDeviceNode.any() {
-    audioFlags =
+    _audioFlags =
         outputToSpeaker | allowHeadset | allowBlueToothA2DP | allowAirPlay;
   }
 }

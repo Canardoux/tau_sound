@@ -512,24 +512,8 @@ class TauPlayer implements TauPlayerCallback {
     // - remux OGG file format to CAF file format (with ffmpeg)
     // - decode CAF/OPPUS (with native Apple AVFoundation)
 
-    if (_needToConvert(codec.deprecatedCodec)) {
-      if (!tauHelper.isFFmpegAvailable()) return false;
-      var convert = kIsWeb
-          ? _tabWebConvert[codec.deprecatedCodec.index]
-          : (Platform.isIOS)
-              ? _tabIosConvert[codec.deprecatedCodec.index]
-              : (Platform.isAndroid)
-                  ? _tabAndroidConvert[codec.deprecatedCodec.index]
-                  : null;
-      assert(convert != null);
-      if (convert != null) {
-        result = await TauPlayerPlatform.instance
-            .isDecoderSupported(this, codec: convert);
-      }
-    } else {
-      result = await TauPlayerPlatform.instance
-          .isDecoderSupported(this, codec: codec.deprecatedCodec);
-    }
+    result = await TauPlayerPlatform.instance
+      .isDecoderSupported(this, codec: codec.deprecatedCodec);
     _logger.d('FS:<--- isDecoderSupported ');
     return result;
   }
@@ -582,10 +566,10 @@ class TauPlayer implements TauPlayerCallback {
   /// User callback "whenFinished:"
   TWhenFinished? _audioPlayerFinishedPlaying;
   StreamController<PlaybackDisposition>? _playerController;
-  final StreamController<PlayerState> _playerStateController =
+  final StreamController<PlayerState> _playerStateControllerALVARO =
       StreamController<PlayerState>.broadcast();
 
-  Stream<PlayerState> get onPlayerStateChanged => _playerStateController.stream;
+  Stream<PlayerState> get onPlayerStateChanged => _playerStateControllerALVARO.stream;
 
   /// The default blocksize used when playing from Stream.
   static const _blockSize = 4096;
@@ -700,7 +684,7 @@ class TauPlayer implements TauPlayerCallback {
     //AudioDevice device = AudioDevice.speaker,
     int audioFlags = outputToSpeaker | allowBlueToothA2DP | allowAirPlay,
   }) async {
-    _playerStateController.add(PlayerState.isStopped);
+    //_playerStateControllerALVARO.add(PlayerState.isStopped);
     _logger.d('FS:---> open()');
     while (_openPlayerCompleter != null) {
       _logger.w('Another openPlayer() in progress');
@@ -786,7 +770,7 @@ class TauPlayer implements TauPlayerCallback {
       _closePlayerCompleter = null;
       rethrow;
     }
-    await _playerStateController.close();
+    //await _playerStateControllerALVARO.close();
     _logger.d('FS:<--- close() ');
     return completer!.future;
   }
@@ -830,21 +814,11 @@ class TauPlayer implements TauPlayerCallback {
       codec = fromURI.codec;
     }
 
-    var oldCodec = codec.deprecatedCodec;
-
-    var what = <String, dynamic>{
-      'codec': oldCodec,
-      'path': uri,
-      'fromDataBuffer': null,
-    };
-    await _convert(oldCodec, what);
-    oldCodec = what['codec'] as Codec;
-    uri = what['path'] as String;
 
     var state = PlayerState.isStopped.index;
        state = await TauPlayerPlatform.instance.startPlayer(
         this,
-        codec: oldCodec,
+        codec: codec.deprecatedCodec,
         fromURI: uri,
         fromDataBuffer: null,
       );
@@ -877,18 +851,10 @@ class TauPlayer implements TauPlayerCallback {
     }
     var oldCodec = codec.deprecatedCodec;
 
-    var what = <String, dynamic>{
-      'codec': oldCodec,
-      'path': null,
-      'fromDataBuffer': buffer,
-    };
-    await _convert(oldCodec, what);
-    oldCodec = what['codec'] as Codec;
-    buffer = what['fromDataBuffer'] as Uint8List;
     var state = PlayerState.isStopped.index;
      state = await TauPlayerPlatform.instance.startPlayer(
         this,
-        codec: oldCodec,
+        codec: codec.deprecatedCodec,
         fromDataBuffer: buffer,
         fromURI: null,
       );
@@ -1049,7 +1015,7 @@ class TauPlayer implements TauPlayerCallback {
           throw Exception('Invalid Input Node');
       }
       _playerState = state;
-      _playerStateController.add(state);
+      //_playerStateControllerALVARO.add(state);
     } on Exception {
       _startPlayerCompleter = null;
       rethrow;
@@ -1059,76 +1025,6 @@ class TauPlayer implements TauPlayerCallback {
     return completer!.future;
   }
 
-  ///
-  bool _needToConvert(Codec codec) {
-    _logger.d('FS:---> needToConvert ');
-    var convert = (kIsWeb)
-        ? _tabWebConvert[codec.index]
-        : (Platform.isIOS)
-            ? _tabIosConvert[codec.index]
-            : (Platform.isAndroid)
-                ? _tabAndroidConvert[codec.index]
-                : null;
-    _logger.d('FS:<--- needToConvert ');
-    return (convert != Codec.defaultCodec);
-  }
-
-  ///
-  Future<void> _convertAudio(Codec codec, Map<String, dynamic> what) async {
-    // If we want to play OGG/OPUS on iOS, we remux the OGG file format to a specific Apple CAF envelope before starting the player.
-    // We use FFmpeg for that task.
-    _logger.d('FS:---> _convertAudio ');
-    var tempDir = await getTemporaryDirectory();
-    //var codec = what['codec'] as Codec?;
-
-    var convert = kIsWeb
-        ? _tabWebConvert[codec.index]
-        : (Platform.isIOS)
-            ? _tabIosConvert[codec.index]
-            : (Platform.isAndroid)
-                ? _tabAndroidConvert[codec.index]
-                : null;
-    assert(convert != null);
-    if (convert != null) {
-      var fout = '${tempDir.path}/flutter_sound-tmp2${ext[convert.index]}';
-      var path = what['path'] as String?;
-      await tauHelper.convertFile(path, codec, fout, convert);
-
-      // Now we can play Apple CAF/OPUS
-
-      what['path'] = fout;
-      what['codec'] = convert;
-    }
-    _logger.d('FS:<--- _convertAudio ');
-  }
-
-  Future<void> _convert(Codec codec, Map<String, dynamic> what) async {
-    _logger.d('FS:---> _convert ');
-    //var codec = what['codec'] as Codec?;
-    if (_needToConvert(codec)) {
-      var fromDataBuffer = what['fromDataBuffer'] as Uint8List?;
-
-      if (fromDataBuffer != null) {
-        var tempDir = await getTemporaryDirectory();
-        var inputFile = File('${tempDir.path}/flutter_sound-tmp');
-
-        if (inputFile.existsSync()) {
-          await inputFile.delete();
-        }
-        inputFile.writeAsBytesSync(
-            fromDataBuffer); // Write the user buffer into the temporary file
-        what['fromDataBuffer'] = null;
-        what['path'] = inputFile.path;
-        await _convertAudio(codec, what);
-        var inputFile2 = File(what['path']);
-        what['fromDataBuffer'] = await inputFile2.readAsBytes();
-        what['path'] = null;
-      } else {
-        await _convertAudio(codec, what);
-      }
-    }
-    _logger.d('FS:<--- _convert ');
-  }
 
   Future<void> _stopPlayer() async {
     _logger.d('FS:---> _stopPlayer ');
@@ -1176,7 +1072,7 @@ class TauPlayer implements TauPlayerCallback {
       _stopPlayerCompleter = null;
       rethrow;
     }
-    _playerStateController.add(_playerState);
+    //_playerStateControllerALVARO.add(_playerState);
 
     _logger.d('FS:<--- _stop ');
     return completer!.future;
@@ -1206,7 +1102,7 @@ class TauPlayer implements TauPlayerCallback {
       _pausePlayerCompleter = null;
       rethrow;
     }
-    _playerStateController.add(_playerState);
+    //_playerStateControllerALVARO.add(_playerState);
     _logger.d('FS:<--- _pausePlayer ');
     return completer!.future;
   }
@@ -1235,7 +1131,7 @@ class TauPlayer implements TauPlayerCallback {
       _resumePlayerCompleter = null;
       rethrow;
     }
-    _playerStateController.add(_playerState);
+    //_playerStateControllerALVARO.add(_playerState);
     _logger.d('FS:<--- _resumePlayer');
     return completer!.future;
   }
@@ -1365,7 +1261,7 @@ class TauPlayer implements TauPlayerCallback {
       ),
     );
   }
-ty
+
 
   /// Callback from the &tau; Core. Must not be called by the App
   /// @nodoc

@@ -28,7 +28,7 @@ dependencies:
     path: ../../tau_platform_interface # tau_platform_interface Dir
   tau_web: # 9.0.0-beta-1
     path: ../../tau_web # tau_web Dir
-  tau_sound_lite: # ^9.0.0-beta-1
+  tau_sound: # ^9.0.0-beta-1
     path: ../ # Flutter Sound Dir
 # ============================================================================
 
@@ -37,7 +37,6 @@ dependencies:
   path_provider: ^2.0.2
   permission_handler: ^8.2.5
   path: ^1.6.4
-####  flutter_ffmpeg: ^0.4.2
   intl: ^0.17.0
   just_audio: ^0.9.11
     #path: ../../../just_audio/just_audio

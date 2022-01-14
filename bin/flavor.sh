@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "This script is obsolete"
+echo "Now we support only one flavor, without dependency to Flutter FFmpeg"
+exit -1
+
 # ------------------------------------------------------------------------------------------------------
 
 # This script is used to switch from the Flutter Sound FULL flavor to the Flutter Sound LITE flavor

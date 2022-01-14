@@ -27,7 +27,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart' show DateFormat;
-import 'package:tau_sound_lite/tau_sound.dart';
+import 'package:tau_sound/tau_sound.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -219,7 +219,6 @@ class _MyAppState extends State<Demo> {
   bool _decoderSupported = true; // Optimist
 
 
-  double? _duration;
   StreamController<TauFood>? recordingDataController;
   IOSink? sink;
   StreamController<TauFood> totoController = StreamController();
@@ -417,16 +416,12 @@ class _MyAppState extends State<Demo> {
       case Media.file:
       case Media.buffer:
         var path = _path[_codec.index];
-        var d = path != null ? await tauHelper.duration(path) : null;
-        _duration = d != null ? d.inMilliseconds / 1000.0 : null;
         break;
       case Media.asset:
       case Media.stream:
       case Media.remoteExampleFile:
-        _duration = null;
         break;
       default:
-        _duration = null;
     }
     setState(() {});
   }
@@ -1066,10 +1061,6 @@ class _MyAppState extends State<Demo> {
                   await seekToPlayer(value.toInt());
                 },
                 divisions: maxDuration == 0.0 ? 1 : maxDuration.toInt())),
-        Container(
-          height: 30.0,
-          child: Text(_duration != null ? 'Duration: $_duration sec.' : ''),
-        ),
       ],
     );
 
