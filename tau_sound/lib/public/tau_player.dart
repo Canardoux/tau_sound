@@ -1072,7 +1072,7 @@ class TauPlayer implements TauPlayerCallback {
       _stopPlayerCompleter = null;
       rethrow;
     }
-    _playerStateControlleradd(_playerState);
+    _playerStateController.add(_playerState);
 
     _logger.d('FS:<--- _stop ');
     return completer!.future;
