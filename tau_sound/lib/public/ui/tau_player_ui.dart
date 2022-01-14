@@ -87,7 +87,7 @@ class TauPlayerUI extends StatefulWidget {
     this.playerDurationTextStyle,
     this.playerPositionTextStyle,
     this.iconSize = 45,
-    this.playerRefreshDuration = const Duration(milliseconds: 500),
+    this.playerRefreshDuration = const Duration(milliseconds: 100),
     this.playPauseColor,
     this.alwaysShowPlayerSpeed = false,
     this.speeds,
@@ -137,6 +137,7 @@ class _TauPlayerUIState extends State<TauPlayerUI>
       switch (event) {
         case PlayerState.isStopped:
         case PlayerState.isPaused:
+        case PlayerState.isClosed:
           _animationController!.reverse();
           break;
         case PlayerState.isPlaying:

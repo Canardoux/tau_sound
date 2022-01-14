@@ -29,11 +29,11 @@ import 'dart:typed_data' show Uint8List;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
-import 'package:tau_platform_interface/tau_platform_interface.dart';
-import 'package:tau_platform_interface/tau_player_platform_interface.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:path_provider/path_provider.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:tau_platform_interface/tau_platform_interface.dart';
+import 'package:tau_platform_interface/tau_player_platform_interface.dart';
 
 import '../tau_sound.dart';
 
@@ -47,13 +47,15 @@ enum PlayerState {
 
   /// Player is paused
   isPaused,
+
+  /// Player is closed
+  isClosed,
 }
 
 /// Playback function type for [FlutterSoundPlayer.startPlayer()].
 ///
 /// Note : this type must include a parameter with a reference to the FlutterSoundPlayer object involved.
 typedef TWhenFinished = void Function();
-
 
 //--------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -328,8 +330,7 @@ class TauPlayer implements TauPlayerCallback {
   }) async {
     Duration? r;
     await _lock.synchronized(() async {
-      r = await _play(
-      );
+      r = await _play();
     });
     return r;
   }
@@ -472,7 +473,6 @@ class TauPlayer implements TauPlayerCallback {
     }
   }
 
-
   ///  Used when you want to play live PCM data synchronously.
   ///
   ///  This procedure returns a Future. It is very important that you wait that this Future is completed before trying to play another buffer.
@@ -513,7 +513,7 @@ class TauPlayer implements TauPlayerCallback {
     // - decode CAF/OPPUS (with native Apple AVFoundation)
 
     result = await TauPlayerPlatform.instance
-      .isDecoderSupported(this, codec: codec.deprecatedCodec);
+        .isDecoderSupported(this, codec: codec.deprecatedCodec);
     _logger.d('FS:<--- isDecoderSupported ');
     return result;
   }
@@ -712,14 +712,15 @@ class TauPlayer implements TauPlayerCallback {
     _openPlayerCompleter = Completer<TauPlayer>();
     completer = _openPlayerCompleter;
     try {
-      var state = await TauPlayerPlatform.instance.openPlayer(this,
-          logLevel: _logLevel,
-          focus: focus,
-          audioFlags: audioFlags,
-          category: category,
-          device: AudioDevice.obsolete,
-          mode: mode,
-          );
+      var state = await TauPlayerPlatform.instance.openPlayer(
+        this,
+        logLevel: _logLevel,
+        focus: focus,
+        audioFlags: audioFlags,
+        category: category,
+        device: AudioDevice.obsolete,
+        mode: mode,
+      );
       if (focus != AudioFocus.doNotRequestFocus) {
         _hasFocus = focus != AudioFocus.abandonFocus;
       }
@@ -770,7 +771,8 @@ class TauPlayer implements TauPlayerCallback {
       _closePlayerCompleter = null;
       rethrow;
     }
-    await _playerStateController.close();
+    _playerState = PlayerState.isClosed;
+    _playerStateController.add(_playerState);
     _logger.d('FS:<--- close() ');
     return completer!.future;
   }
@@ -805,7 +807,8 @@ class TauPlayer implements TauPlayerCallback {
 
   Future<PlayerState> _startPlayerFromURI(
     InputFileNode fromURI,
-    OutputDeviceNode to, ) async {
+    OutputDeviceNode to,
+  ) async {
     var uri = fromURI.uri;
     var codec = fromURI.codec;
     if (codec is Pcm && codec.audioFormat == AudioFormat.raw) {
@@ -814,25 +817,27 @@ class TauPlayer implements TauPlayerCallback {
       codec = fromURI.codec;
     }
 
-
     var state = PlayerState.isStopped.index;
-       state = await TauPlayerPlatform.instance.startPlayer(
-        this,
-        codec: codec.deprecatedCodec,
-        fromURI: uri,
-        fromDataBuffer: null,
-      );
+    state = await TauPlayerPlatform.instance.startPlayer(
+      this,
+      codec: codec.deprecatedCodec,
+      fromURI: uri,
+      fromDataBuffer: null,
+    );
 
     return PlayerState.values[state];
   }
 
   Future<PlayerState> _startPlayerFromAsset(
     InputAssetNode fromAsset,
-    OutputDeviceNode to, ) async {
+    OutputDeviceNode to,
+  ) async {
     final byteData = await rootBundle.load(fromAsset.path);
     var assetBuffer = byteData.buffer.asUint8List();
-    var bufferNode = InputBufferNode(assetBuffer,
-        codec: fromAsset.codec, );
+    var bufferNode = InputBufferNode(
+      assetBuffer,
+      codec: fromAsset.codec,
+    );
     return await _startPlayerFromBuffer(
       bufferNode,
       to,
@@ -841,7 +846,8 @@ class TauPlayer implements TauPlayerCallback {
 
   Future<PlayerState> _startPlayerFromBuffer(
     InputBufferNode fromBuffer,
-    OutputDeviceNode to, ) async {
+    OutputDeviceNode to,
+  ) async {
     var buffer = fromBuffer.inputBuffer;
     var codec = fromBuffer.codec;
     if (codec is Pcm && codec.audioFormat == AudioFormat.raw) {
@@ -852,12 +858,12 @@ class TauPlayer implements TauPlayerCallback {
     var oldCodec = codec.deprecatedCodec;
 
     var state = PlayerState.isStopped.index;
-     state = await TauPlayerPlatform.instance.startPlayer(
-        this,
-        codec: codec.deprecatedCodec,
-        fromDataBuffer: buffer,
-        fromURI: null,
-      );
+    state = await TauPlayerPlatform.instance.startPlayer(
+      this,
+      codec: codec.deprecatedCodec,
+      fromDataBuffer: buffer,
+      fromURI: null,
+    );
 
     return PlayerState.values[state];
   }
@@ -1024,7 +1030,6 @@ class TauPlayer implements TauPlayerCallback {
     _logger.d('FS:<--- startPlayer ');
     return completer!.future;
   }
-
 
   Future<void> _stopPlayer() async {
     _logger.d('FS:---> _stopPlayer ');
@@ -1261,7 +1266,6 @@ class TauPlayer implements TauPlayerCallback {
       ),
     );
   }
-
 
   /// Callback from the &tau; Core. Must not be called by the App
   /// @nodoc
