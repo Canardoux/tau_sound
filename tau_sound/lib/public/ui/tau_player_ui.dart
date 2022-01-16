@@ -120,9 +120,6 @@ class _TauPlayerUIState extends State<TauPlayerUI>
   @override
   void initState() {
     super.initState();
-    if (!widget.player.isOpen) {
-      throw Exception('Player must be open before build TauPlayerUI');
-    }
 
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 400));
@@ -135,14 +132,12 @@ class _TauPlayerUIState extends State<TauPlayerUI>
     }
     widget.player.onPlayerStateChanged.listen((event) {
       switch (event) {
-        case PlayerState.isStopped:
-        case PlayerState.isPaused:
-        case PlayerState.isClosed:
-          _animationController!.reverse();
-          break;
         case PlayerState.isPlaying:
-        default:
           _animationController!.forward();
+          setState(() {});
+          break;
+        default:
+          _animationController!.reverse();
           break;
       }
     });

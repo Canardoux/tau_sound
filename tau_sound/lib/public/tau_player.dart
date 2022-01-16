@@ -32,7 +32,6 @@ import 'package:flutter/services.dart';
 import 'package:logger/logger.dart' show Level, Logger;
 import 'package:path_provider/path_provider.dart';
 import 'package:synchronized/synchronized.dart';
-import 'package:tau_platform_interface/tau_platform_interface.dart';
 import 'package:tau_platform_interface/tau_player_platform_interface.dart';
 
 import '../tau_sound.dart';
@@ -47,9 +46,6 @@ enum PlayerState {
 
   /// Player is paused
   isPaused,
-
-  /// Player is closed
-  isClosed,
 }
 
 /// Playback function type for [FlutterSoundPlayer.startPlayer()].
@@ -297,7 +293,7 @@ class TauPlayer implements TauPlayerCallback {
   /// - The path of a local file
   /// - The name of a temporary file (without any slash '/')
   ///
-  /// Hint: [path_provider](https://pub.dev/packages/path_provider) can be useful if you want to get access to some directories on your device.
+  /// Hint: [path_provider](https://pub.dev/packages/path_provider) can be useful if you want to get access to some dire'ctor'ies on your device.
   ///
   ///
   /// *Example:*
@@ -452,6 +448,7 @@ class TauPlayer implements TauPlayerCallback {
     var state = await TauPlayerPlatform.instance
         .setSubscriptionDuration(this, duration: duration);
     _playerState = PlayerState.values[state];
+    _playerStateController?.add(_playerState);
     _logger.d('FS:<---- setSubscriptionDuration ');
   }
 
@@ -531,6 +528,7 @@ class TauPlayer implements TauPlayerCallback {
     }
     var state = await TauPlayerPlatform.instance.getPlayerState(this);
     _playerState = PlayerState.values[state];
+    _playerStateController?.add(_playerState);
     return _playerState;
   }
 
@@ -566,10 +564,10 @@ class TauPlayer implements TauPlayerCallback {
   /// User callback "whenFinished:"
   TWhenFinished? _audioPlayerFinishedPlaying;
   StreamController<PlaybackDisposition>? _playerController;
-  final StreamController<PlayerState> _playerStateController =
-      StreamController<PlayerState>.broadcast();
+  StreamController<PlayerState>? _playerStateController;
 
-  Stream<PlayerState> get onPlayerStateChanged => _playerStateController.stream;
+  Stream<PlayerState> get onPlayerStateChanged =>
+      _playerStateController!.stream;
 
   /// The default blocksize used when playing from Stream.
   static const _blockSize = 4096;
@@ -684,7 +682,7 @@ class TauPlayer implements TauPlayerCallback {
     //AudioDevice device = AudioDevice.speaker,
     int audioFlags = outputToSpeaker | allowBlueToothA2DP | allowAirPlay,
   }) async {
-    _playerStateController.add(PlayerState.isStopped);
+    _playerStateController ??= StreamController<PlayerState>.broadcast();
     _logger.d('FS:---> open()');
     while (_openPlayerCompleter != null) {
       _logger.w('Another openPlayer() in progress');
@@ -708,6 +706,7 @@ class TauPlayer implements TauPlayerCallback {
         : AudioFocus.requestFocusAndStopOthers;
     TauPlayerPlatform.instance.openSession(this);
     _setPlayerCallback();
+    _playerStateController?.add(PlayerState.isStopped);
     assert(_openPlayerCompleter == null);
     _openPlayerCompleter = Completer<TauPlayer>();
     completer = _openPlayerCompleter;
@@ -727,6 +726,7 @@ class TauPlayer implements TauPlayerCallback {
       _from = from;
       _to = to;
       _playerState = PlayerState.values[state];
+      _playerStateController?.add(_playerState);
     } on Exception {
       _openPlayerCompleter = null;
       rethrow;
@@ -771,8 +771,6 @@ class TauPlayer implements TauPlayerCallback {
       _closePlayerCompleter = null;
       rethrow;
     }
-    _playerState = PlayerState.isClosed;
-    _playerStateController.add(_playerState);
     _logger.d('FS:<--- close() ');
     return completer!.future;
   }
@@ -802,6 +800,7 @@ class TauPlayer implements TauPlayerCallback {
       device: AudioDevice.obsolete,
     );
     _playerState = PlayerState.values[state];
+    _playerStateController?.add(_playerState);
     _logger.d('FS:<--- setAudioFocus ');
   }
 
@@ -923,6 +922,7 @@ class TauPlayer implements TauPlayerCallback {
         numChannels: codec.nbrChannels(),
         sampleRate: codec.sampleRate);
     _playerState = PlayerState.values[state];
+    _playerStateController?.add(_playerState);
     _logger.d('FS:<--- startPlayerFromStream ');
     return PlayerState.values[state];
   }
@@ -956,6 +956,7 @@ class TauPlayer implements TauPlayerCallback {
     var state = await TauPlayerPlatform.instance
         .startPlayerFromMic(this, numChannels: 1, sampleRate: 44000);
     _playerState = PlayerState.values[state];
+    _playerStateController?.add(_playerState);
     _logger.d('FS:<--- startPlayerFromMic ');
     //return completer!.future;
     return PlayerState.values[state];
@@ -988,7 +989,7 @@ class TauPlayer implements TauPlayerCallback {
       // We dispatch depending on the `from` class.
       // We could have used a virtual function in InputNode,
       // but I wanted to keep the InputNode hierarchy independant of `tauPlayer`
-      var state = PlayerState.isStopped;
+      var state = PlayerState.isPlaying;
       switch (_from.runtimeType) {
         case InputFileNode:
           state = await _startPlayerFromURI(
@@ -1021,7 +1022,7 @@ class TauPlayer implements TauPlayerCallback {
           throw Exception('Invalid Input Node');
       }
       _playerState = state;
-      _playerStateController.add(state);
+      _playerStateController?.add(state);
     } on Exception {
       _startPlayerCompleter = null;
       rethrow;
@@ -1070,6 +1071,7 @@ class TauPlayer implements TauPlayerCallback {
       var state = await TauPlayerPlatform.instance.stopPlayer(this);
 
       _playerState = PlayerState.values[state];
+      _playerStateController?.add(_playerState);
       if (_playerState != PlayerState.isStopped) {
         _logger.d('Player is not stopped!');
       }
@@ -1077,7 +1079,6 @@ class TauPlayer implements TauPlayerCallback {
       _stopPlayerCompleter = null;
       rethrow;
     }
-    _playerStateController.add(_playerState);
 
     _logger.d('FS:<--- _stop ');
     return completer!.future;
@@ -1099,6 +1100,7 @@ class TauPlayer implements TauPlayerCallback {
       completer = _pausePlayerCompleter;
       _playerState = PlayerState
           .values[await TauPlayerPlatform.instance.pausePlayer(this)];
+      _playerStateController?.add(_playerState);
       //if (_playerState != PlayerState.isPaused) {
       //throw _PlayerRunningException(
       //'Player is not paused.'); // I am not sure that it is good to throw an exception here
@@ -1107,7 +1109,7 @@ class TauPlayer implements TauPlayerCallback {
       _pausePlayerCompleter = null;
       rethrow;
     }
-    _playerStateController.add(_playerState);
+
     _logger.d('FS:<--- _pausePlayer ');
     return completer!.future;
   }
@@ -1128,6 +1130,7 @@ class TauPlayer implements TauPlayerCallback {
       completer = _resumePlayerCompleter;
       var state = await TauPlayerPlatform.instance.resumePlayer(this);
       _playerState = PlayerState.values[state];
+      _playerStateController?.add(_playerState);
       //if (_playerState != PlayerState.isPlaying) {
       //throw _PlayerRunningException(
       //'Player is not resumed.'); // I am not sure that it is good to throw an exception here
@@ -1136,7 +1139,6 @@ class TauPlayer implements TauPlayerCallback {
       _resumePlayerCompleter = null;
       rethrow;
     }
-    _playerStateController.add(_playerState);
     _logger.d('FS:<--- _resumePlayer');
     return completer!.future;
   }
@@ -1152,6 +1154,7 @@ class TauPlayer implements TauPlayerCallback {
       duration: duration,
     );
     _playerState = PlayerState.values[state];
+    _playerStateController?.add(_playerState);
     _logger.v('FS:<--- seekToPlayer ');
   }
 
@@ -1171,6 +1174,7 @@ class TauPlayer implements TauPlayerCallback {
       volume: volume,
     );
     _playerState = PlayerState.values[state];
+    _playerStateController?.add(_playerState);
     _logger.d('FS:<--- setVolume ');
   }
 
@@ -1189,6 +1193,7 @@ class TauPlayer implements TauPlayerCallback {
       speed: speed,
     );
     _playerState = PlayerState.values[state];
+    _playerStateController?.add(_playerState);
     _logger.d('FS:<--- _setSpeed ');
   }
 
@@ -1273,6 +1278,7 @@ class TauPlayer implements TauPlayerCallback {
   void updatePlaybackState(int state) {
     if (state >= 0 && state < PlayerState.values.length) {
       _playerState = PlayerState.values[state];
+      _playerStateController?.add(_playerState);
     }
   }
 
@@ -1293,6 +1299,7 @@ class TauPlayer implements TauPlayerCallback {
     //playerState = PlayerState.isStopped;
     //int state = call['arg'] as int;
     _playerState = PlayerState.values[state];
+    _playerStateController?.add(_playerState);
     //await _stop(); // ??? Maybe ??? perhaps ??? //
     await stop(); // ??? Maybe ??? perhaps ??? //
     _cleanCompleters(); // We have problem when the record is finished and a resume is pending
@@ -1319,6 +1326,7 @@ class TauPlayer implements TauPlayerCallback {
     } else {
       _openPlayerCompleter!.completeError('openPlayer failed');
     }
+    _playerStateController?.add(_playerState);
     _openPlayerCompleter = null;
     _logger.d('<--- openPlayerCompleted: $success');
   }
@@ -1343,6 +1351,7 @@ class TauPlayer implements TauPlayerCallback {
     _closePlayerCompleter = null;
 
     _cleanCompleters();
+    _playerStateController?.add(_playerState);
     _logger.d('<--- closePlayerCompleted');
   }
 
@@ -1362,6 +1371,7 @@ class TauPlayer implements TauPlayerCallback {
       _pausePlayerCompleter!.completeError('pausePlayer failed');
     }
     _pausePlayerCompleter = null;
+    _playerStateController?.add(_playerState);
     _logger.d('<--- pausePlayerCompleted: $success');
   }
 
@@ -1381,6 +1391,7 @@ class TauPlayer implements TauPlayerCallback {
       _resumePlayerCompleter!.completeError('resumePlayer failed');
     }
     _resumePlayerCompleter = null;
+    _playerStateController?.add(_playerState);
     _logger.d('<--- resumePlayerCompleted: $success');
   }
 
@@ -1400,6 +1411,7 @@ class TauPlayer implements TauPlayerCallback {
       _startPlayerCompleter!.completeError('startPlayer() failed');
     }
     _startPlayerCompleter = null;
+    _playerStateController?.add(_playerState);
     _logger.d('<--- startPlayerCompleted: $success');
   }
 
@@ -1422,6 +1434,7 @@ class TauPlayer implements TauPlayerCallback {
     }
     _stopPlayerCompleter = null;
     // cleanCompleters(); ????
+    _playerStateController?.add(_playerState);
     _logger.d('<--- stopPlayerCompleted: $success');
   }
 
