@@ -113,6 +113,8 @@ class _TauPlayerUIState extends State<TauPlayerUI>
   Duration? _audioDuration;
   double? _actualSpeed;
   int _speedIndex = 0;
+  Stream<PlaybackDisposition>? _onProgress;
+  Stream<PlayerState>? _onPlayerStateChanged;
 
   ///
   ///
@@ -125,22 +127,9 @@ class _TauPlayerUIState extends State<TauPlayerUI>
         AnimationController(vsync: this, duration: Duration(milliseconds: 400));
 
     _audioDuration = widget.duration;
-    widget.player.setSubscriptionDuration(widget.playerRefreshDuration!);
-
     if (widget.speeds != null && widget.speeds!.isNotEmpty) {
       _actualSpeed = widget.speeds![_speedIndex];
     }
-    widget.player.onPlayerStateChanged.listen((event) {
-      switch (event) {
-        case PlayerState.isPlaying:
-          _animationController!.forward();
-          setState(() {});
-          break;
-        default:
-          _animationController!.reverse();
-          break;
-      }
-    });
   }
 
   ///
@@ -157,8 +146,25 @@ class _TauPlayerUIState extends State<TauPlayerUI>
   ///
   @override
   Widget build(BuildContext context) {
+    _onProgress = null;
+    _onPlayerStateChanged = null;
+
+    widget.player.setSubscriptionDuration(widget.playerRefreshDuration!);
+    _onProgress = widget.player.onProgress;
+    _onPlayerStateChanged = widget.player.onPlayerStateChanged;
+    _onPlayerStateChanged?.listen((event) {
+      switch (event) {
+        case PlayerState.isPlaying:
+          _animationController!.forward();
+          break;
+        default:
+          _animationController!.reverse();
+          break;
+      }
+    });
+
     return StreamBuilder<PlaybackDisposition>(
-      stream: widget.player.onProgress,
+      stream: _onProgress!,
       builder: (context, snapshot) {
         if (snapshot.data != null) {
           _audioDuration = snapshot.data!.duration;
@@ -173,6 +179,7 @@ class _TauPlayerUIState extends State<TauPlayerUI>
               shape: CircleBorder(),
               child: InkWell(
                 onTap: () async {
+                  setState(() {});
                   await widget.onTap(widget.player);
                 },
                 child: AnimatedIcon(

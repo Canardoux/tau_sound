@@ -661,6 +661,9 @@ class TauPlayer implements TauPlayerCallback {
   void _removePlayerCallback() {
     _playerController?.close();
     _playerController = null;
+
+    _playerStateController?.close();
+    _playerStateController = null;
   }
 
   Future<void> _waitOpen() async {
@@ -1264,6 +1267,8 @@ class TauPlayer implements TauPlayerCallback {
     if (duration < position) {
       _logger.d(' Duration = $duration,   Position = $position');
     }
+    // print(duration.toString());
+    // print(position.toString());
     _playerController!.add(
       PlaybackDisposition(
         position: Duration(milliseconds: position),
