@@ -1115,7 +1115,7 @@
 
 
 
-   <h2 id="900-alpha13">9.0.0-alpha.13</h2>
+   <h2 id="900-beta-1">9.0.0-beta-1</h2>
 
 <ul>
   <li>τ Sound and τ Native are now published under GPL3.0 . <a href="https://github.com/Canardoux/tau/issues/696">FS #696</a>. See <a href="tau_sound_birth-post.html">here</a></li>
@@ -1126,6 +1126,14 @@
   <li>Fix all the 404 errors in the documentation of the Dart API</li>
   <li>No more crashes with Just Audio compatibility. <a href="https://github.com/Canardoux/tau/issues/767">FS #767</a></li>
   <li>Added support to play audio files from assets. <a href="https://github.com/Canardoux/tau/issues/549">FS #549</a></li>
+  <li>When the App wants to play a remote file, the file is downloaded asynchronously. <a href="https://github.com/Canardoux/flutter_sound/issues/762">#762</a> and <a href="https://github.com/Canardoux/flutter_sound/issues/771">#771</a>. Thanks to <a href="https://github.com/Alvarocda">@Alvarocda</a> who did a very good job on this issue. Now there are two things that we probably want to do in the future :
+    <ul>
+      <li>Download the file in the <code class="language-plaintext highlighter-rouge">open()</code> verb instead of <code class="language-plaintext highlighter-rouge">play()</code></li>
+      <li>Do not keep the semaphore so long, during the download, and allow the use of <code class="language-plaintext highlighter-rouge">close()</code> during the download.</li>
+    </ul>
+  </li>
+  <li>Remove everything about the “With UI” flag, the Audio Service on Android, and all the API about “Now Playing”. The App will use <code class="language-plaintext highlighter-rouge">Just Audio Service</code> if it needs to use the Lock Screen.</li>
+  <li>Rewrite the UI Widgets <a href="https://github.com/Canardoux/tau/pull/15">#15</a></li>
 </ul>
 
 
@@ -1153,8 +1161,8 @@
 <footer>
             <div class="row">
                 <div class="col-lg-12 footer">
-               &copy;2021 Canardoux. Licensed under GPL. <br />
- Site last generated: Oct 20, 2021 <br />
+               &copy;2022 Canardoux. Licensed under GPL. <br />
+ Site last generated: Jan 19, 2022 <br />
 <p><img src="images/banner5.svg" alt="Company logo" max-width="10"/></p>
                 </div>
             </div>

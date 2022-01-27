@@ -150,10 +150,10 @@ class TauWebPlugin //extends TauPlatform
         {
                 TauPlayerWeb.registerWith(registrar);
                 TauRecorderWeb.registerWith(registrar);
-                importJsLibrary(url: "./howler/howler.js", flutterPluginName: "tau_web");
-                importJsLibrary(url: "./src/tau_core.js", flutterPluginName: "tau_web");
-                importJsLibrary(url: "./src/tau_core_player.js", flutterPluginName: "tau_web");
-                importJsLibrary(url: "./src/tau_core_recorder.js", flutterPluginName: "tau_web");
+                importJsLibrary(url: "./howler/howler.js", flutterPluginName: "flutter_sound_web");
+                importJsLibrary(url: "./src/tau_core.js", flutterPluginName: "flutter_sound_web");
+                importJsLibrary(url: "./src/tau_core_player.js", flutterPluginName: "flutter_sound_web");
+                importJsLibrary(url: "./src/tau_core_recorder.js", flutterPluginName: "flutter_sound_web");
 
         }
 }

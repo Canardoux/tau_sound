@@ -4,6 +4,7 @@ mkdir -v /tmp/toto_doc 2>/tmp/null
 tar xzf _toto.tgz -C /tmp/toto_doc
 tar xzf _toto3.tgz  -C /tmp/toto_doc
 rm -rf /tmp/toto_doc/_site /tmp/toto_doc/tau_sound/example/ios 2>/dev/null
+mv -v  /tmp/toto_doc/tau_sound/example/samples cp -a /tmp/toto_doc/tau_sound/example/assets/
 #####cp -a /tmp/toto_doc/_site/* /var/www/vhosts/canardoux.xyz/tau.canardoux.xyz/
 
 cd /tmp/toto_doc/tau_sound/
@@ -17,7 +18,7 @@ cd
 sed -i  "0,/^  overflow: hidden;$/s/overflow: auto;/"  /tmp/toto_doc/api/static-assets/styles.css
 sed -i  "s/^  background-color: inherit;$/  background-color: #2196F3;/" /tmp/toto_doc/api/static-assets/styles.css
 
-echo "patch css for Jekyll compatigility"
+echo "patch css for Jekyll compatibility"
 
 echo "Add Front matter on top of dartdoc pages"
 for f in $(find /tmp/toto_doc/api -name '*.html' )
