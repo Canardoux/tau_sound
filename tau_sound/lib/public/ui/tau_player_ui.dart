@@ -87,7 +87,7 @@ class TauPlayerUI extends StatefulWidget {
     this.playerDurationTextStyle,
     this.playerPositionTextStyle,
     this.iconSize = 45,
-    this.playerRefreshDuration = const Duration(milliseconds: 500),
+    this.playerRefreshDuration = const Duration(milliseconds: 100),
     this.playPauseColor,
     this.alwaysShowPlayerSpeed = false,
     this.speeds,
@@ -113,6 +113,8 @@ class _TauPlayerUIState extends State<TauPlayerUI>
   Duration? _audioDuration;
   double? _actualSpeed;
   int _speedIndex = 0;
+  Stream<PlaybackDisposition>? _onProgress;
+  Stream<PlayerState>? _onPlayerStateChanged;
 
   ///
   ///
@@ -120,31 +122,14 @@ class _TauPlayerUIState extends State<TauPlayerUI>
   @override
   void initState() {
     super.initState();
-    if (!widget.player.isOpen) {
-      throw Exception('Player must be open before build TauPlayerUI');
-    }
 
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 400));
 
     _audioDuration = widget.duration;
-    widget.player.setSubscriptionDuration(widget.playerRefreshDuration!);
-
     if (widget.speeds != null && widget.speeds!.isNotEmpty) {
       _actualSpeed = widget.speeds![_speedIndex];
     }
-    widget.player.onPlayerStateChanged.listen((event) {
-      switch (event) {
-        case PlayerState.isStopped:
-        case PlayerState.isPaused:
-          _animationController!.reverse();
-          break;
-        case PlayerState.isPlaying:
-        default:
-          _animationController!.forward();
-          break;
-      }
-    });
   }
 
   ///
@@ -161,8 +146,25 @@ class _TauPlayerUIState extends State<TauPlayerUI>
   ///
   @override
   Widget build(BuildContext context) {
+    _onProgress = null;
+    _onPlayerStateChanged = null;
+
+    widget.player.setSubscriptionDuration(widget.playerRefreshDuration!);
+    _onProgress = widget.player.onProgress;
+    _onPlayerStateChanged = widget.player.onPlayerStateChanged;
+    _onPlayerStateChanged?.listen((event) {
+      switch (event) {
+        case PlayerState.isPlaying:
+          _animationController!.forward();
+          break;
+        default:
+          _animationController!.reverse();
+          break;
+      }
+    });
+
     return StreamBuilder<PlaybackDisposition>(
-      stream: widget.player.onProgress,
+      stream: _onProgress!,
       builder: (context, snapshot) {
         if (snapshot.data != null) {
           _audioDuration = snapshot.data!.duration;
@@ -177,6 +179,7 @@ class _TauPlayerUIState extends State<TauPlayerUI>
               shape: CircleBorder(),
               child: InkWell(
                 onTap: () async {
+                  setState(() {});
                   await widget.onTap(widget.player);
                 },
                 child: AnimatedIcon(
